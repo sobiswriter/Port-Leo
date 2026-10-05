@@ -67,7 +67,7 @@ export const DEFAULT_HYPERSPEED_OPTIONS: HyperspeedEffectOptions = {
   lanesPerRoad: 4,
   fov: 90,
   fovSpeedUp: 140,
-  speedUp: 2.2,
+  speedUp: 5.0,
   carLightsFade: 0.4,
   totalSideLightSticks: 20,
   lightPairsPerRoadWay: 40,
@@ -423,6 +423,10 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
       renderPass: any;
       bloomPass: any;
       rafId: number = 0;
+      handleGlobalMouseDown: (ev: any) => void;
+      handleGlobalMouseUp: (ev: any) => void;
+      handleKeyDown: (ev: KeyboardEvent) => void;
+      handleKeyUp: (ev: KeyboardEvent) => void;
 
       constructor(container: HTMLElement, options: any = {}) {
         this.options = options;
@@ -499,6 +503,36 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
         this.onTouchStart = this.onTouchStart.bind(this);
         this.onTouchEnd = this.onTouchEnd.bind(this);
         this.onContextMenu = this.onContextMenu.bind(this);
+
+        this.handleGlobalMouseDown = (ev: any) => {
+          const target = ev.target as HTMLElement;
+          // Don't trigger speed up when user is interacting with text inputs or form controls
+          if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')) {
+            return;
+          }
+          this.onMouseDown(ev);
+        };
+
+        this.handleGlobalMouseUp = (ev: any) => {
+          this.onMouseUp(ev);
+        };
+
+        this.handleKeyDown = (ev: KeyboardEvent) => {
+          const target = ev.target as HTMLElement;
+          if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')) {
+            return;
+          }
+          if (ev.code === 'Space' || ev.code === 'KeyW' || ev.code === 'ArrowUp') {
+            ev.preventDefault();
+            this.onMouseDown(ev);
+          }
+        };
+
+        this.handleKeyUp = (ev: KeyboardEvent) => {
+          if (ev.code === 'Space' || ev.code === 'KeyW' || ev.code === 'ArrowUp') {
+            this.onMouseUp(ev);
+          }
+        };
 
         this.onWindowResize = this.onWindowResize.bind(this);
         window.addEventListener('resize', this.onWindowResize, { passive: true });
@@ -598,6 +632,15 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
 
         this.container.addEventListener('contextmenu', this.onContextMenu);
 
+        // Global listeners so clicking or holding anywhere accelerates hyperspeed
+        window.addEventListener('mousedown', this.handleGlobalMouseDown);
+        window.addEventListener('mouseup', this.handleGlobalMouseUp);
+        window.addEventListener('touchstart', this.handleGlobalMouseDown, { passive: true });
+        window.addEventListener('touchend', this.handleGlobalMouseUp, { passive: true });
+        window.addEventListener('touchcancel', this.handleGlobalMouseUp, { passive: true });
+        window.addEventListener('keydown', this.handleKeyDown);
+        window.addEventListener('keyup', this.handleKeyUp);
+
         this.tick();
       }
 
@@ -630,8 +673,8 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
       }
 
       update(delta: number) {
-        const lerpPercentage = Math.exp(-(-60 * Math.log2(1 - 0.1)) * delta);
-        this.speedUp += lerp(this.speedUp, this.speedUpTarget, lerpPercentage, 0.00001);
+        const targetSpeed = this.speedUpTarget;
+        this.speedUp += (targetSpeed - this.speedUp) * Math.min(1, delta * 8);
         this.timeOffset += this.speedUp * delta;
 
         const time = this.timer.getElapsed() + this.timeOffset;
@@ -642,9 +685,10 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
         this.road.update(time);
 
         let updateCamera = false;
-        const fovChange = lerp(this.camera.fov, this.fovTarget, lerpPercentage);
-        if (fovChange !== 0) {
-          this.camera.fov += fovChange * delta * 6;
+        const targetFov = this.fovTarget;
+        const fovDelta = (targetFov - this.camera.fov) * Math.min(1, delta * 8);
+        if (Math.abs(fovDelta) > 0.05) {
+          this.camera.fov += fovDelta;
           updateCamera = true;
         }
 
@@ -706,6 +750,14 @@ export const Hyperspeed: React.FC<HyperspeedProps> = ({
         }
 
         window.removeEventListener('resize', this.onWindowResize);
+        window.removeEventListener('mousedown', this.handleGlobalMouseDown);
+        window.removeEventListener('mouseup', this.handleGlobalMouseUp);
+        window.removeEventListener('touchstart', this.handleGlobalMouseDown);
+        window.removeEventListener('touchend', this.handleGlobalMouseUp);
+        window.removeEventListener('touchcancel', this.handleGlobalMouseUp);
+        window.removeEventListener('keydown', this.handleKeyDown);
+        window.removeEventListener('keyup', this.handleKeyUp);
+
         if (this.container) {
           this.container.removeEventListener('mousedown', this.onMouseDown);
           this.container.removeEventListener('mouseup', this.onMouseUp);

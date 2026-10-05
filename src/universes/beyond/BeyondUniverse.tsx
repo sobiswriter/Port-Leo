@@ -102,7 +102,7 @@ export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) =>
 
   // Hyperspeed Warp State
   const [selectedPresetId, setSelectedPresetId] = useState<string>('cyber');
-  const [isHyperdriveEngaged, setIsHyperdriveEngaged] = useState<boolean>(false);
+  const [isSpeedingUp, setIsSpeedingUp] = useState<boolean>(false);
   const [showWarpControls, setShowWarpControls] = useState<boolean>(false);
 
   // Transmission Form State
@@ -122,18 +122,21 @@ export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) =>
   const activePreset =
     WARP_PRESETS.find((p) => p.id === selectedPresetId) || WARP_PRESETS[0];
 
-  // Memoized Hyperspeed effect options to prevent unnecessary scene recreations
+  // Memoized Hyperspeed effect options with real-time speed up callbacks
   const hyperspeedOptions = useMemo<HyperspeedEffectOptions>(() => {
     return {
       ...DEFAULT_HYPERSPEED_OPTIONS,
       distortion: activePreset.distortion,
       colors: activePreset.colors,
-      fov: isHyperdriveEngaged ? 130 : 90,
-      speedUp: isHyperdriveEngaged ? 3.5 : 2.0,
+      fov: 90,
+      fovSpeedUp: 145,
+      speedUp: 6.0,
       lanesPerRoad: 4,
       length: 400,
+      onSpeedUp: () => setIsSpeedingUp(true),
+      onSlowDown: () => setIsSpeedingUp(false),
     };
-  }, [activePreset, isHyperdriveEngaged]);
+  }, [activePreset]);
 
   const handleCopyPgp = () => {
     navigator.clipboard.writeText(BEYOND_DATA.pgpKeyFingerprint);
@@ -224,18 +227,78 @@ export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) =>
 
         {/* 
           ========================================================================
+          Live Hyperspeed Velocity Indicator Banner (Click & Hold to Accelerate)
+          ========================================================================
+        */}
+        <div
+          className={`my-4 p-3.5 sm:p-4 rounded-xl border transition-all flex flex-wrap items-center justify-between gap-3 ${
+            isSpeedingUp
+              ? 'bg-cyan-950/80 border-cyan-400 text-cyan-100 shadow-2xl shadow-cyan-500/30'
+              : 'bg-neutral-950/60 backdrop-blur-md border-neutral-800/80 text-neutral-400'
+          }`}
+        >
+          <div className="flex items-center gap-3 font-mono text-xs">
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+                isSpeedingUp ? 'bg-cyan-400 text-neutral-950 animate-pulse' : 'bg-neutral-900 text-cyan-400'
+              }`}
+            >
+              <Zap className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
+                <span className={isSpeedingUp ? 'text-cyan-300' : 'text-neutral-200'}>
+                  {isSpeedingUp ? '⚡ HYPERSPEED ACTIVE · 850 KM/S (WARP 9.6)' : '🚀 CRUISE VELOCITY · 120 KM/S'}
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+              </div>
+              <p className="text-[11px] text-neutral-400 font-sans mt-0.5">
+                {isSpeedingUp
+                  ? 'Relativistic camera distortion active · FOV expanded to 145° · Release mouse to return to cruise'
+                  : 'CLICK & HOLD ANYWHERE on the screen (or hold Spacebar) to surge into hyperspeed'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onMouseDown={() => {
+                window.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+              }}
+              onMouseUp={() => {
+                window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+              }}
+              onTouchStart={() => {
+                window.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
+              }}
+              onTouchEnd={() => {
+                window.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
+              }}
+              className={`px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all shadow-md select-none cursor-pointer ${
+                isSpeedingUp
+                  ? 'bg-cyan-400 text-neutral-950 shadow-cyan-400/50 scale-105'
+                  : 'bg-neutral-900 border border-cyan-700/60 text-cyan-300 hover:bg-cyan-950/60'
+              }`}
+            >
+              {isSpeedingUp ? '⚡ WARP ACTIVE (HOLDING)' : 'PRESS & HOLD TO WARP'}
+            </button>
+          </div>
+        </div>
+
+        {/* 
+          ========================================================================
           Expandable Hyperspeed Warp Controller HUD
           ========================================================================
         */}
         {showWarpControls && (
-          <div className="mt-4 p-4 sm:p-5 rounded-xl bg-neutral-950/85 backdrop-blur-xl border border-cyan-900/30 text-xs font-mono space-y-4 shadow-2xl">
+          <div className="mb-4 p-4 sm:p-5 rounded-xl bg-neutral-950/85 backdrop-blur-xl border border-cyan-900/30 text-xs font-mono space-y-4 shadow-2xl">
             <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-neutral-900">
               <div className="flex items-center gap-2 text-cyan-300">
                 <Zap className="w-4 h-4 text-cyan-400" />
                 <span className="font-semibold uppercase tracking-wider">Hyperspeed Warp Drive Control</span>
               </div>
               <span className="text-[11px] text-neutral-500">
-                Live Three.js postprocessing bloom & relativistic road distortion
+                Click & hold anywhere on screen to accelerate into warp
               </span>
             </div>
 
@@ -261,23 +324,13 @@ export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) =>
               </div>
             </div>
 
-            {/* Hyperdrive Boost Toggle */}
-            <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
-              <button
-                onClick={() => setIsHyperdriveEngaged(!isHyperdriveEngaged)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-xs font-mono font-bold transition-all shadow-lg ${
-                  isHyperdriveEngaged
-                    ? 'bg-cyan-500 text-neutral-950 border-cyan-400 shadow-cyan-500/30'
-                    : 'bg-neutral-900/80 text-cyan-300 border-cyan-700/50 hover:bg-cyan-950/40'
-                }`}
-              >
-                <Zap className="w-4 h-4" />
-                <span>{isHyperdriveEngaged ? '⚡ HYPERDRIVE ENGAGED (WARP 3.5X)' : '⚡ ENGAGE HYPERDRIVE BOOST'}</span>
-              </button>
-
-              <span className="text-[11px] text-neutral-400">
-                Status: {isHyperdriveEngaged ? 'FOV 130° · Relativistic Boost' : 'Cruising · FOV 90° Nominal'}
-              </span>
+            {/* Velocity Readout */}
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-neutral-400">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                <span>Engine Status: {isSpeedingUp ? '⚡ Maximum Warp (3.5x boost)' : 'Cruising (1.0x velocity)'}</span>
+              </div>
+              <span>Camera FOV: {isSpeedingUp ? '145° (Relativistic Wide)' : '90° (Nominal)'}</span>
             </div>
           </div>
         )}
