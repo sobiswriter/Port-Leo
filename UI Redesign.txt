@@ -1,0 +1,849 @@
+# SOBI'S MULTIVERSE
+## MASTER MVP REDESIGN PROMPT
+
+We already have the multiverse skeleton and we have now selected the background/visual environment for each universe.
+
+Your task is to completely redesign the **UI, information architecture, content presentation, spacing, and interactions inside each universe** so that each one feels intentionally designed for its specific background.
+
+We are NOT replacing the backgrounds.
+
+We are NOT turning all universes into variations of the same dashboard.
+
+We are NOT trying to connect the universes with cinematic transitions yet.
+
+The goal of this pass is:
+
+> **Make every universe independently complete, visually distinct, content-rich, readable, responsive, and capable of standing alone.**
+
+The backgrounds are already chosen.
+
+Now the UI must learn how to live inside them.
+
+---
+
+# 1. CRITICAL DESIGN RULE
+
+DO NOT think of these as eight sections of one website.
+
+Think of them as:
+
+**eight independent digital worlds.**
+
+Each universe must have:
+
+- its own composition
+- its own UI language
+- its own information hierarchy
+- its own density
+- its own interaction patterns
+- its own way of presenting content
+- its own responsive behavior
+
+Shared components are allowed only at the low-level infrastructure level.
+
+Do NOT create one universal:
+
+`Section`
+`Card`
+`Header`
+`Grid`
+`Dashboard`
+`Tabs`
+
+system and reuse it everywhere.
+
+That is exactly what is making the current prototype feel generic.
+
+A Project UI in Builder does not need to look anything like a Research UI.
+
+Arsenal should not look like Builder.
+
+Journey should not look like Research.
+
+About should not look like a dashboard at all.
+
+---
+
+# 2. BACKGROUNDS ARE SACRED
+
+The existing backgrounds have already been intentionally selected.
+
+DO NOT replace them.
+
+DO NOT redesign them.
+
+DO NOT hide them underneath giant opaque containers.
+
+DO NOT place a giant solid panel across the center of the screen that destroys the composition.
+
+Treat each background as a major visual asset that the UI must compose around.
+
+The background should remain clearly visible throughout the experience.
+
+You may use:
+
+- transparent surfaces
+- translucent panels
+- local blur
+- subtle readability gradients
+- small contrast masks
+- soft shadows
+- thin borders
+
+where genuinely necessary.
+
+But the background must still feel present.
+
+The rule is:
+
+**UI sits inside the universe. UI does not cover the universe.**
+
+---
+
+# 3. CONTENT MUST BE REAL
+
+Remove placeholder/fabricated portfolio content.
+
+Populate the universes using the real information available from `sobi.codes`.
+
+The current public portfolio describes Sobi as an AI/ML-focused developer and researcher working around applied AI, document intelligence, generative AI, NLP, behavior-aware interfaces, and creative tooling. It also lists programming languages, AI/ML capabilities, application-development tooling, systems/tooling, projects, recognition, achievements, and public links.
+
+Do not fabricate project metrics, paper titles, awards, dates, clients, users, performance numbers, or technical claims.
+
+Where information is unavailable, present the information without inventing specifics.
+
+---
+
+# 4. UNIVERSE 00 · ARRIVAL
+
+### Existing background
+
+A monochrome black-and-white flowing mesh / distorted spatial field.
+
+It is atmospheric, quiet, abstract, and cinematic.
+
+### Current problem
+
+The current arrival screen places too much information into ordinary cards and navigation elements.
+
+That fights the background.
+
+### New UI concept
+
+Treat this as an **entry chamber / dimensional coordinate room**.
+
+The visitor should immediately understand:
+
+- who Sobi is
+- what kind of work he does
+- that this site contains multiple worlds
+
+But very little else.
+
+Use:
+
+- one dominant Sobi identity block
+- very restrained supporting text
+- a small universe directory/index
+- tiny coordinate/status information
+- subtle interactive objects embedded around the environment
+
+Do NOT make a normal hero + CTA section.
+
+The universe itself should feel like an environment.
+
+### Content
+
+Use the real positioning from the portfolio:
+
+AI / ML Systems  
+Applied AI  
+Creative Tooling
+
+The professional positioning should emphasize building applied AI systems and complete usable products rather than merely demos.
+
+### Visual rule
+
+Maximum negative space.
+
+Let the flowing background breathe.
+
+Do not fill the screen just because empty space exists.
+
+---
+
+# 5. UNIVERSE 01 · BUILDER
+
+### Existing background
+
+Dark technical grid / terminal / architectural system with blue-violet accents.
+
+### New UI concept
+
+This background wants a:
+
+**WORKBENCH / PROJECT CONSOLE**
+
+rather than a collection of ordinary cards.
+
+Imagine:
+
+- project explorer
+- active workspace
+- metadata rail
+- selected build
+- small system status indicators
+- project stack
+- repository/demo actions
+
+The UI should feel like the visitor has opened Sobi's personal engineering workstation.
+
+### Layout
+
+Use an asymmetric composition.
+
+For example:
+
+LEFT:
+compact project explorer
+
+CENTER:
+one featured project/workbench
+
+RIGHT or lower:
+technology + project metadata
+
+Do NOT show ten giant project cards simultaneously.
+
+Focus on one project at a time.
+
+Allow the project list to switch the active workspace.
+
+### Featured projects
+
+Prioritize real substantial projects such as:
+
+LegalLM  
+Project AIC  
+RIGHT.LEFT  
+Wassap  
+EquityEcho  
+Shri Guru Kirpa Gold Platters And Jewellers  
+Sonar Thali Food Commerce App
+
+The public portfolio describes LegalLM as an AI platform for legal document upload, parsing, analysis, key-clause/risk extraction and summarization, while Project AIC focuses on behavior, decision logic, long-term memory and personality-oriented interaction. RIGHT.LEFT combines React, Express, Gemini-powered intelligence and an editorial agency platform.
+
+Use the remaining projects as an expandable archive rather than forcing everything into the first viewport.
+
+The complete project catalog currently includes:
+
+Wat-EWrite  
+Sonar Thali Food Commerce App  
+RIGHT.LEFT  
+Shri Guru Kirpa Gold Platters And Jewellers  
+GDC Diagnostic Center  
+Wassap  
+EquityEcho  
+DevineClub  
+CosmicCanvas  
+LegalLM  
+Project AIC  
+The Shadow Diary  
+PersonaVerse  
+AI Overlay  
+Inviter  
+Business Venture App  
+Cosmos Anomaly  
+Timeline Twist (V2)  
+PS Utility Suite
+
+Use the source portfolio for the actual descriptions and technology metadata.
+
+### Interaction
+
+Selecting a project should transform the workbench.
+
+Do not navigate to an entirely different visual template.
+
+The same universe should feel alive while remaining self-contained.
+
+---
+
+# 6. UNIVERSE 02 · AI LAB
+
+### Existing background
+
+Black/purple environment with large curved contour-like rings.
+
+It feels experimental, cerebral and slightly unstable.
+
+### New UI concept
+
+This wants to be an:
+
+**EXPERIMENT CONSOLE / MODEL OBSERVATORY**
+
+Not a list of projects.
+
+Use:
+
+- experiment index
+- selected experiment
+- concept summary
+- approach
+- technologies
+- what was explored
+- related experiments
+- optional interactive mini visualization
+
+Use vertical stacks, floating experiment capsules, thin technical labels, and controlled asymmetry.
+
+### Content
+
+Strong candidates:
+
+Project AIC  
+PersonaVerse  
+The Shadow Diary  
+AI Overlay  
+LegalLM  
+EquityEcho
+
+Project AIC explores behavior and decision logic, long-term memory and adaptive/personality-oriented interaction. PersonaVerse is a desktop playground for AI-driven personas with profiles and behavior constraints. The Shadow Diary is an AI journaling/reframing tool, while AI Overlay is a context-aware desktop utility using OCR.
+
+Do not invent numerical model benchmarks.
+
+Instead, emphasize:
+
+WHAT
+
+WHY
+
+HOW
+
+WHAT WAS EXPLORED
+
+WHAT WAS LEARNED
+
+### Visual rule
+
+The purple contour background should remain visible around and between the experiment interface.
+
+The UI should feel like it is floating over the field rather than sitting inside a giant rectangular dashboard.
+
+---
+
+# 7. UNIVERSE 03 · RESEARCH
+
+### Existing background
+
+Dark purple environment with vertical streaks / lines descending through space.
+
+This visually resembles:
+
+data streams + archival documents + signal traces.
+
+### New UI concept
+
+Do NOT pretend there are dozens of research papers if the source doesn't provide them.
+
+Build a:
+
+**RESEARCH DOSSIER / INVESTIGATION ARCHIVE**
+
+Use large documentary surfaces rather than ordinary project cards.
+
+Possible layout:
+
+MAIN:
+one large research/investigation record
+
+SIDE:
+research threads / evidence / signals
+
+BOTTOM:
+recognition and publication signals
+
+### Content
+
+Use genuine research-oriented material from the portfolio:
+
+- document intelligence
+- generative AI
+- NLP
+- behavior-aware interfaces
+- AI system design
+- applied system architecture
+- modular AI design
+- automation/tooling
+
+The portfolio also identifies a patent publication, technical recognition at IIT Ropar, hackathons/ideathons, ODDO Meet participation, and IMC Conference participation.
+
+Do not manufacture paper titles or abstracts.
+
+Instead, frame these as:
+
+RESEARCH THREAD
+
+TECHNICAL INVESTIGATION
+
+PUBLICATION SIGNAL
+
+CONFERENCE SIGNAL
+
+SYSTEM EXPLORATION
+
+This will be more honest and much more visually interesting.
+
+---
+
+# 8. UNIVERSE 04 · ARSENAL
+
+### Existing background
+
+Green technical topology / node network.
+
+This is probably the universe with the strongest opportunity to become interactive.
+
+### New UI concept
+
+Do NOT use a skill-card grid.
+
+Turn the UI into a:
+
+**SYSTEM TOPOLOGY / CAPABILITY MAP**
+
+Skills should behave like nodes.
+
+Clusters represent:
+
+LANGUAGES
+
+AI / ML
+
+APPLICATION DEVELOPMENT
+
+SYSTEMS & TOOLING
+
+The portfolio currently lists Python, TypeScript, JavaScript, PowerShell and Java, alongside NLP/GenAI, document analysis, Transformers, AI rewriting pipelines, Electron, Tkinter, Node.js/Next.js, modular AI design, automation pipelines, CLI/PowerShell utilities and third-party integrations.
+
+### Interaction
+
+Selecting a node should illuminate related nodes.
+
+Example:
+
+Python
+
+→ Project AIC  
+→ AI Overlay  
+→ PS Utility Suite
+
+TypeScript
+
+→ Wat-EWrite  
+→ Sonar Thali  
+→ Wassap  
+→ LegalLM  
+→ EquityEcho
+
+The exact relationships should be based on the real project technology metadata.
+
+Use the background's network aesthetic as part of the interface.
+
+The topology should feel like the UI and background are part of one system.
+
+### Visual rule
+
+Very little traditional card UI.
+
+Prefer:
+
+- node labels
+- connection lines
+- compact information panels
+- floating metadata
+- cluster labels
+- system readouts
+
+---
+
+# 9. UNIVERSE 05 · JOURNEY
+
+### Existing background
+
+Deep-space starfield / colorful cosmic field.
+
+This is perfect for a:
+
+**COSMIC TIMELINE**
+
+The current timeline UI is conceptually correct, but it currently behaves too much like a dashboard floating above a galaxy.
+
+### New UI concept
+
+Make the timeline the composition.
+
+Use:
+
+- orbital paths
+- milestone nodes
+- chronological movement
+- expandable milestones
+- small floating labels
+- subtle star-map navigation
+
+Do not create a giant central column of cards.
+
+The background should be an active visual participant.
+
+### Real milestones
+
+Use verified milestones such as:
+
+India Accelerator / OpenXAI 2025  
+LegalLM / HacktoSkill 2025  
+AIFusion IIT Ropar  
+Patent Publication  
+Tech Fest IIT Ropar recognition  
+Hackathons & Ideathons  
+ODDO Meet participation  
+IMC Conference participation
+
+Do not assign dates to entries when the portfolio does not provide the date.
+
+The portfolio explicitly identifies the OpenXAI and HacktoSkill programs as 2025, while the other achievements/signals are presented without specific dates.
+
+### Visual rule
+
+The user should feel like they are exploring a star map of Sobi's development.
+
+---
+
+# 10. UNIVERSE 06 · ABOUT
+
+### Existing background
+
+Warm amber/orange dotted spherical or field-like structure.
+
+This should be the most human universe.
+
+Do not make it look like an employee dashboard.
+
+### New UI concept
+
+Create a:
+
+**LIVING DOSSIER**
+
+Think:
+
+personal profile + philosophy + current state.
+
+Use a highly asymmetric layout.
+
+Possible structure:
+
+LEFT:
+identity/profile dossier
+
+CENTER:
+large personal narrative
+
+RIGHT:
+principles / interests / current focus
+
+BOTTOM:
+small "signature" or thematic indicators
+
+### Content
+
+Use real language and facts from the portfolio.
+
+The current professional overview emphasizes:
+
+building applied AI systems  
+usability  
+clarity  
+reliable execution  
+document intelligence  
+generative AI  
+NLP  
+behavior-aware interfaces  
+AI + interface design + tooling  
+shipping useful outcomes
+
+The portfolio also identifies its broader themes around AI as a system rather than just a demo, and persona, identity, and behavior modeling.
+
+Translate these ideas into actual human-readable prose.
+
+Do not write corporate "passionate developer" filler.
+
+Do not invent personality traits.
+
+### Visual rule
+
+This should be slower and calmer than Builder or AI Lab.
+
+Let the amber field dominate.
+
+---
+
+# 11. UNIVERSE 07 · BEYOND
+
+### Existing background
+
+Dark field with cyan/magenta transmission beams.
+
+It feels like:
+
+signal transmission + communication + departure.
+
+Perfect for:
+
+**TRANSMISSION / EGRESS**
+
+### New UI concept
+
+Treat contact as sending a transmission.
+
+Instead of:
+
+"Contact Me"
+
+use an interface resembling a communications terminal.
+
+Possible layout:
+
+LEFT:
+message composition / contact form
+
+RIGHT:
+verified public channels
+
+BOTTOM:
+CV / resume / external links
+
+### Real contact information
+
+Use the public information currently exposed on sobi.codes:
+
+GitHub  
+LinkedIn  
+public email  
+resume/CV
+
+Do not invent alternative contact details.
+
+The site currently provides a public email, GitHub profile, LinkedIn profile and CV access.
+
+### Visual rule
+
+Keep the central content compact.
+
+The cyan/magenta transmission field must remain visible around it.
+
+This universe should feel like the visitor has reached an exit terminal rather than a traditional website footer.
+
+---
+
+# 12. GLOBAL NAVIGATION FOR THIS PHASE
+
+Keep navigation extremely simple.
+
+Do NOT add cinematic universe transitions yet.
+
+Do NOT add scroll-based world travel.
+
+Do NOT add scroll-jacking.
+
+Do NOT repeat a giant navigation bar inside every universe.
+
+Use a minimal universal "Universe Index" control that can open a small directory containing:
+
+00 Arrival  
+01 Builder  
+02 AI Lab  
+03 Research  
+04 Arsenal  
+05 Journey  
+06 About  
+07 Beyond
+
+Selecting an entry simply changes route.
+
+This navigation is temporary infrastructure.
+
+It must remain visually subordinate to each universe.
+
+Later, we will replace or augment this with the actual Multiverse Travel System.
+
+---
+
+# 13. RESPONSIVE BEHAVIOR
+
+Every universe must be independently responsive.
+
+Do not simply stack the desktop dashboard vertically on mobile.
+
+Each universe should have its own mobile composition.
+
+The background must remain meaningful.
+
+Content must never:
+
+- overflow horizontally
+- collide with the background in unreadable ways
+- extend outside the universe container
+- become hidden below fixed navigation
+- create giant empty blocks because desktop dimensions were preserved
+
+Use responsive typography and spacing.
+
+Prioritize the visual identity of each universe over preserving the exact desktop layout.
+
+---
+
+# 14. CONTENT + BACKGROUND COMPOSITION RULES
+
+For every universe ask:
+
+1. Where is the background visually strongest?
+2. Where is the natural empty space?
+3. Where should information live without covering that area?
+4. What interaction metaphor matches the background?
+5. What is the minimum information necessary?
+6. What can be revealed only after interaction?
+7. What should remain visible at all times?
+
+The answer must differ from universe to universe.
+
+Do not center everything.
+
+Do not make every page symmetrical.
+
+Do not use the same content width everywhere.
+
+Do not use the same panel style everywhere.
+
+Do not use the same card radius everywhere.
+
+Do not use the same typography treatment everywhere.
+
+---
+
+# 15. OVERFLOW / CONTAINER RULE
+
+Every universe owns its own scene.
+
+Conceptually:
+
+Universe
+├── Background
+├── Ambient layer
+├── Universe UI
+├── Universe content
+└── Local controls
+
+The background must be clipped to the universe.
+
+Content must remain inside a deliberate content-safe region.
+
+Use proper max-widths, viewport calculations and responsive spacing.
+
+If a universe needs more vertical space than one viewport, allow that universe to grow naturally.
+
+Do NOT force everything into 100vh if that causes text to overflow.
+
+The goal is not "fit everything on screen".
+
+The goal is:
+
+**make the universe feel intentionally composed at every size.**
+
+---
+
+# 16. DO NOT FALL BACK TO GENERIC UI
+
+Do not solve design problems by repeatedly creating:
+
+- rounded rectangular cards
+- glass panels
+- dashboard grids
+- pill badges
+- tab bars
+- statistic tiles
+- giant hero containers
+
+These are tools, not defaults.
+
+Each universe should have a specific visual metaphor.
+
+Use the following mental model:
+
+Arrival = dimensional chamber
+
+Builder = engineering workbench
+
+AI Lab = experiment console
+
+Research = investigation archive
+
+Arsenal = capability topology
+
+Journey = cosmic map
+
+About = living dossier
+
+Beyond = transmission terminal
+
+---
+
+# 17. MOTION FOR THIS PASS
+
+Motion can now be used to make the interfaces feel alive, but keep it local.
+
+Use subtle GSAP/React interactions such as:
+
+- node highlighting
+- panel transitions
+- list selection
+- hover depth
+- reveal animations
+- small parallax
+- background-responsive movement
+- local UI transformations
+
+Do NOT implement universe-to-universe cinematic travel yet.
+
+That is a later system.
+
+---
+
+# 18. FINAL QUALITY BAR
+
+When finished, opening each route individually should produce the feeling:
+
+"I could believe this was an entire standalone interactive website."
+
+Not:
+
+"This is another section of the same portfolio."
+
+The eight universes should clearly feel related by authorship, but different in reality.
+
+The backgrounds should no longer feel like decorative images behind UI.
+
+The UI should look like it was **designed around each background from the beginning**.
+
+The information should be real.
+
+The content should breathe.
+
+The layouts should not overflow.
+
+The user should enjoy exploring each universe even before the future transition system exists.
+
+Do not move on to cinematic multiverse transitions after this task.
+
+First make the eight worlds worth travelling between.
