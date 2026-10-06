@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
-import { UniverseId, ArsenalRing } from '../../types/universe';
-import { ARSENAL_RINGS, UNIVERSES_META } from '../../data/portfolioData';
-import { Cpu, Terminal, Shield, Wrench, CheckCircle, Grid, Sparkles } from 'lucide-react';
+import { UniverseId, TopologyNode } from '../../types/universe';
+import { TOPOLOGY_NODES, UNIVERSES_META, PROJECTS_DATA } from '../../data/portfolioData';
+import {
+  Cpu,
+  Layers,
+  ArrowRight,
+  Sparkles,
+  Workflow,
+  Radio,
+  Terminal,
+  ExternalLink,
+  ChevronRight,
+  Code2,
+} from 'lucide-react';
 import PixelBlast, { PixelBlastVariant } from '../../components/react-bits/PixelBlast';
 
 interface ArsenalUniverseProps {
@@ -23,15 +34,16 @@ const PIXEL_THEMES: PixelTheme[] = [
 
 export const ArsenalUniverse: React.FC<ArsenalUniverseProps> = ({ onTravelTo }) => {
   const currentMeta = UNIVERSES_META.find((u) => u.id === 'arsenal')!;
-  const [activeRingId, setActiveRingId] = useState<string>(ARSENAL_RINGS[0].id);
+  
+  // Selected Topology Node (defaults to Python)
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('lang-python');
+  const [activeClusterFilter, setActiveClusterFilter] = useState<string>('ALL');
 
-  // PixelBlast Interactive Controls
+  // PixelBlast Interactive Controls (ORIGINAL STATE RESTORED)
   const [pixelVariant, setPixelVariant] = useState<PixelBlastVariant>('diamond');
   const [themeId, setThemeId] = useState<string>('phosphor');
 
   const activeTheme = PIXEL_THEMES.find((t) => t.id === themeId) || PIXEL_THEMES[0];
-  const activeRing: ArsenalRing =
-    ARSENAL_RINGS.find((r) => r.id === activeRingId) || ARSENAL_RINGS[0];
 
   const variants: { id: PixelBlastVariant; label: string }[] = [
     { id: 'diamond', label: 'Diamond' },
@@ -40,11 +52,27 @@ export const ArsenalUniverse: React.FC<ArsenalUniverseProps> = ({ onTravelTo }) 
     { id: 'triangle', label: 'Triangle' },
   ];
 
+  const clusters: Array<TopologyNode['cluster']> = [
+    'LANGUAGES',
+    'AI / ML',
+    'APPLICATION DEVELOPMENT',
+    'SYSTEMS & TOOLING',
+  ];
+
+  const activeNode: TopologyNode =
+    TOPOLOGY_NODES.find((n) => n.id === selectedNodeId) || TOPOLOGY_NODES[0];
+
+  // Connected nodes set for illumination
+  const illuminatedNodeIds = new Set<string>([
+    activeNode.id,
+    ...activeNode.connectedNodes,
+  ]);
+
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-6 sm:p-10 lg:p-12 overflow-hidden selection:bg-neutral-800">
+    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-4 sm:p-8 lg:p-10 overflow-x-hidden selection:bg-emerald-900/60 selection:text-white">
       {/* 
         ========================================================================
-        PixelBlast WebGL Dithered Matrix Surface
+        PixelBlast WebGL Dithered Matrix Surface (ORIGINAL BEHAVIOR RESTORED)
         Spans the entire Arsenal universe with interactive click shockwaves & liquid touch
         ========================================================================
       */}
@@ -73,188 +101,236 @@ export const ArsenalUniverse: React.FC<ArsenalUniverseProps> = ({ onTravelTo }) 
       </div>
 
       {/* Structural Stage Border Frame */}
-      <div className="absolute inset-4 sm:inset-6 pointer-events-none border border-neutral-800/60 rounded-lg z-10" />
+      <div className="absolute inset-2 sm:inset-4 pointer-events-none border border-emerald-950/40 rounded-lg z-10" />
 
-      {/* Header */}
-      <header className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-neutral-800/80 backdrop-blur-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-            <span>UNIVERSE 04</span>
-            <span aria-hidden="true" className="text-neutral-700">/</span>
-            <span className="text-neutral-300 font-semibold uppercase">{currentMeta.name}</span>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
-            <span className="text-neutral-400">{currentMeta.concept}</span>
+      {/* TOP TOPOLOGY HUD */}
+      <header className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-emerald-950/50 backdrop-blur-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-emerald-300 uppercase">
+              TOPOLOGY 04 // {currentMeta.name.toUpperCase()} SYSTEM MAP
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-display text-neutral-100">
-            Capabilities, Tooling & Systems Topology
-          </h1>
+          <span className="text-neutral-700 hidden sm:inline">|</span>
+          <span className="font-mono text-xs text-neutral-400 hidden sm:inline">
+            INTERACTIVE CAPABILITY NETWORK
+          </span>
         </div>
 
-        {/* PixelBlast Controls: Shape & Color */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Shape Selector */}
-          <div className="flex items-center gap-1 bg-neutral-900/80 border border-neutral-800 p-0.5 rounded-md backdrop-blur-md">
-            <span className="text-[11px] font-mono text-neutral-400 px-2 flex items-center gap-1">
-              <Grid className="w-3 h-3 text-neutral-400" />
-              <span className="hidden sm:inline">Pixel:</span>
+        {/* Theme & Jump Controls */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-neutral-950/70 border border-emerald-950/80 p-0.5 rounded text-[11px] font-mono">
+            <span className="text-neutral-400 px-1.5 flex items-center gap-1">
+              <Layers className="w-3 h-3 text-emerald-400" />
+              <span className="hidden sm:inline">Phosphor:</span>
             </span>
-            {variants.map((v) => (
+            {PIXEL_THEMES.map((t) => (
               <button
-                key={v.id}
-                onClick={() => setPixelVariant(v.id)}
-                className={`px-2 py-1 text-xs font-mono rounded transition-colors ${
-                  pixelVariant === v.id
-                    ? 'bg-neutral-100 text-neutral-950 font-bold shadow-xs'
-                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+                key={t.id}
+                onClick={() => setThemeId(t.id)}
+                className={`px-2 py-0.5 rounded transition-colors ${
+                  themeId === t.id
+                    ? 'bg-emerald-600 text-white font-bold'
+                    : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
-                {v.label}
+                {t.label}
               </button>
             ))}
           </div>
 
-          {/* Theme Selector */}
-          <div className="flex items-center gap-1 bg-neutral-900/80 border border-neutral-800 p-0.5 rounded-md backdrop-blur-md">
-            {PIXEL_THEMES.map((th) => (
-              <button
-                key={th.id}
-                onClick={() => setThemeId(th.id)}
-                className={`px-2.5 py-1 text-xs font-mono rounded transition-colors ${
-                  themeId === th.id
-                    ? 'bg-neutral-800 text-neutral-100 font-semibold border border-neutral-700'
-                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
-                }`}
-              >
-                <span className="w-2 h-2 rounded-full inline-block mr-1.5" style={{ backgroundColor: th.color }} />
-                <span>{th.label}</span>
-              </button>
-            ))}
-          </div>
+          <button
+            onClick={() => onTravelTo('journey')}
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-mono text-neutral-400 hover:text-emerald-300 transition-colors"
+          >
+            <span>Next: 05 Journey</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
       </header>
 
-      {/* Main Structural Stage: Systems Capability Matrix */}
-      <main className="relative z-10 flex-1 py-8 space-y-8">
-        {/* Ring Selector Tabs */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {ARSENAL_RINGS.map((ring, idx) => {
-            const isActive = ring.id === activeRing.id;
-            return (
-              <button
-                key={ring.id}
-                onClick={() => setActiveRingId(ring.id)}
-                className={`text-left p-4 rounded-lg border backdrop-blur-md transition-all ${
-                  isActive
-                    ? 'bg-neutral-900/90 border-neutral-500 text-neutral-100 shadow-md ring-1 ring-neutral-500/30'
-                    : 'bg-neutral-950/70 border-neutral-800/80 text-neutral-400 hover:border-neutral-700 hover:bg-neutral-900/60'
-                }`}
-              >
-                <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-1">
-                  <span>RING 0{idx + 1}</span>
-                  {isActive && <div className="w-1.5 h-1.5 rounded-full bg-neutral-100" />}
-                </div>
-                <div className="text-sm font-semibold text-neutral-200">
-                  {ring.title}
-                </div>
-                <div className="text-xs text-neutral-400 mt-1 line-clamp-1">
-                  {ring.capabilities.length} Key Competencies
-                </div>
-              </button>
-            );
-          })}
-        </div>
+      {/* CLUSTER FILTER STRIP */}
+      <div className="relative z-20 flex flex-wrap items-center gap-2 mb-6">
+        <span className="text-[11px] font-mono text-neutral-400 mr-1 uppercase">
+          CLUSTER FOCUS:
+        </span>
+        {['ALL', ...clusters].map((cl) => (
+          <button
+            key={cl}
+            onClick={() => setActiveClusterFilter(cl)}
+            className={`px-2.5 py-1 text-xs font-mono rounded transition-colors ${
+              activeClusterFilter === cl
+                ? 'bg-emerald-950/90 border border-emerald-400/80 text-emerald-200 font-bold shadow-xs'
+                : 'bg-neutral-950/60 border border-emerald-950/60 text-neutral-400 hover:text-neutral-200 hover:border-emerald-900/60'
+            }`}
+          >
+            {cl}
+          </button>
+        ))}
+      </div>
 
-        {/* Active Ring Blueprint Matrix */}
-        <div className="bg-neutral-950/80 backdrop-blur-md border border-neutral-800/80 rounded-xl p-6 sm:p-8 space-y-6">
-          <div className="border-b border-neutral-800/80 pb-5">
-            <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-1">
-              <span>ACTIVE ARCHITECTURAL TOPOLOGY</span>
-              <span aria-hidden="true" className="text-neutral-700">/</span>
-              <span className="text-neutral-300 font-semibold">{activeRing.id}</span>
+      {/* MAIN TOPOLOGY INTERACTION CANVAS */}
+      <main className="relative z-20 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ====================================================================
+            LEFT: TOPOLOGY NODE MAP (8 cols - Clustered Network)
+            ==================================================================== */}
+        <section className="lg:col-span-8 space-y-6">
+          {clusters
+            .filter((c) => activeClusterFilter === 'ALL' || activeClusterFilter === c)
+            .map((clusterName) => {
+              const clusterNodes = TOPOLOGY_NODES.filter((n) => n.cluster === clusterName);
+              return (
+                <div
+                  key={clusterName}
+                  className="bg-neutral-950/60 backdrop-blur-md border border-emerald-950/60 rounded-xl p-4 sm:p-5 space-y-3"
+                >
+                  <div className="flex items-center justify-between border-b border-emerald-950/40 pb-2">
+                    <span className="font-mono text-xs font-semibold tracking-wider text-emerald-400 flex items-center gap-2 uppercase">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      CLUSTER: {clusterName}
+                    </span>
+                    <span className="font-mono text-[10px] text-neutral-500">
+                      {clusterNodes.length} NODES
+                    </span>
+                  </div>
+
+                  {/* Nodes in this cluster */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                    {clusterNodes.map((node) => {
+                      const isSelected = node.id === activeNode.id;
+                      const isIlluminated = illuminatedNodeIds.has(node.id);
+
+                      return (
+                        <button
+                          key={node.id}
+                          onClick={() => setSelectedNodeId(node.id)}
+                          className={`group text-left p-3 rounded-lg border transition-all duration-200 flex flex-col justify-between ${
+                            isSelected
+                              ? 'bg-emerald-950/80 border-emerald-400 text-white shadow-md ring-1 ring-emerald-400/50 scale-[1.02]'
+                              : isIlluminated
+                              ? 'bg-emerald-950/40 border-emerald-700/60 text-emerald-100 hover:border-emerald-500'
+                              : 'bg-neutral-950/40 border-neutral-800/40 text-neutral-400 hover:border-emerald-900/60 hover:text-neutral-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-[10px] font-mono mb-1 w-full">
+                            <span className="truncate text-emerald-400/80 font-semibold">
+                              {node.depth}
+                            </span>
+                            {isIlluminated && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                            )}
+                          </div>
+
+                          <div className="font-sans font-semibold text-sm text-neutral-100 group-hover:text-white">
+                            {node.name}
+                          </div>
+
+                          <div className="text-[10px] font-mono text-neutral-500 mt-1 truncate">
+                            → {node.relatedProjects.length} Associated Projects
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+        </section>
+
+        {/* ====================================================================
+            RIGHT: FLOATING SYSTEM READOUT TERMINAL (4 cols)
+            ==================================================================== */}
+        <aside className="lg:col-span-4 bg-neutral-950/80 backdrop-blur-md border border-emerald-950/80 rounded-xl p-5 sm:p-6 space-y-5 sticky top-6">
+          {/* Active Node Header */}
+          <div className="border-b border-emerald-950/60 pb-4">
+            <div className="flex items-center gap-2 text-[11px] font-mono text-emerald-400 mb-1">
+              <span>NODE INSPECTION</span>
+              <span className="text-neutral-700">/</span>
+              <span>{activeNode.cluster}</span>
             </div>
-            <h2 className="text-2xl font-bold font-display text-neutral-50">
-              {activeRing.title}
+            <h2 className="text-xl sm:text-2xl font-bold font-display text-white flex items-center gap-2">
+              <Workflow className="w-5 h-5 text-emerald-400" />
+              {activeNode.name}
             </h2>
-            <p className="text-neutral-300 text-sm mt-1">
-              {activeRing.subtitle}
+            <div className="mt-1 text-xs font-mono text-emerald-300">
+              DEPTH LEVEL: {activeNode.depth.toUpperCase()}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1.5">
+            <h4 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+              CAPABILITY PROFILE
+            </h4>
+            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed bg-neutral-900/40 p-3 rounded border border-emerald-950/50">
+              {activeNode.description}
             </p>
           </div>
 
-          {/* Capabilities Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {activeRing.capabilities.map((cap, idx) => (
-              <div
-                key={idx}
-                className="bg-neutral-900/60 border border-neutral-800/80 rounded-lg p-5 flex flex-col justify-between space-y-4 hover:border-neutral-700 transition-colors shadow-sm"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-mono text-neutral-400">
-                    <span>CAPABILITY 0{idx + 1}</span>
-                    <span className="text-neutral-200 font-semibold">{cap.depth}</span>
-                  </div>
-
-                  <h3 className="text-base font-semibold text-neutral-100 leading-snug">
-                    {cap.name}
-                  </h3>
-
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
-                    {cap.description}
-                  </p>
-                </div>
-
-                {/* Primary Tools List (Unboxed metadata with separators) */}
-                <div className="pt-3 border-t border-neutral-800/80 text-xs">
-                  <span className="font-mono text-neutral-500 uppercase block mb-1.5">
-                    Primary Toolchain:
-                  </span>
-                  <div className="flex flex-wrap items-center gap-1.5 text-neutral-300 font-mono text-xs">
-                    {cap.primaryTools.map((tool) => (
-                      <span key={tool} className="bg-neutral-950/80 border border-neutral-800 px-2 py-0.5 rounded text-neutral-200">
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Engineering Tenet for Current Ring */}
-          <div className="pt-4 border-t border-neutral-800/80 flex items-center justify-between text-xs font-mono text-neutral-400">
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-emerald-400" />
-              <span>Standard Invariant: Zero unchecked allocations in critical loops</span>
+          {/* Connected Topology Nodes */}
+          <div className="space-y-2">
+            <h4 className="text-[11px] font-mono text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 text-emerald-400" />
+              ILLUMINATED ADJACENT NODES ({activeNode.connectedNodes.length})
+            </h4>
+            <div className="flex flex-wrap gap-1.5">
+              {activeNode.connectedNodes.map((targetId) => {
+                const targetNode = TOPOLOGY_NODES.find((n) => n.id === targetId);
+                return (
+                  <button
+                    key={targetId}
+                    onClick={() => setSelectedNodeId(targetId)}
+                    className="px-2 py-1 rounded bg-emerald-950/50 border border-emerald-600/40 text-[11px] font-mono text-emerald-200 hover:bg-emerald-900/60 transition-colors flex items-center gap-1"
+                  >
+                    <span>{targetNode?.name || targetId}</span>
+                    <ChevronRight className="w-3 h-3 text-emerald-400" />
+                  </button>
+                );
+              })}
             </div>
-            <span>Click canvas for shockwave ripples</span>
           </div>
-        </div>
+
+          {/* Connected Real Projects */}
+          <div className="space-y-2 pt-2 border-t border-emerald-950/60">
+            <h4 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+              GROUNDED IN PRODUCTION BUILDS ({activeNode.relatedProjects.length})
+            </h4>
+            <div className="space-y-1.5">
+              {activeNode.relatedProjects.map((projTitle) => {
+                const projectObj = PROJECTS_DATA.find((p) => p.title === projTitle);
+                return (
+                  <div
+                    key={projTitle}
+                    className="p-2 rounded bg-neutral-900/50 border border-neutral-800/60 text-xs font-mono text-neutral-300 flex items-center justify-between"
+                  >
+                    <span className="font-sans font-medium text-neutral-200 truncate">
+                      {projTitle}
+                    </span>
+                    {projectObj?.liveUrl && (
+                      <a
+                        href={projectObj.liveUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-emerald-400 hover:text-emerald-300 shrink-0 ml-2"
+                        title="View Deployment"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* System Terminal Readout */}
+          <div className="pt-2 text-[10px] font-mono text-neutral-500 border-t border-emerald-950/60 flex items-center justify-between">
+            <span>GRAPH TOPOLOGY STATUS: ACTIVE</span>
+            <span>VERIFIED ON SOBI.CODES</span>
+          </div>
+        </aside>
       </main>
-
-      {/* Footer */}
-      <footer className="relative z-10 pt-6 border-t border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono text-neutral-400 backdrop-blur-xs">
-        <div>
-          <span>Arsenal Registry · Stage 04/07</span>
-          <span aria-hidden="true" className="text-neutral-700"> · </span>
-          <span>Surface: Interactive Pixel Blast Dither Matrix (Three.js)</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => onTravelTo('research')}
-            className="text-neutral-400 hover:text-neutral-200 transition-colors"
-          >
-            ← 03 Research
-          </button>
-          <span aria-hidden="true" className="text-neutral-700">·</span>
-          <button
-            onClick={() => onTravelTo('journey')}
-            className="text-neutral-200 hover:text-white transition-colors font-medium"
-          >
-            Enter 05 Journey →
-          </button>
-        </div>
-      </footer>
     </div>
   );
 };
-

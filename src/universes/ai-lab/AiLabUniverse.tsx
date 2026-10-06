@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
-import { UniverseId, AiExperimentItem } from '../../types/universe';
+import { UniverseId, AiLabExperiment } from '../../types/universe';
 import { AI_LAB_EXPERIMENTS, UNIVERSES_META } from '../../data/portfolioData';
-import { Play, RotateCcw, Cpu, Sparkles, Terminal, Activity, ArrowRight, Mountain, Sliders } from 'lucide-react';
+import {
+  Sparkles,
+  Cpu,
+  Brain,
+  Sliders,
+  CheckCircle2,
+  HelpCircle,
+  Lightbulb,
+  Workflow,
+  ArrowRight,
+  Terminal,
+  Activity,
+  Layers,
+} from 'lucide-react';
 import Topography from '../../components/react-bits/Topography';
 
 interface AiLabUniverseProps {
@@ -25,51 +38,44 @@ const TOPO_PALETTES: TopoPalette[] = [
 
 export const AiLabUniverse: React.FC<AiLabUniverseProps> = ({ onTravelTo }) => {
   const currentMeta = UNIVERSES_META.find((u) => u.id === 'ai-lab')!;
-  const [selectedExpId, setSelectedExpId] = useState<string>(AI_LAB_EXPERIMENTS[0].id);
+  const [selectedExpId, setSelectedExpId] = useState<string>('project-aic');
 
-  // Topography Interactive State
+  // Topography Original Interactive State
   const [activePaletteId, setActivePaletteId] = useState<string>('latent');
   const [fieldSpeed, setFieldSpeed] = useState<number>(0.35);
-
   const activePalette = TOPO_PALETTES.find((p) => p.id === activePaletteId) || TOPO_PALETTES[0];
 
-  const activeExp: AiExperimentItem =
+  const activeExp: AiLabExperiment =
     AI_LAB_EXPERIMENTS.find((e) => e.id === selectedExpId) || AI_LAB_EXPERIMENTS[0];
 
-  // Interactive Test Bench State
-  const [selectedPrompt, setSelectedPrompt] = useState<string>(
-    activeExp.demoPromptOptions?.[0] || 'Run synthetic evaluation workload'
-  );
-  const [temperature, setTemperature] = useState<number>(activeExp.defaultTemperature || 0.2);
-  const [contextDepth, setContextDepth] = useState<number>(64);
-  const [isSimulating, setIsSimulating] = useState<boolean>(false);
-  const [simulationLog, setSimulationLog] = useState<string | null>(null);
+  // Interactive Probe state (if probe exists on active experiment)
+  const probe = activeExp.interactiveProbe;
+  const [probeParams, setProbeParams] = useState<Record<string, string>>(() => {
+    const initial: Record<string, string> = {};
+    if (probe) {
+      probe.parameters.forEach((param) => {
+        initial[param.id] = param.defaultVal;
+      });
+    }
+    return initial;
+  });
 
-  const handleSelectExperiment = (exp: AiExperimentItem) => {
-    setSelectedExpId(exp.id);
-    setSelectedPrompt(exp.demoPromptOptions?.[0] || 'Default evaluation task');
-    setTemperature(exp.defaultTemperature || 0.2);
-    setSimulationLog(null);
+  const handleParamChange = (paramId: string, val: string) => {
+    setProbeParams((prev) => ({ ...prev, [paramId]: val }));
   };
 
-  const handleRunSimulation = () => {
-    setIsSimulating(true);
-    setSimulationLog(null);
-
-    setTimeout(() => {
-      setIsSimulating(false);
-      const output =
-        activeExp.sampleOutputs?.[selectedPrompt] ||
-        `[Simulation Complete: ${activeExp.title}]\nTemperature: ${temperature.toFixed(2)} | Context: ${contextDepth}k tokens\nExecution finished in 24.8ms. Invariant bounds checked: verified 100% adherence to safety constraints.`;
-      setSimulationLog(output);
-    }, 450);
-  };
+  const probeKey = probe
+    ? Object.values(probeParams).join('_')
+    : '';
+  const probeEvaluation = probe
+    ? probe.evaluations[probeKey] || Object.values(probe.evaluations)[0]
+    : null;
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-6 sm:p-10 lg:p-12 overflow-hidden selection:bg-neutral-800">
+    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-4 sm:p-8 lg:p-10 overflow-x-hidden selection:bg-purple-900/60 selection:text-white">
       {/* 
         ========================================================================
-        Topography WebGL Morphing Elevation Field
+        Topography WebGL Morphing Elevation Field (ORIGINAL BEHAVIOR RESTORED)
         Spans the entire AI Lab universe with interactive cursor elevation bumps
         ========================================================================
       */}
@@ -102,274 +108,248 @@ export const AiLabUniverse: React.FC<AiLabUniverseProps> = ({ onTravelTo }) => {
       </div>
 
       {/* Structural Stage Border Frame */}
-      <div className="absolute inset-4 sm:inset-6 pointer-events-none border border-neutral-800/60 rounded-lg z-10" />
+      <div className="absolute inset-2 sm:inset-4 pointer-events-none border border-purple-950/40 rounded-lg z-10" />
 
-      {/* AI Lab Universe Header */}
-      <header className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-neutral-800/80 backdrop-blur-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-            <span>UNIVERSE 02</span>
-            <span aria-hidden="true" className="text-neutral-700">/</span>
-            <span className="text-neutral-300 font-semibold uppercase">{currentMeta.name}</span>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
-            <span className="text-neutral-400">{currentMeta.concept}</span>
+      {/* OBSERVATORY HEADER */}
+      <header className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-purple-900/30 backdrop-blur-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-purple-300 uppercase">
+              OBSERVATORY 02 // {currentMeta.name.toUpperCase()}
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-display text-neutral-100">
-            Cognitive Experiments & Model Prototypes
-          </h1>
+          <span className="text-neutral-700 hidden sm:inline">|</span>
+          <span className="font-mono text-xs text-neutral-400 hidden sm:inline">
+            COGNITIVE & BEHAVIORAL INVESTIGATIONS
+          </span>
         </div>
 
-        {/* Topography Palette Switcher & Status */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1 bg-neutral-900/80 border border-neutral-800 p-0.5 rounded-md backdrop-blur-md">
-            <span className="text-[11px] font-mono text-neutral-400 px-2 flex items-center gap-1">
-              <Mountain className="w-3 h-3 text-neutral-400" />
-              <span className="hidden sm:inline">Manifold:</span>
+        {/* Contour Color Spectrum Switcher */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-neutral-950/70 border border-purple-950/80 p-0.5 rounded text-[11px] font-mono">
+            <span className="text-neutral-400 px-1.5 flex items-center gap-1">
+              <Layers className="w-3 h-3 text-purple-400" />
+              <span className="hidden sm:inline">Contour:</span>
             </span>
-            {TOPO_PALETTES.map((pal) => (
+            {TOPO_PALETTES.map((p) => (
               <button
-                key={pal.id}
-                onClick={() => setActivePaletteId(pal.id)}
-                className={`px-2.5 py-1 text-xs font-mono rounded transition-colors ${
-                  activePaletteId === pal.id
-                    ? 'bg-neutral-100 text-neutral-950 font-bold shadow-xs'
-                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+                key={p.id}
+                onClick={() => setActivePaletteId(p.id)}
+                className={`px-2 py-0.5 rounded transition-colors ${
+                  activePaletteId === p.id
+                    ? 'bg-purple-600 text-white font-bold'
+                    : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
-                {pal.label}
+                {p.label}
               </button>
             ))}
           </div>
 
-          <div className="flex items-center gap-3 text-xs font-mono text-neutral-400">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span>5 Active Prototypes</span>
-            </span>
-          </div>
+          <button
+            onClick={() => onTravelTo('research')}
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-mono text-neutral-400 hover:text-purple-300 transition-colors"
+          >
+            <span>Next: 03 Research</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
       </header>
 
-      {/* Main Structural Stage: Split Laboratory Bench */}
-      <main className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start">
-        {/* Left: Experiment Registry (5 Cols) */}
-        <div className="lg:col-span-5 space-y-3">
-          <div className="text-xs font-mono tracking-wider text-neutral-400 uppercase flex items-center justify-between px-1 mb-2">
-            <span>Active Hypotheses ({AI_LAB_EXPERIMENTS.length})</span>
-            <span className="text-neutral-400">Select to run</span>
+      {/* CONTROLLED ASYMMETRY / FLOATING EXPERIMENT CONSOLE */}
+      <main className="relative z-20 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ====================================================================
+            LEFT: FLOATING EXPERIMENT CAPSULES (Vertical Stack)
+            ==================================================================== */}
+        <aside className="lg:col-span-4 space-y-2.5">
+          <div className="text-[11px] font-mono text-purple-400 tracking-wider uppercase px-1 mb-2 flex items-center justify-between">
+            <span className="flex items-center gap-1.5">
+              <Brain className="w-3.5 h-3.5 text-purple-400" />
+              EXPERIMENT CAPSULES ({AI_LAB_EXPERIMENTS.length})
+            </span>
+            <span className="text-neutral-500">SELECT TO OBSERVE</span>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {AI_LAB_EXPERIMENTS.map((exp) => {
               const isSelected = exp.id === activeExp.id;
               return (
                 <button
                   key={exp.id}
-                  onClick={() => handleSelectExperiment(exp)}
-                  className={`w-full text-left p-4 rounded-lg border backdrop-blur-md transition-all ${
+                  onClick={() => setSelectedExpId(exp.id)}
+                  className={`w-full text-left p-3.5 rounded-lg border transition-all duration-200 backdrop-blur-md ${
                     isSelected
-                      ? 'bg-neutral-900/90 border-cyan-500/50 shadow-md ring-1 ring-cyan-500/20'
-                      : 'bg-neutral-950/70 border-neutral-800/80 hover:border-neutral-700 hover:bg-neutral-900/70'
+                      ? 'bg-purple-950/70 border-purple-500/70 text-white shadow-lg ring-1 ring-purple-500/40 translate-x-1'
+                      : 'bg-neutral-950/50 border-purple-950/50 text-neutral-300 hover:bg-neutral-900/60 hover:border-purple-900/60'
                   }`}
                 >
-                  <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-1">
-                    <span>{exp.type}</span>
-                    <span className="text-neutral-300 font-semibold">{exp.status}</span>
+                  <div className="flex items-center justify-between text-[10px] font-mono text-neutral-400 mb-1">
+                    <span className="text-purple-300 uppercase">{exp.focusArea}</span>
+                    <span className="text-neutral-500">{exp.status}</span>
                   </div>
 
-                  <h3 className="text-base font-semibold text-neutral-100">{exp.title}</h3>
+                  <h3 className="font-sans font-semibold text-sm text-neutral-100 group-hover:text-white">
+                    {exp.title}
+                  </h3>
 
-                  <p className="text-xs text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
-                    {exp.hypothesis}
+                  <p className="text-[11px] text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
+                    {exp.tagline}
                   </p>
                 </button>
               );
             })}
           </div>
-        </div>
+        </aside>
 
-        {/* Right: Interactive Experimentation & Simulation Bench (7 Cols) */}
-        <div className="lg:col-span-7 bg-neutral-950/80 backdrop-blur-md border border-neutral-800/80 rounded-xl p-6 sm:p-8 space-y-6">
-          {/* Active Experiment Header */}
-          <div className="border-b border-neutral-800/80 pb-5">
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-1">
-              <span>PROTOTYPE SPECIFICATION</span>
-              <span className="text-neutral-300 font-semibold">{activeExp.type}</span>
+        {/* ====================================================================
+            RIGHT: SELECTED EXPERIMENT OBSERVATORY (What, Why, How, Explored, Learned)
+            ==================================================================== */}
+        <section className="lg:col-span-8 bg-neutral-950/70 backdrop-blur-md border border-purple-950/70 rounded-xl p-5 sm:p-7 space-y-6">
+          {/* Top Experiment Header */}
+          <div className="border-b border-purple-900/30 pb-5">
+            <div className="flex items-center gap-2 text-[11px] font-mono text-purple-400 mb-1">
+              <span>EXPERIMENT SPECIFICATION</span>
+              <span className="text-neutral-700">/</span>
+              <span className="text-neutral-300">{activeExp.focusArea}</span>
+              <span className="text-neutral-700">·</span>
+              <span className="text-emerald-400">{activeExp.status}</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold font-display text-neutral-50">
+            <h2 className="text-2xl sm:text-3xl font-bold font-display text-white">
               {activeExp.title}
             </h2>
-            <p className="text-sm text-neutral-300 mt-2 leading-relaxed">
-              {activeExp.hypothesis}
+            <p className="text-sm text-purple-200/90 mt-1 leading-relaxed">
+              {activeExp.tagline}
             </p>
           </div>
 
-          {/* Architecture Hook Details */}
-          <div className="space-y-1.5 bg-neutral-900/60 p-4 rounded-lg border border-neutral-800/80">
-            <span className="text-xs font-mono uppercase tracking-wider text-neutral-400 block">
-              Kernel & Pipeline Architecture
-            </span>
-            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-mono">
-              {activeExp.architecture}
-            </p>
-          </div>
+          {/* THE 5 CORE PILLARS: WHAT, WHY, HOW, EXPLORED, LEARNED */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* 1. WHAT */}
+            <div className="bg-neutral-900/50 border border-purple-950/60 rounded-lg p-4 space-y-1.5">
+              <div className="text-[11px] font-mono text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Brain className="w-3.5 h-3.5 text-purple-400" />
+                WHAT IT IS
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                {activeExp.what}
+              </p>
+            </div>
 
-          {/* Empirical Benchmarks Table */}
-          <div className="space-y-2">
-            <span className="text-xs font-mono uppercase tracking-wider text-neutral-400 block">
-              Empirical Evaluation vs Baseline
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {activeExp.evalMetrics.map((metric, idx) => (
-                <div key={idx} className="bg-neutral-900/70 p-3 rounded-lg border border-neutral-800/80">
-                  <div className="text-xs text-neutral-400">{metric.name}</div>
-                  <div className="text-xl font-bold font-mono text-neutral-100 mt-1">
-                    {metric.value}
-                  </div>
-                  <div className="text-xs text-neutral-500 font-mono mt-0.5">
-                    Baseline: {metric.baseline}
-                  </div>
-                </div>
-              ))}
+            {/* 2. WHY */}
+            <div className="bg-neutral-900/50 border border-purple-950/60 rounded-lg p-4 space-y-1.5">
+              <div className="text-[11px] font-mono text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                <HelpCircle className="w-3.5 h-3.5 text-purple-400" />
+                WHY IT WAS BUILT
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                {activeExp.why}
+              </p>
+            </div>
+
+            {/* 3. HOW */}
+            <div className="bg-neutral-900/50 border border-purple-950/60 rounded-lg p-4 space-y-1.5 md:col-span-2">
+              <div className="text-[11px] font-mono text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Workflow className="w-3.5 h-3.5 text-purple-400" />
+                HOW IT WAS ARCHITECTED
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                {activeExp.how}
+              </p>
+            </div>
+
+            {/* 4. WHAT WAS EXPLORED */}
+            <div className="bg-neutral-900/50 border border-purple-950/60 rounded-lg p-4 space-y-1.5">
+              <div className="text-[11px] font-mono text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-purple-400" />
+                WHAT WAS EXPLORED
+              </div>
+              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                {activeExp.whatWasExplored}
+              </p>
+            </div>
+
+            {/* 5. WHAT WAS LEARNED */}
+            <div className="bg-purple-950/30 border border-purple-600/40 rounded-lg p-4 space-y-1.5">
+              <div className="text-[11px] font-mono text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5 text-purple-300" />
+                WHAT WAS LEARNED
+              </div>
+              <p className="text-xs sm:text-sm text-purple-100 leading-relaxed">
+                {activeExp.whatWasLearned}
+              </p>
             </div>
           </div>
 
-          {/* Interactive Simulation Console */}
-          <div className="pt-4 border-t border-neutral-800/80 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono uppercase tracking-wider text-neutral-300 flex items-center gap-1.5">
-                <Terminal className="w-3.5 h-3.5 text-neutral-400" />
-                Live Execution Simulator
-              </span>
-              <span className="text-xs font-mono text-neutral-400">Interactive Test Harness</span>
-            </div>
-
-            {/* Prompt Selector */}
-            {activeExp.demoPromptOptions && activeExp.demoPromptOptions.length > 0 && (
-              <div className="space-y-1.5">
-                <label className="text-xs text-neutral-400 block">Select Evaluation Workload:</label>
-                <div className="space-y-1.5">
-                  {activeExp.demoPromptOptions.map((opt) => (
-                    <button
-                      key={opt}
-                      onClick={() => {
-                        setSelectedPrompt(opt);
-                        setSimulationLog(null);
-                      }}
-                      className={`w-full text-left px-3 py-2 text-xs rounded transition-colors border ${
-                        selectedPrompt === opt
-                          ? 'bg-neutral-800 border-neutral-600 text-neutral-100 font-medium'
-                          : 'bg-neutral-950/60 border-neutral-900 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900'
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Controls (Temperature & Context) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-neutral-900/60 p-3.5 rounded-lg border border-neutral-800/80 text-xs">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-neutral-400 font-mono">
-                  <span>Temperature</span>
-                  <span>{temperature.toFixed(2)}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0.0"
-                  max="1.0"
-                  step="0.05"
-                  value={temperature}
-                  onChange={(e) => setTemperature(parseFloat(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
+          {/* INTERACTIVE MODEL / PARAMETER PROBE (If available) */}
+          {probe && (
+            <div className="bg-black/60 border border-purple-900/40 rounded-lg p-4 space-y-3">
+              <div className="flex items-center justify-between border-b border-purple-950/80 pb-2">
+                <span className="text-xs font-mono text-purple-300 font-semibold flex items-center gap-2">
+                  <Sliders className="w-3.5 h-3.5 text-purple-400" />
+                  {probe.title.toUpperCase()}
+                </span>
+                <span className="text-[10px] font-mono text-neutral-500">INTERACTIVE PROBE</span>
               </div>
 
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-neutral-400 font-mono">
-                  <span>Context Window</span>
-                  <span>{contextDepth}k tokens</span>
-                </div>
-                <input
-                  type="range"
-                  min="16"
-                  max="128"
-                  step="16"
-                  value={contextDepth}
-                  onChange={(e) => setContextDepth(parseInt(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
+              <p className="text-xs text-neutral-400">
+                {probe.description}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {probe.parameters.map((param) => (
+                  <div key={param.id} className="space-y-1">
+                    <label className="text-[11px] font-mono text-neutral-400 block">
+                      {param.label}
+                    </label>
+                    <div className="flex flex-wrap gap-1">
+                      {param.options.map((opt) => (
+                        <button
+                          key={opt}
+                          onClick={() => handleParamChange(param.id, opt)}
+                          className={`px-2 py-1 text-[11px] font-mono rounded transition-colors ${
+                            probeParams[param.id] === opt
+                              ? 'bg-purple-600 text-white font-bold shadow-xs'
+                              : 'bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-neutral-200'
+                          }`}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
 
-            {/* Trigger Button */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleRunSimulation}
-                disabled={isSimulating}
-                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-neutral-950 bg-neutral-100 hover:bg-white rounded transition-colors disabled:opacity-50"
-              >
-                {isSimulating ? (
-                  <>
-                    <Activity className="w-3.5 h-3.5 animate-spin" />
-                    <span>Executing Inference...</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Execute Inference Simulation</span>
-                  </>
-                )}
-              </button>
-
-              {simulationLog && (
-                <button
-                  onClick={() => setSimulationLog(null)}
-                  className="text-xs text-neutral-400 hover:text-neutral-200 flex items-center gap-1 font-mono"
-                >
-                  <RotateCcw className="w-3 h-3" />
-                  <span>Clear Output</span>
-                </button>
+              {probeEvaluation && (
+                <div className="mt-3 p-3 bg-neutral-950/80 rounded border border-purple-950/60 font-mono text-xs text-purple-200 whitespace-pre-wrap leading-relaxed">
+                  {probeEvaluation}
+                </div>
               )}
             </div>
+          )}
 
-            {/* Simulation Output Terminal Log */}
-            {simulationLog && (
-              <div className="bg-neutral-950 p-4 rounded-lg border border-neutral-800 text-xs font-mono text-neutral-300 whitespace-pre-wrap leading-relaxed">
-                {simulationLog}
-              </div>
-            )}
+          {/* TECHNOLOGIES & LINKED SYSTEMS */}
+          <div className="pt-4 border-t border-purple-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-neutral-500 mr-1">TECHNOLOGIES:</span>
+              {activeExp.technologies.map((t) => (
+                <span
+                  key={t}
+                  className="px-2 py-0.5 rounded bg-purple-950/50 border border-purple-700/40 text-purple-200 text-[11px]"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+
+            <div className="text-neutral-400">
+              <span className="text-neutral-500">RELATED: </span>
+              {activeExp.relatedProjects.join(', ')}
+            </div>
           </div>
-        </div>
+        </section>
       </main>
-
-      {/* Footer Nav */}
-      <footer className="relative z-10 pt-6 border-t border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono text-neutral-400 backdrop-blur-xs">
-        <div>
-          <span>AI Lab Workbench · Stage 02/07</span>
-          <span aria-hidden="true" className="text-neutral-700"> · </span>
-          <span>Surface: Interactive Morphing Topography (WebGL)</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => onTravelTo('builder')}
-            className="text-neutral-400 hover:text-neutral-200 transition-colors"
-          >
-            ← 01 Builder
-          </button>
-          <span aria-hidden="true" className="text-neutral-700">·</span>
-          <button
-            onClick={() => onTravelTo('research')}
-            className="text-neutral-200 hover:text-white transition-colors font-medium"
-          >
-            Enter 03 Research →
-          </button>
-        </div>
-      </footer>
     </div>
   );
 };
-

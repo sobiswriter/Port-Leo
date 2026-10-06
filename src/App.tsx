@@ -71,7 +71,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-neutral-950 font-sans text-neutral-100 pb-20">
+    <div className="relative min-h-screen w-full bg-neutral-950 font-sans text-neutral-100">
       {/* Standalone Universe Viewport Container */}
       <div id={`universe-${activeUniverse}`} className="w-full min-h-screen">
         {renderCurrentUniverse()}

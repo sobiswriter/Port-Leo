@@ -22,77 +22,83 @@ export interface ProjectItem {
   id: string;
   title: string;
   tagline: string;
-  category: 'Systems' | 'AI & Agents' | 'Distributed' | 'DevTools' | 'Interface';
-  year: string;
+  category: 'Applied AI' | 'Document Intelligence' | 'Commercial & Web' | 'Creative Tooling' | 'Systems & Utilities';
   role: string;
   problem: string;
   architecture: string[];
-  metrics: { label: string; value: string }[];
+  keyFeatures: string[];
   stack: string[];
   githubUrl?: string;
   liveUrl?: string;
   featured: boolean;
-  status: 'Production' | 'Active R&D' | 'Open Source';
+  status: 'Production' | 'Active Build' | 'Open Source' | 'Exploratory';
+  executionEnvironment?: string;
 }
 
-export interface AiExperimentItem {
+export interface AiLabExperiment {
   id: string;
   title: string;
-  type: 'Autonomous Agent' | 'KV Cache Optimization' | 'Latent Space' | 'Speculative Decoding' | 'Mixture-of-Experts';
-  hypothesis: string;
-  architecture: string;
-  evalMetrics: { name: string; value: string; baseline: string }[];
-  status: 'Active Prototype' | 'Benchmarked' | 'Research Paper';
-  demoPromptOptions?: string[];
-  defaultTemperature?: number;
-  sampleOutputs?: Record<string, string>;
+  tagline: string;
+  focusArea: string;
+  what: string;
+  why: string;
+  how: string;
+  whatWasExplored: string;
+  whatWasLearned: string;
+  technologies: string[];
+  relatedProjects: string[];
+  status: string;
+  interactiveProbe?: {
+    title: string;
+    description: string;
+    parameters: {
+      id: string;
+      label: string;
+      options: string[];
+      defaultVal: string;
+    }[];
+    evaluations: Record<string, string>;
+  };
 }
 
-export interface ResearchPaperItem {
+export interface ResearchRecordItem {
   id: string;
   title: string;
-  venue: string;
-  year: string;
-  abstract: string;
-  contributions: string[];
-  citations: number;
-  readTime: string;
-  arxivId: string;
-  bibtex: string;
-  tags: string[];
+  type: 'RESEARCH THREAD' | 'TECHNICAL INVESTIGATION' | 'PUBLICATION SIGNAL' | 'CONFERENCE SIGNAL' | 'SYSTEM EXPLORATION';
+  domain: string;
+  overview: string;
+  investigationDetails: string[];
+  keyOutcomes: string[];
+  artifactsAndTools: string[];
+  signalBadge?: string;
+  dateOrEra?: string;
 }
 
-export interface CapabilityItem {
+export interface TopologyNode {
+  id: string;
   name: string;
-  depth: 'Core Mastery' | 'Deep Architecture' | 'Applied Production';
+  cluster: 'LANGUAGES' | 'AI / ML' | 'APPLICATION DEVELOPMENT' | 'SYSTEMS & TOOLING';
   description: string;
-  primaryTools: string[];
+  depth: 'Core Mastery' | 'Applied Production' | 'System Architecture';
+  connectedNodes: string[];
+  relatedProjects: string[];
 }
 
-export interface ArsenalRing {
+export interface CosmicMilestone {
   id: string;
   title: string;
-  subtitle: string;
-  capabilities: CapabilityItem[];
-}
-
-export interface MilestoneItem {
-  id: string;
-  year: string;
-  dateStr: string;
-  title: string;
-  category: 'Hackathon' | 'Career' | 'Academic' | 'Milestone' | 'Open Source';
+  year?: string;
+  epoch: string;
+  category: 'Cohort' | 'Award & Recognition' | 'Patent' | 'Conference' | 'Academic' | 'Hackathon';
   context: string;
-  description: string;
-  outcome: string;
-  takeaway: string;
-}
-
-export interface BookRecommendation {
-  title: string;
-  author: string;
-  category: string;
-  impact: string;
+  summary: string;
+  significance: string;
+  verifiedDetails: string[];
+  celestialCoordinates: {
+    sector: string;
+    magnitude: string;
+    anchorIndex: number;
+  };
 }
 
 export interface AboutDossier {
@@ -103,23 +109,34 @@ export interface AboutDossier {
   timezone: string;
   coordinates: string;
   status: string;
-  bioParagraphs: string[];
-  axioms: { number: string; statement: string; explanation: string }[];
-  readingList: BookRecommendation[];
-  workspaceSpecs: { category: string; item: string }[];
+  positioning: string[];
+  manifestoStatement: string;
+  narrativeParagraphs: string[];
+  engineeringAxioms: {
+    number: string;
+    title: string;
+    thesis: string;
+    context: string;
+  }[];
+  currentExplorations: string[];
   offlinePursuits: string[];
 }
 
 export interface BeyondData {
-  transmissionNote: string;
+  transmissionHeader: string;
+  terminalStatus: string;
   email: string;
-  pgpKeyId: string;
-  pgpKeyFingerprint: string;
-  socials: { label: string; username: string; url: string; note: string }[];
-  resumeSummary: {
-    summaryText: string;
-    focusAreas: string[];
-    education: string;
-    experienceHighlights: string[];
+  channels: {
+    name: string;
+    handle: string;
+    url: string;
+    protocol: string;
+    note: string;
+  }[];
+  curriculumVitae: {
+    summary: string;
+    coreCompetencies: string[];
+    verifiedSignals: string[];
+    resumeDownloadAvailable: boolean;
   };
 }

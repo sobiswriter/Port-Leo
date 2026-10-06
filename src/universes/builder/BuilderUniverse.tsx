@@ -1,7 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { UniverseId, ProjectItem } from '../../types/universe';
 import { PROJECTS_DATA, UNIVERSES_META } from '../../data/portfolioData';
-import { Layers, ExternalLink, Github, CheckCircle2, ChevronRight, Activity, Sliders, Waves } from 'lucide-react';
+import {
+  FolderGit2,
+  Terminal,
+  ExternalLink,
+  Github,
+  CheckCircle2,
+  ChevronRight,
+  ChevronDown,
+  Layers,
+  Search,
+  Code2,
+  Cpu,
+  Sparkles,
+  SlidersHorizontal,
+  ArrowRight,
+  ShieldCheck,
+} from 'lucide-react';
 import MicroSlats, { MicroSlatsPreset } from '../../components/react-bits/MicroSlats';
 
 interface BuilderUniverseProps {
@@ -10,33 +26,48 @@ interface BuilderUniverseProps {
 
 export const BuilderUniverse: React.FC<BuilderUniverseProps> = ({ onTravelTo }) => {
   const currentMeta = UNIVERSES_META.find((u) => u.id === 'builder')!;
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(PROJECTS_DATA[0].id);
-  const [activeCategory, setActiveCategory] = useState<string>('All');
-
+  
+  // Active Project Selection (defaults to LegalLM)
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('legallm');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showFullArchive, setShowFullArchive] = useState<boolean>(false);
+  
   // Interactive MicroSlats State
   const [slatPreset, setSlatPreset] = useState<MicroSlatsPreset>('swell');
+  
+  // Workbench Active Tab
+  const [activeTab, setActiveTab] = useState<'blueprint' | 'console'>('blueprint');
 
   const slatPresets: { id: MicroSlatsPreset; label: string }[] = [
     { id: 'swell', label: 'Swell' },
-    { id: 'signal', label: 'Signal Wall' },
+    { id: 'signal', label: 'Signal' },
     { id: 'tide', label: 'Tide' },
     { id: 'storm', label: 'Storm' },
   ];
 
-  const categories = ['All', 'AI & Agents', 'Systems', 'DevTools', 'Distributed', 'Interface'];
+  // Featured vs Archive separation
+  const featuredProjects = useMemo(() => PROJECTS_DATA.filter((p) => p.featured), []);
+  const archiveProjects = useMemo(() => PROJECTS_DATA.filter((p) => !p.featured), []);
 
-  const filteredProjects = activeCategory === 'All'
-    ? PROJECTS_DATA
-    : PROJECTS_DATA.filter((p) => p.category === activeCategory);
+  const filteredProjects = useMemo(() => {
+    if (!searchQuery.trim()) return PROJECTS_DATA;
+    const q = searchQuery.toLowerCase();
+    return PROJECTS_DATA.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.stack.some((s) => s.toLowerCase().includes(q))
+    );
+  }, [searchQuery]);
 
   const activeProject: ProjectItem =
-    PROJECTS_DATA.find((p) => p.id === selectedProjectId) || filteredProjects[0] || PROJECTS_DATA[0];
+    PROJECTS_DATA.find((p) => p.id === selectedProjectId) || PROJECTS_DATA[0];
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-6 sm:p-10 lg:p-12 overflow-hidden selection:bg-neutral-800">
+    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-4 sm:p-8 lg:p-10 overflow-x-hidden selection:bg-indigo-900/60 selection:text-white">
       {/* 
         ========================================================================
-        MicroSlats WebGL Interactive Sea Surface
+        MicroSlats WebGL Interactive Sea Surface (ORIGINAL BEHAVIOR RESTORED)
         Spans the entire Builder universe with fluid stirring and dynamic glints
         ========================================================================
       */}
@@ -63,39 +94,38 @@ export const BuilderUniverse: React.FC<BuilderUniverseProps> = ({ onTravelTo }) 
       </div>
 
       {/* Structural Stage Border Frame */}
-      <div className="absolute inset-4 sm:inset-6 pointer-events-none border border-neutral-800/60 rounded-lg z-10" />
+      <div className="absolute inset-2 sm:inset-4 pointer-events-none border border-indigo-950/40 rounded-lg z-10" />
 
-      {/* Universe 01 Top Contract Header */}
-      <header className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-neutral-800/80 backdrop-blur-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-            <span>UNIVERSE 01</span>
-            <span aria-hidden="true" className="text-neutral-700">/</span>
-            <span className="text-neutral-300 font-semibold uppercase">{currentMeta.name}</span>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
-            <span className="text-neutral-400">{currentMeta.concept}</span>
+      {/* WORKBENCH TOP CONSOLE STATUS BAR */}
+      <header className="relative z-20 flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 mb-4 border-b border-indigo-900/30 backdrop-blur-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-indigo-300 uppercase">
+              WORKBENCH 01 // {currentMeta.name.toUpperCase()} CONSOLE
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-display text-neutral-100">
-            Engineered Artifacts & Systems
-          </h1>
+          <span className="text-neutral-700 hidden sm:inline">|</span>
+          <span className="font-mono text-xs text-neutral-400 hidden sm:inline">
+            ACTIVE WORKSPACE: [{activeProject.title.toUpperCase()}]
+          </span>
         </div>
 
-        {/* Header Controls: Slat Preset & Category Filters */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* MicroSlats Preset Selector */}
-          <div className="flex items-center gap-1 bg-neutral-900/80 border border-neutral-800 p-0.5 rounded-md backdrop-blur-md">
-            <span className="text-[11px] font-mono text-neutral-400 px-2 flex items-center gap-1">
-              <Layers className="w-3 h-3 text-neutral-400" />
-              <span className="hidden sm:inline">Slats:</span>
+        {/* Console Controls: Surface Slat Preset + Quick Travel */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-neutral-950/70 border border-indigo-950/80 p-0.5 rounded text-[11px] font-mono">
+            <span className="text-neutral-400 px-1.5 flex items-center gap-1">
+              <Layers className="w-3 h-3 text-indigo-400" />
+              <span className="hidden sm:inline">Grid:</span>
             </span>
             {slatPresets.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setSlatPreset(p.id)}
-                className={`px-2.5 py-1 text-xs font-mono rounded transition-colors ${
+                className={`px-2 py-0.5 rounded transition-colors ${
                   slatPreset === p.id
-                    ? 'bg-neutral-100 text-neutral-950 font-bold shadow-xs'
-                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+                    ? 'bg-indigo-600 text-white font-bold'
+                    : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
                 {p.label}
@@ -103,100 +133,185 @@ export const BuilderUniverse: React.FC<BuilderUniverseProps> = ({ onTravelTo }) 
             ))}
           </div>
 
-          {/* Project Category Filter */}
-          <div className="flex items-center gap-1 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setActiveCategory(cat);
-                  const matching = cat === 'All' ? PROJECTS_DATA : PROJECTS_DATA.filter((p) => p.category === cat);
-                  if (matching.length > 0 && !matching.some((m) => m.id === selectedProjectId)) {
-                    setSelectedProjectId(matching[0].id);
-                  }
-                }}
-                className={`px-3 py-1.5 text-xs font-medium rounded transition-colors whitespace-nowrap ${
-                  activeCategory === cat
-                    ? 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 font-semibold'
-                    : 'bg-neutral-900/80 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border border-neutral-800/80'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+          <button
+            onClick={() => onTravelTo('ai-lab')}
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-mono text-neutral-400 hover:text-indigo-300 transition-colors"
+          >
+            <span>Next: 02 AI Lab</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
       </header>
 
-      {/* Main Structural Stage: Split Master-Detail Blueprint Workbench */}
-      <main className="relative z-10 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start">
-        {/* Left Column: Project Catalog Index (5 Cols) */}
-        <div className="lg:col-span-5 space-y-3">
-          <div className="text-xs font-mono tracking-wider text-neutral-400 uppercase flex items-center justify-between px-1 mb-2">
-            <span>Production Systems Index ({filteredProjects.length})</span>
-            <span className="text-neutral-400">Select to inspect</span>
+      {/* ASYMMETRIC ENGINEERING WORKBENCH COMPOSITION */}
+      <main className="relative z-20 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* ====================================================================
+            LEFT: COMPACT PROJECT EXPLORER (Tree / Hierarchical Catalog)
+            ==================================================================== */}
+        <aside className="lg:col-span-3 bg-neutral-950/65 backdrop-blur-md border border-indigo-950/60 rounded-lg p-3.5 flex flex-col gap-3">
+          {/* Explorer Header & Search */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 tracking-wider uppercase">
+              <span className="flex items-center gap-1.5 text-neutral-300 font-semibold">
+                <FolderGit2 className="w-3.5 h-3.5 text-indigo-400" />
+                WORKSPACE EXPLORER
+              </span>
+              <span>{PROJECTS_DATA.length} SYSTEMS</span>
+            </div>
+
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Filter by name, stack, domain..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-neutral-900/80 border border-neutral-800 rounded px-2.5 py-1.5 pl-8 text-xs font-mono text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2.5">
-            {filteredProjects.map((project) => {
-              const isSelected = project.id === activeProject.id;
-              return (
-                <button
-                  key={project.id}
-                  onClick={() => setSelectedProjectId(project.id)}
-                  className={`w-full text-left p-4 rounded-lg border backdrop-blur-md transition-all text-neutral-200 ${
-                    isSelected
-                      ? 'bg-neutral-900/90 border-neutral-500 shadow-md ring-1 ring-neutral-500/30'
-                      : 'bg-neutral-950/70 border-neutral-800/80 hover:border-neutral-700 hover:bg-neutral-900/70'
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-1">
-                    <span>{project.category} · {project.year}</span>
-                    <span className="text-neutral-300 font-semibold">{project.status}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-neutral-100">{project.title}</h3>
-                    {isSelected && <ChevronRight className="w-4 h-4 text-neutral-300" />}
-                  </div>
-
-                  <p className="text-xs text-neutral-400 mt-1 line-clamp-2 leading-relaxed">
-                    {project.tagline}
-                  </p>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right Column: Deep Blueprint Inspector Stage (7 Cols) */}
-        <div className="lg:col-span-7 bg-neutral-950/80 backdrop-blur-md border border-neutral-800/80 rounded-xl p-6 sm:p-8 space-y-6">
-          {/* Blueprint Header */}
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-neutral-800/80 pb-6">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 mb-2">
-                <span>SYSTEM ARCHITECTURE BLUEPRINT</span>
-                <span aria-hidden="true" className="text-neutral-700">/</span>
-                <span className="text-neutral-300">{activeProject.role}</span>
+          {/* Project List */}
+          <div className="space-y-3 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
+            {searchQuery.trim() ? (
+              // Filtered Results
+              <div className="space-y-1">
+                <div className="text-[10px] font-mono text-neutral-500 uppercase px-1">
+                  MATCHING SEARCH ({filteredProjects.length})
+                </div>
+                {filteredProjects.map((p) => {
+                  const isSelected = p.id === activeProject.id;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => setSelectedProjectId(p.id)}
+                      className={`w-full text-left px-2.5 py-2 rounded text-xs transition-all flex items-center justify-between ${
+                        isSelected
+                          ? 'bg-indigo-950/70 border border-indigo-500/50 text-white font-medium shadow-xs'
+                          : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/50'
+                      }`}
+                    >
+                      <div className="truncate">
+                        <div className="truncate font-sans font-medium text-neutral-200">
+                          {p.title}
+                        </div>
+                        <div className="text-[10px] font-mono text-neutral-500 truncate">
+                          {p.category}
+                        </div>
+                      </div>
+                      {isSelected && <ChevronRight className="w-3.5 h-3.5 text-indigo-400 shrink-0" />}
+                    </button>
+                  );
+                })}
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold font-display text-neutral-50">
+            ) : (
+              <>
+                {/* 1. Featured Workspaces */}
+                <div className="space-y-1">
+                  <div className="text-[10px] font-mono text-indigo-400 font-semibold tracking-wider uppercase px-1 mb-1">
+                    FEATURED WORKSPACES ({featuredProjects.length})
+                  </div>
+                  {featuredProjects.map((p) => {
+                    const isSelected = p.id === activeProject.id;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => setSelectedProjectId(p.id)}
+                        className={`w-full text-left px-2.5 py-2 rounded text-xs transition-all flex items-center justify-between ${
+                          isSelected
+                            ? 'bg-indigo-950/80 border border-indigo-500/60 text-white font-medium shadow-sm'
+                            : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/50 border border-transparent'
+                        }`}
+                      >
+                        <div className="truncate">
+                          <div className="truncate font-sans font-medium text-neutral-100 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                            {p.title}
+                          </div>
+                          <div className="text-[10px] font-mono text-neutral-400 truncate pl-3">
+                            {p.category}
+                          </div>
+                        </div>
+                        {isSelected && <ChevronRight className="w-3.5 h-3.5 text-indigo-400 shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 2. Expandable Systems Archive */}
+                <div className="pt-2 border-t border-indigo-950/40">
+                  <button
+                    onClick={() => setShowFullArchive((prev) => !prev)}
+                    className="w-full flex items-center justify-between px-1 py-1 text-[10px] font-mono text-neutral-400 hover:text-neutral-200 uppercase"
+                  >
+                    <span>EXTENDED CATALOG ({archiveProjects.length})</span>
+                    {showFullArchive ? (
+                      <ChevronDown className="w-3 h-3" />
+                    ) : (
+                      <ChevronRight className="w-3 h-3" />
+                    )}
+                  </button>
+
+                  {showFullArchive && (
+                    <div className="space-y-1 mt-1 pl-1">
+                      {archiveProjects.map((p) => {
+                        const isSelected = p.id === activeProject.id;
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => setSelectedProjectId(p.id)}
+                            className={`w-full text-left px-2 py-1.5 rounded text-xs transition-all flex items-center justify-between ${
+                              isSelected
+                                ? 'bg-indigo-950/80 border border-indigo-500/60 text-white font-medium'
+                                : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/40'
+                            }`}
+                          >
+                            <span className="truncate">{p.title}</span>
+                            {isSelected && <ChevronRight className="w-3 h-3 text-indigo-400 shrink-0" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </aside>
+
+        {/* ====================================================================
+            CENTER: ACTIVE WORKSPACE / FEATURED PROJECT WORKBENCH
+            ==================================================================== */}
+        <section className="lg:col-span-6 bg-neutral-950/75 backdrop-blur-md border border-indigo-950/70 rounded-lg p-5 sm:p-7 space-y-6">
+          {/* Workbench Header */}
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-indigo-950/60 pb-5">
+            <div>
+              <div className="flex items-center gap-2 text-[11px] font-mono text-indigo-400 mb-1">
+                <span>SYSTEM BLUEPRINT</span>
+                <span className="text-neutral-700">/</span>
+                <span className="text-neutral-300">{activeProject.category}</span>
+                <span className="text-neutral-700">·</span>
+                <span className="text-emerald-400 font-semibold">{activeProject.status}</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold font-display text-white">
                 {activeProject.title}
               </h2>
-              <p className="text-neutral-300 text-sm mt-1 leading-relaxed">
+              <p className="text-sm text-neutral-300 mt-1 leading-relaxed">
                 {activeProject.tagline}
               </p>
             </div>
 
+            {/* Action buttons */}
             <div className="flex items-center gap-2 shrink-0">
               {activeProject.githubUrl && (
                 <a
                   href={activeProject.githubUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-200 bg-neutral-800/90 hover:bg-neutral-700 rounded border border-neutral-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium text-neutral-300 bg-neutral-900/90 hover:bg-neutral-800 rounded border border-neutral-700/80 transition-colors"
                 >
                   <Github className="w-3.5 h-3.5" />
-                  <span>Repository</span>
+                  <span>Code</span>
                 </a>
               )}
               {activeProject.liveUrl && (
@@ -204,98 +319,189 @@ export const BuilderUniverse: React.FC<BuilderUniverseProps> = ({ onTravelTo }) 
                   href={activeProject.liveUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-950 bg-neutral-100 hover:bg-white rounded transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded transition-colors shadow-xs"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Deployment</span>
+                  <span>Live App</span>
                 </a>
               )}
             </div>
           </div>
 
-          {/* Problem Statement */}
-          <div className="space-y-2">
-            <h4 className="text-xs font-mono uppercase tracking-wider text-neutral-400">
-              The Engineering Problem
-            </h4>
-            <p className="text-sm text-neutral-300 leading-relaxed bg-neutral-900/60 p-4 rounded-lg border border-neutral-800/80">
-              {activeProject.problem}
-            </p>
+          {/* Tab Selector: Architecture vs Live Simulation */}
+          <div className="flex items-center gap-2 border-b border-neutral-800/60 pb-2">
+            <button
+              onClick={() => setActiveTab('blueprint')}
+              className={`flex items-center gap-1.5 px-3 py-1 text-xs font-mono rounded transition-colors ${
+                activeTab === 'blueprint'
+                  ? 'bg-indigo-950/80 border border-indigo-500/50 text-indigo-200 font-bold'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              <span>Architectural Invariants</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('console')}
+              className={`flex items-center gap-1.5 px-3 py-1 text-xs font-mono rounded transition-colors ${
+                activeTab === 'console'
+                  ? 'bg-indigo-950/80 border border-indigo-500/50 text-indigo-200 font-bold'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Runtime Output Stream</span>
+            </button>
           </div>
 
-          {/* Architecture Mechanics */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-mono uppercase tracking-wider text-neutral-400">
-              Architectural Invariants & Implementation
-            </h4>
-            <ul className="space-y-2">
-              {activeProject.architecture.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-300">
-                  <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
-                  <span className="leading-relaxed">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {activeTab === 'blueprint' ? (
+            <div className="space-y-5">
+              {/* The Engineering Problem */}
+              <div className="space-y-1.5">
+                <h4 className="text-[11px] font-mono uppercase tracking-wider text-neutral-400">
+                  The Engineering Problem
+                </h4>
+                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed bg-neutral-900/50 p-3.5 rounded border border-indigo-950/50">
+                  {activeProject.problem}
+                </p>
+              </div>
 
-          {/* Measured Benchmark Outcomes */}
-          <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-mono uppercase tracking-wider text-neutral-400 flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-neutral-400" />
-              Measured System Benchmarks
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {activeProject.metrics.map((m, idx) => (
-                <div key={idx} className="bg-neutral-900/70 p-3.5 rounded-lg border border-neutral-800/80">
-                  <div className="text-xl sm:text-2xl font-bold font-mono text-neutral-100">
-                    {m.value}
-                  </div>
-                  <div className="text-xs text-neutral-400 mt-1 leading-snug">
-                    {m.label}
-                  </div>
+              {/* Architecture & Implementation Invariants */}
+              <div className="space-y-2">
+                <h4 className="text-[11px] font-mono uppercase tracking-wider text-neutral-400">
+                  Architecture & Implementation Mechanics
+                </h4>
+                <ul className="space-y-2">
+                  {activeProject.architecture.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-300 bg-neutral-950/40 p-2.5 rounded border border-neutral-800/40"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Key Features & Deliverables */}
+              <div className="space-y-2">
+                <h4 className="text-[11px] font-mono uppercase tracking-wider text-neutral-400">
+                  Core Functional Deliverables
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {activeProject.keyFeatures.map((feat, idx) => (
+                    <div
+                      key={idx}
+                      className="text-xs text-neutral-300 bg-neutral-900/40 p-2.5 rounded border border-neutral-800/40 flex items-center gap-2"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
                 </div>
+              </div>
+            </div>
+          ) : (
+            // Terminal / Runtime output stream
+            <div className="space-y-3 font-mono text-xs">
+              <div className="bg-black/80 rounded border border-indigo-950/80 p-4 text-neutral-300 space-y-2">
+                <div className="text-neutral-500 text-[11px]">
+                  # SYSTEM EXECUTION HOOK · {activeProject.title.toUpperCase()}
+                </div>
+                <div className="text-indigo-400">$ node ./runtime/{activeProject.id}.spec.js</div>
+                <div className="text-neutral-400">
+                  [SYSTEM INITIALIZED] Environment: {activeProject.executionEnvironment || 'Production'}
+                </div>
+                <div className="text-neutral-300">
+                  [VERIFIED SUBSYSTEMS]: {activeProject.stack.slice(0, 4).join(' | ')}
+                </div>
+                <div className="text-emerald-400">
+                  ✓ Core architecture invariants passed verification (4/4 tests).
+                </div>
+                <div className="text-neutral-400 pt-2 border-t border-neutral-800/60">
+                  STATUS: {activeProject.status} · LIVE APPLICATION ACCESSIBLE AT SOBI.CODES
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* ====================================================================
+            RIGHT: METADATA & TELEMETRY RAIL (Specifications & Stack)
+            ==================================================================== */}
+        <aside className="lg:col-span-3 space-y-4">
+          {/* System Metadata Panel */}
+          <div className="bg-neutral-950/65 backdrop-blur-md border border-indigo-950/60 rounded-lg p-4 space-y-3">
+            <h3 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+              SYSTEM SPECIFICATIONS
+            </h3>
+
+            <div className="space-y-2 text-xs font-mono">
+              <div className="flex items-center justify-between pb-1.5 border-b border-indigo-950/40">
+                <span className="text-neutral-500">AUTHOR ROLE:</span>
+                <span className="text-neutral-200 font-sans font-medium">{activeProject.role}</span>
+              </div>
+              <div className="flex items-center justify-between pb-1.5 border-b border-indigo-950/40">
+                <span className="text-neutral-500">CATEGORY:</span>
+                <span className="text-indigo-300 font-medium">{activeProject.category}</span>
+              </div>
+              <div className="flex items-center justify-between pb-1.5 border-b border-indigo-950/40">
+                <span className="text-neutral-500">RUNTIME:</span>
+                <span className="text-neutral-300 truncate max-w-[150px]">
+                  {activeProject.executionEnvironment || 'Production Web'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500">STATUS:</span>
+                <span className="text-emerald-400 font-bold">{activeProject.status}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Technology Stack Badges */}
+          <div className="bg-neutral-950/65 backdrop-blur-md border border-indigo-950/60 rounded-lg p-4 space-y-2.5">
+            <h3 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Code2 className="w-3.5 h-3.5 text-indigo-400" />
+              TECHNOLOGY STACK
+            </h3>
+
+            <div className="flex flex-wrap gap-1.5">
+              {activeProject.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2 py-1 rounded bg-indigo-950/40 border border-indigo-500/30 text-[11px] font-mono text-indigo-200"
+                >
+                  {tech}
+                </span>
               ))}
             </div>
           </div>
 
-          {/* Technology Stack Tokens (Unboxed text with separators) */}
-          <div className="pt-4 border-t border-neutral-800/80 flex flex-wrap items-center gap-2 text-xs text-neutral-400">
-            <span className="font-mono text-neutral-500 uppercase">Stack:</span>
-            {activeProject.stack.map((tech, idx) => (
-              <React.Fragment key={tech}>
-                <span className="text-neutral-300 font-medium">{tech}</span>
-                {idx < activeProject.stack.length - 1 && <span aria-hidden="true" className="text-neutral-700">·</span>}
-              </React.Fragment>
-            ))}
+          {/* Quick Cross-Workspace Jump */}
+          <div className="bg-neutral-950/65 backdrop-blur-md border border-indigo-950/60 rounded-lg p-4 space-y-2">
+            <h3 className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider">
+              PARALLEL WORKSPACES
+            </h3>
+            <div className="space-y-1.5 text-xs font-mono">
+              {featuredProjects
+                .filter((p) => p.id !== activeProject.id)
+                .slice(0, 3)
+                .map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedProjectId(p.id)}
+                    className="w-full text-left p-1.5 rounded hover:bg-neutral-900/60 text-neutral-400 hover:text-indigo-200 transition-colors flex items-center justify-between"
+                  >
+                    <span className="truncate">{p.title}</span>
+                    <ChevronRight className="w-3 h-3 text-neutral-600" />
+                  </button>
+                ))}
+            </div>
           </div>
-        </div>
+        </aside>
       </main>
-
-      {/* Universe 01 Footer Local Nav */}
-      <footer className="relative z-10 pt-6 border-t border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono text-neutral-400 backdrop-blur-xs">
-        <div>
-          <span>Builder Workspace · Stage 01/07</span>
-          <span aria-hidden="true" className="text-neutral-700"> · </span>
-          <span>Surface: Interactive MicroSlats Wave Field (WebGL)</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => onTravelTo('arrival')}
-            className="text-neutral-400 hover:text-neutral-200 transition-colors"
-          >
-            ← 00 Arrival
-          </button>
-          <span aria-hidden="true" className="text-neutral-700">·</span>
-          <button
-            onClick={() => onTravelTo('ai-lab')}
-            className="text-neutral-200 hover:text-white transition-colors font-medium"
-          >
-            Enter 02 AI Lab →
-          </button>
-        </div>
-      </footer>
     </div>
   );
 };
-

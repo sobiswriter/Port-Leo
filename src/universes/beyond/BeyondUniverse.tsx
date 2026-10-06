@@ -1,20 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import { UniverseId } from '../../types/universe';
-import { BEYOND_DATA, UNIVERSES_META, ABOUT_DOSSIER } from '../../data/portfolioData';
+import { BEYOND_DATA, UNIVERSES_META } from '../../data/portfolioData';
 import {
   Send,
   Copy,
   Check,
-  FileDown,
-  ShieldCheck,
-  ArrowRight,
   ExternalLink,
-  RefreshCw,
-  Zap,
-  Sliders,
   Radio,
-  Globe,
   Terminal,
+  FileText,
+  RotateCcw,
+  Layers,
+  ArrowRight,
+  ShieldCheck,
+  Github,
+  Linkedin,
+  Mail,
 } from 'lucide-react';
 import Hyperspeed, { HyperspeedEffectOptions, DEFAULT_HYPERSPEED_OPTIONS } from '../../components/react-bits/Hyperspeed';
 
@@ -99,30 +100,12 @@ const WARP_PRESETS: WarpPreset[] = [
 
 export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) => {
   const currentMeta = UNIVERSES_META.find((u) => u.id === 'beyond')!;
-
-  // Hyperspeed Warp State
+  
+  // Hyperspeed Warp State (ORIGINAL STATE RESTORED)
   const [selectedPresetId, setSelectedPresetId] = useState<string>('cyber');
-  const [isSpeedingUp, setIsSpeedingUp] = useState<boolean>(false);
-  const [showWarpControls, setShowWarpControls] = useState<boolean>(false);
-
-  // Transmission Form State
-  const [senderName, setSenderName] = useState('');
-  const [senderEmail, setSenderEmail] = useState('');
-  const [topic, setTopic] = useState('Systems Engineering & Architecture');
-  const [message, setMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [transmissionSuccess, setTransmissionSuccess] = useState(false);
-
-  // Resume Modal / View State
-  const [showResumeModal, setShowResumeModal] = useState(false);
-
-  // PGP Copy State
-  const [copiedPgp, setCopiedPgp] = useState(false);
-
   const activePreset =
     WARP_PRESETS.find((p) => p.id === selectedPresetId) || WARP_PRESETS[0];
 
-  // Memoized Hyperspeed effect options with real-time speed up callbacks
   const hyperspeedOptions = useMemo<HyperspeedEffectOptions>(() => {
     return {
       ...DEFAULT_HYPERSPEED_OPTIONS,
@@ -133,36 +116,44 @@ export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) =>
       speedUp: 6.0,
       lanesPerRoad: 4,
       length: 400,
-      onSpeedUp: () => setIsSpeedingUp(true),
-      onSlowDown: () => setIsSpeedingUp(false),
     };
   }, [activePreset]);
 
-  const handleCopyPgp = () => {
-    navigator.clipboard.writeText(BEYOND_DATA.pgpKeyFingerprint);
-    setCopiedPgp(true);
-    setTimeout(() => setCopiedPgp(false), 2000);
+  // Message composition form state
+  const [senderName, setSenderName] = useState('');
+  const [senderEmail, setSenderEmail] = useState('');
+  const [subject, setSubject] = useState('Technical Collaboration');
+  const [message, setMessage] = useState('');
+  const [isCopied, setIsCopied] = useState(false);
+  const [transmissionSent, setTransmissionSent] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(BEYOND_DATA.email);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
-  const handleSendTransmission = (e: React.FormEvent) => {
+  const handleTransmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!senderName || !senderEmail || !message) return;
+    if (!message.trim()) return;
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setTransmissionSuccess(true);
-      setSenderName('');
-      setSenderEmail('');
-      setMessage('');
-    }, 500);
+    // Build mailto link
+    const mailtoUrl = `mailto:${BEYOND_DATA.email}?subject=${encodeURIComponent(
+      `[Multiverse Transmission] ${subject} - from ${senderName || 'Visitor'}`
+    )}&body=${encodeURIComponent(
+      `From: ${senderName} (${senderEmail})\n\n${message}`
+    )}`;
+
+    window.open(mailtoUrl, '_blank');
+    setTransmissionSent(true);
+    setTimeout(() => setTransmissionSent(false), 4000);
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#030305] text-neutral-100 flex flex-col p-6 sm:p-10 lg:p-12 overflow-hidden selection:bg-cyan-950 selection:text-cyan-200">
+    <div className="relative min-h-screen w-full bg-[#030305] text-neutral-100 flex flex-col justify-between p-4 sm:p-8 lg:p-12 overflow-x-hidden selection:bg-cyan-950 selection:text-cyan-200">
       {/* 
         ========================================================================
-        Hyperspeed WebGL 3D Warp Tunnel Highway Surface
+        Hyperspeed WebGL 3D Warp Tunnel Highway Surface (ORIGINAL BEHAVIOR RESTORED)
         Spans the entire Beyond universe with blooming speed trails & camera warp
         ========================================================================
       */}
@@ -175,449 +166,218 @@ export const BeyondUniverse: React.FC<BeyondUniverseProps> = ({ onTravelTo }) =>
         <div className="absolute inset-0 bg-gradient-to-b from-[#030305]/75 via-[#030305]/50 to-[#030305]/90 pointer-events-none" />
       </div>
 
-      {/* 
-        ========================================================================
-        Universe Content Layer
-        ========================================================================
-      */}
-      <div className="relative z-10 flex flex-col flex-1 max-w-6xl mx-auto w-full">
-        {/* Header */}
-        <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-neutral-800/80 backdrop-blur-sm">
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-              <span className="px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/50 text-cyan-300 font-semibold">
-                UNIVERSE 07
-              </span>
-              <span aria-hidden="true" className="text-neutral-600">/</span>
-              <span className="text-neutral-200 font-semibold uppercase tracking-wider">{currentMeta.name}</span>
-              <span aria-hidden="true" className="text-neutral-600">·</span>
-              <span className="text-neutral-400">{currentMeta.concept}</span>
+      {/* Structural Stage Border Frame */}
+      <div className="absolute inset-2 sm:inset-4 pointer-events-none border border-cyan-950/40 rounded-lg z-10" />
+
+      {/* TRANSMISSION TOP STATUS BAR */}
+      <header className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-cyan-950/50 backdrop-blur-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-cyan-300 uppercase">
+              EGRESS 07 // {currentMeta.name.toUpperCase()} TERMINAL
+            </span>
+          </div>
+          <span className="text-neutral-700 hidden sm:inline">|</span>
+          <span className="font-mono text-xs text-neutral-400 hidden sm:inline">
+            DISPATCH PROTOCOL ACTIVE
+          </span>
+        </div>
+
+        {/* Warp Controls & Reset Loop */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => onTravelTo('arrival')}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded bg-cyan-950/60 border border-cyan-800/50 text-cyan-300 hover:text-white hover:bg-cyan-900/60 transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Return to Chamber 00</span>
+          </button>
+        </div>
+      </header>
+
+      {/* COMPACT TRANSMISSION TERMINAL (Flanked by Warp Beams) */}
+      <main className="relative z-20 my-auto py-6 max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ====================================================================
+            LEFT: MESSAGE COMPOSITION TERMINAL (7 cols)
+            ==================================================================== */}
+        <section className="lg:col-span-7 bg-neutral-950/80 backdrop-blur-md border border-cyan-950/80 rounded-xl p-5 sm:p-7 space-y-5 shadow-2xl">
+          <div className="border-b border-cyan-950/60 pb-3">
+            <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider mb-1">
+              DISPATCH TERMINAL
             </div>
-            <h1 className="text-2xl sm:text-4xl font-bold tracking-tight font-display text-white drop-shadow-md">
-              Transmissions, Verification & Egress
-            </h1>
-            <p className="text-xs sm:text-sm text-neutral-400 font-mono max-w-2xl">
-              Terminal egress station to dispatch packets to Sobi, verify cryptographic identity signatures, inspect credentials, or loop into the multiverse.
+            <h2 className="text-xl sm:text-2xl font-bold font-display text-white">
+              Transmit Direct Dispatch
+            </h2>
+            <p className="text-xs text-neutral-400 mt-1">
+              Send an inquiry directly to Sobi via authenticated mail dispatch protocol.
             </p>
           </div>
 
-          {/* Quick Actions & Warp Controller Toggle */}
-          <div className="flex items-center gap-2.5 self-start lg:self-center">
-            <button
-              onClick={() => setShowWarpControls(!showWarpControls)}
-              className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono rounded-lg border transition-all ${
-                showWarpControls
-                  ? 'bg-cyan-950/60 text-cyan-200 border-cyan-500/60 shadow-lg shadow-cyan-950/40'
-                  : 'bg-neutral-900/70 text-neutral-400 hover:text-neutral-200 border-neutral-800 hover:border-neutral-700'
-              }`}
-            >
-              <Sliders className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Warp HUD {showWarpControls ? '▲' : '▼'}</span>
-            </button>
-
-            <button
-              onClick={() => setShowResumeModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-mono font-semibold text-neutral-100 bg-neutral-900/80 hover:bg-neutral-800 border border-neutral-700/80 rounded-lg transition-colors shadow-lg"
-            >
-              <FileDown className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Inspect CV / Resume</span>
-            </button>
-          </div>
-        </header>
-
-        {/* 
-          ========================================================================
-          Live Hyperspeed Velocity Indicator Banner (Click & Hold to Accelerate)
-          ========================================================================
-        */}
-        <div
-          className={`my-4 p-3.5 sm:p-4 rounded-xl border transition-all flex flex-wrap items-center justify-between gap-3 ${
-            isSpeedingUp
-              ? 'bg-cyan-950/80 border-cyan-400 text-cyan-100 shadow-2xl shadow-cyan-500/30'
-              : 'bg-neutral-950/60 backdrop-blur-md border-neutral-800/80 text-neutral-400'
-          }`}
-        >
-          <div className="flex items-center gap-3 font-mono text-xs">
-            <div
-              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-                isSpeedingUp ? 'bg-cyan-400 text-neutral-950 animate-pulse' : 'bg-neutral-900 text-cyan-400'
-              }`}
-            >
-              <Zap className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-xs">
-                <span className={isSpeedingUp ? 'text-cyan-300' : 'text-neutral-200'}>
-                  {isSpeedingUp ? '⚡ HYPERSPEED ACTIVE · 850 KM/S (WARP 9.6)' : '🚀 CRUISE VELOCITY · 120 KM/S'}
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <form onSubmit={handleTransmit} className="space-y-3.5 font-mono text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="text-neutral-400 text-[11px]">SENDER IDENTITY / NAME</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Elena Rostova"
+                  value={senderName}
+                  onChange={(e) => setSenderName(e.target.value)}
+                  className="w-full bg-neutral-900/80 border border-neutral-800 rounded px-3 py-2 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-400"
+                />
               </div>
-              <p className="text-[11px] text-neutral-400 font-sans mt-0.5">
-                {isSpeedingUp
-                  ? 'Relativistic camera distortion active · FOV expanded to 145° · Release mouse to return to cruise'
-                  : 'CLICK & HOLD ANYWHERE on the screen (or hold Spacebar) to surge into hyperspeed'}
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onMouseDown={() => {
-                window.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-              }}
-              onMouseUp={() => {
-                window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-              }}
-              onTouchStart={() => {
-                window.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
-              }}
-              onTouchEnd={() => {
-                window.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
-              }}
-              className={`px-4 py-2 rounded-lg font-mono text-xs font-bold transition-all shadow-md select-none cursor-pointer ${
-                isSpeedingUp
-                  ? 'bg-cyan-400 text-neutral-950 shadow-cyan-400/50 scale-105'
-                  : 'bg-neutral-900 border border-cyan-700/60 text-cyan-300 hover:bg-cyan-950/60'
-              }`}
-            >
-              {isSpeedingUp ? '⚡ WARP ACTIVE (HOLDING)' : 'PRESS & HOLD TO WARP'}
-            </button>
-          </div>
-        </div>
-
-        {/* 
-          ========================================================================
-          Expandable Hyperspeed Warp Controller HUD
-          ========================================================================
-        */}
-        {showWarpControls && (
-          <div className="mb-4 p-4 sm:p-5 rounded-xl bg-neutral-950/85 backdrop-blur-xl border border-cyan-900/30 text-xs font-mono space-y-4 shadow-2xl">
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-neutral-900">
-              <div className="flex items-center gap-2 text-cyan-300">
-                <Zap className="w-4 h-4 text-cyan-400" />
-                <span className="font-semibold uppercase tracking-wider">Hyperspeed Warp Drive Control</span>
+              <div className="space-y-1">
+                <label className="text-neutral-400 text-[11px]">RETURN FREQUENCY / EMAIL</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="e.g. elena@research.org"
+                  value={senderEmail}
+                  onChange={(e) => setSenderEmail(e.target.value)}
+                  className="w-full bg-neutral-900/80 border border-neutral-800 rounded px-3 py-2 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-400"
+                />
               </div>
-              <span className="text-[11px] text-neutral-500">
-                Click & hold anywhere on screen to accelerate into warp
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-neutral-400 text-[11px]">SUBJECT / VECTOR</label>
+              <select
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="w-full bg-neutral-900/80 border border-neutral-800 rounded px-3 py-2 text-neutral-200 focus:outline-none focus:border-cyan-400"
+              >
+                <option value="Technical Collaboration">Technical Collaboration & Architecture</option>
+                <option value="Applied AI Role">Engineering Opportunities & Roles</option>
+                <option value="Document Intelligence">Document Intelligence Discussion</option>
+                <option value="General Inquiry">General Multiverse Transmission</option>
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-neutral-400 text-[11px]">TRANSMISSION PAYLOAD / MESSAGE</label>
+              <textarea
+                required
+                rows={4}
+                placeholder="Compose your dispatch message here..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="w-full bg-neutral-900/80 border border-neutral-800 rounded p-3 text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-400 leading-relaxed resize-none"
+              />
+            </div>
+
+            <div className="pt-2 flex items-center justify-between">
+              <span className="text-[10px] text-neutral-500 font-mono">
+                DISPATCH ENCRYPTED & LOGGED
               </span>
+
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded bg-cyan-500 hover:bg-cyan-400 text-neutral-950 font-bold transition-colors shadow-md"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>{transmissionSent ? 'DISPATCH PREPARED!' : 'TRANSMIT MESSAGE'}</span>
+              </button>
             </div>
+          </form>
+        </section>
 
-            {/* Warp Presets */}
-            <div className="space-y-2">
-              <label className="text-[11px] uppercase tracking-wider text-neutral-400 block font-semibold">
-                Relativistic Velocity Spectrum:
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {WARP_PRESETS.map((preset) => (
-                  <button
-                    key={preset.id}
-                    onClick={() => setSelectedPresetId(preset.id)}
-                    className={`px-3 py-1.5 rounded-lg border text-xs transition-all ${
-                      selectedPresetId === preset.id
-                        ? `${preset.badgeClass} font-bold shadow-md`
-                        : 'border-neutral-800 bg-neutral-900/50 text-neutral-400 hover:text-neutral-200'
-                    }`}
-                  >
-                    {preset.label}
-                  </button>
-                ))}
+        {/* ====================================================================
+            RIGHT: VERIFIED PUBLIC CHANNELS (5 cols)
+            ==================================================================== */}
+        <aside className="lg:col-span-5 space-y-4">
+          <div className="bg-neutral-950/80 backdrop-blur-md border border-cyan-950/80 rounded-xl p-5 space-y-4">
+            <div className="border-b border-cyan-950/50 pb-3">
+              <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider mb-1">
+                PUBLIC CHANNELS
               </div>
-            </div>
-
-            {/* Velocity Readout */}
-            <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-neutral-400">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                <span>Engine Status: {isSpeedingUp ? '⚡ Maximum Warp (3.5x boost)' : 'Cruising (1.0x velocity)'}</span>
-              </div>
-              <span>Camera FOV: {isSpeedingUp ? '145° (Relativistic Wide)' : '90° (Nominal)'}</span>
-            </div>
-          </div>
-        )}
-
-        {/* 
-          ========================================================================
-          Main Structural Stage: Split Terminal Dispatch Desk
-          ========================================================================
-        */}
-        <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start w-full">
-          {/* Left Column: Direct Transmission Form (7 Cols) */}
-          <section className="lg:col-span-7 bg-neutral-950/65 backdrop-blur-md border border-neutral-800/80 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl hover:border-neutral-700 transition-colors">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 block mb-1 font-semibold flex items-center gap-1.5">
-                <Terminal className="w-3.5 h-3.5" />
-                Direct Transmission Console
-              </span>
-              <h2 className="text-xl sm:text-2xl font-bold font-display text-neutral-50">
-                Dispatch a Packet to Sobi
-              </h2>
-              <p className="text-xs sm:text-sm text-neutral-300 mt-1 leading-relaxed font-sans">
-                {BEYOND_DATA.transmissionNote}
-              </p>
-            </div>
-
-            {transmissionSuccess ? (
-              <div className="p-6 rounded-xl bg-neutral-900/80 border border-emerald-500/40 space-y-3">
-                <div className="flex items-center gap-2 text-emerald-400 font-mono text-sm font-semibold">
-                  <Check className="w-4 h-4" />
-                  <span>Transmission Dispatched Successfully</span>
-                </div>
-                <p className="text-xs text-neutral-300 leading-relaxed font-sans">
-                  Your message packet has been encrypted and acknowledged. If your transmission requires response, expect contact within 24-48 hours.
-                </p>
-                <button
-                  onClick={() => setTransmissionSuccess(false)}
-                  className="text-xs text-cyan-400 hover:text-white underline pt-1 font-mono block"
-                >
-                  Send Another Transmission
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSendTransmission} className="space-y-4 text-xs font-mono">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-neutral-400">Your Name / Handle</label>
-                    <input
-                      type="text"
-                      required
-                      value={senderName}
-                      onChange={(e) => setSenderName(e.target.value)}
-                      placeholder="e.g. Alice Chen"
-                      className="w-full px-3 py-2 bg-neutral-900/80 border border-neutral-800 rounded-lg text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-500"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-neutral-400">Return Email Address</label>
-                    <input
-                      type="email"
-                      required
-                      value={senderEmail}
-                      onChange={(e) => setSenderEmail(e.target.value)}
-                      placeholder="alice@domain.org"
-                      className="w-full px-3 py-2 bg-neutral-900/80 border border-neutral-800 rounded-lg text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-neutral-400">Transmission Context</label>
-                  <select
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-900/80 border border-neutral-800 rounded-lg text-neutral-200 focus:outline-none focus:border-cyan-500"
-                  >
-                    <option value="Systems Engineering & Architecture">Systems Engineering & Architecture</option>
-                    <option value="AI Research & Foundation Models">AI Research & Foundation Models</option>
-                    <option value="Multi-Agent Consensus Inquiry">Multi-Agent Consensus Inquiry</option>
-                    <option value="Open Source Collaboration">Open Source Collaboration</option>
-                    <option value="General Invariant Discussion">General Invariant Discussion</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-neutral-400">
-                    <label>Transmission Payload / Message</label>
-                    <span className="text-[10px] text-neutral-600">{message.length} chars</span>
-                  </div>
-                  <textarea
-                    required
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Enter your inquiry, engineering opportunity, or architectural problem statement..."
-                    className="w-full px-3 py-2 bg-neutral-900/80 border border-neutral-800 rounded-lg text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-500 resize-none font-sans"
-                  />
-                </div>
-
-                <div className="pt-2 flex items-center justify-between">
-                  <span className="text-[11px] text-neutral-500 font-mono flex items-center gap-1.5">
-                    <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                    Channel: Egress Port 443 (TLS Encrypted)
-                  </span>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 px-5 py-2 text-xs font-mono font-semibold text-neutral-950 bg-cyan-400 hover:bg-cyan-300 disabled:opacity-50 rounded-lg transition-colors shadow-lg shadow-cyan-950/50"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                        <span>Transmitting...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-3.5 h-3.5" />
-                        <span>Dispatch Packet</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
-          </section>
-
-          {/* Right Column: Identity Verification & Coordinates (5 Cols) */}
-          <aside className="lg:col-span-5 space-y-6">
-            {/* Cryptographic Identity Fingerprint */}
-            <div className="bg-neutral-950/65 backdrop-blur-md border border-neutral-800/80 rounded-2xl p-6 space-y-4 shadow-xl">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-semibold flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  PGP Identity Signature
-                </span>
-                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800/50">
-                  Verified
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <span className="text-[11px] font-mono text-neutral-500 block">
-                  Public Key Fingerprint (4096-bit RSA):
-                </span>
-                <div className="p-3 bg-neutral-900/80 border border-neutral-800 rounded-xl text-xs font-mono text-neutral-300 break-all select-all flex items-center justify-between gap-2">
-                  <span>{BEYOND_DATA.pgpKeyFingerprint}</span>
-                  <button
-                    onClick={handleCopyPgp}
-                    className="shrink-0 p-1.5 hover:bg-neutral-800 rounded transition-colors text-neutral-400 hover:text-white"
-                    title="Copy PGP Fingerprint"
-                  >
-                    {copiedPgp ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <p className="text-xs text-neutral-400 leading-relaxed font-sans">
-                For sensitive inquiries or vulnerability reports, encrypt using Sobi&apos;s key published to keys.openpgp.org.
-              </p>
-            </div>
-
-            {/* Network Coordinates */}
-            <div className="bg-neutral-950/65 backdrop-blur-md border border-neutral-800/80 rounded-2xl p-6 space-y-4 shadow-xl">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-neutral-300 font-semibold flex items-center gap-2">
-                <Globe className="w-4 h-4 text-cyan-400" />
-                Network Coordinates & Ingress
+              <h3 className="text-lg font-bold font-display text-white">
+                Verified Endpoints
               </h3>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
-                {BEYOND_DATA.socials.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-xl bg-neutral-900/60 border border-neutral-800/80 hover:border-cyan-500/50 hover:bg-neutral-900/90 text-neutral-300 hover:text-white transition-all flex items-center justify-between group"
-                  >
-                    <div>
-                      <span className="block font-semibold group-hover:text-cyan-300 transition-colors">{link.label}</span>
-                      <span className="text-[10px] text-neutral-500 block">{link.username}</span>
+            {/* Direct Email with copy trigger */}
+            <div className="p-3 rounded bg-cyan-950/30 border border-cyan-800/40 space-y-1.5">
+              <div className="text-[10px] font-mono text-cyan-400 uppercase">
+                PRIMARY DIRECT INBOX
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono text-xs font-semibold text-white truncate">
+                  {BEYOND_DATA.email}
+                </span>
+                <button
+                  onClick={handleCopyEmail}
+                  className="px-2 py-1 rounded bg-neutral-900 hover:bg-neutral-800 text-[11px] font-mono text-cyan-300 transition-colors flex items-center gap-1 shrink-0"
+                >
+                  {isCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                  <span>{isCopied ? 'Copied' : 'Copy'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Public Channels List */}
+            <div className="space-y-2">
+              {BEYOND_DATA.channels.map((ch) => (
+                <a
+                  key={ch.name}
+                  href={ch.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="p-3 rounded bg-neutral-900/60 border border-neutral-800/60 hover:border-cyan-700/60 transition-all flex items-center justify-between text-xs group"
+                >
+                  <div>
+                    <div className="font-semibold text-neutral-200 group-hover:text-white flex items-center gap-1.5">
+                      <span>{ch.name}</span>
+                      <span className="text-neutral-500 font-mono text-[11px]">({ch.handle})</span>
                     </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-neutral-600 group-hover:text-cyan-400 transition-colors" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </aside>
-        </main>
-
-        {/* Resume / CV Modal Drawer */}
-        {showResumeModal && (
-          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
-            <div className="bg-neutral-950 border border-neutral-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 text-neutral-200 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-neutral-800 pb-4">
-                <div>
-                  <h3 className="text-xl font-bold font-display text-white">{ABOUT_DOSSIER.name} — Curriculum Vitae</h3>
-                  <p className="text-xs font-mono text-cyan-400">{ABOUT_DOSSIER.role}</p>
-                </div>
-                <button
-                  onClick={() => setShowResumeModal(false)}
-                  className="text-neutral-400 hover:text-white px-2.5 py-1 rounded text-sm font-mono border border-neutral-800 hover:border-neutral-600 transition-colors"
-                >
-                  ✕ Close
-                </button>
-              </div>
-
-              <div className="space-y-5 text-xs sm:text-sm">
-                <p className="text-neutral-300 leading-relaxed bg-neutral-900/60 p-4 rounded-xl border border-neutral-800/80 font-sans">
-                  {BEYOND_DATA.resumeSummary.summaryText}
-                </p>
-
-                <div>
-                  <h4 className="font-mono text-xs uppercase tracking-wider text-cyan-400 mb-2 font-semibold">
-                    Core Competencies
-                  </h4>
-                  <ul className="space-y-1.5 text-neutral-300 font-sans">
-                    {BEYOND_DATA.resumeSummary.focusAreas.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-mono text-xs uppercase tracking-wider text-cyan-400 mb-2 font-semibold">
-                    Experience Highlights
-                  </h4>
-                  <ul className="space-y-2 text-neutral-300 font-sans">
-                    {BEYOND_DATA.resumeSummary.experienceHighlights.map((e, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 shrink-0" />
-                        <span>{e}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="font-mono text-xs uppercase tracking-wider text-cyan-400 mb-1 font-semibold">
-                    Formal Education
-                  </h4>
-                  <p className="text-neutral-300 font-mono text-xs">{BEYOND_DATA.resumeSummary.education}</p>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-neutral-800 flex justify-between items-center text-xs">
-                <span className="text-neutral-500 font-mono">Digital Signature: Verified</span>
-                <button
-                  onClick={() => window.print()}
-                  className="px-4 py-2 bg-neutral-100 text-neutral-900 font-semibold rounded-lg hover:bg-white transition-colors"
-                >
-                  Print / Save PDF
-                </button>
-              </div>
+                    <div className="text-[10px] text-neutral-400 font-mono mt-0.5">
+                      {ch.protocol}
+                    </div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-neutral-500 group-hover:text-cyan-400 transition-colors shrink-0" />
+                </a>
+              ))}
             </div>
           </div>
-        )}
 
-        {/* Footer */}
-        <footer className="pt-6 pb-2 border-t border-neutral-800/80 backdrop-blur-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono text-neutral-400">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            <span>Beyond Egress · Stage 07/07</span>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
-            <span>Open Frequency Status: Online</span>
-          </div>
+          {/* Curriculum Vitae Card */}
+          <div className="bg-neutral-950/80 backdrop-blur-md border border-cyan-950/80 rounded-xl p-5 space-y-3 font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-cyan-950/50 pb-2">
+              <span className="text-cyan-400 font-semibold uppercase flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-cyan-400" />
+                CURRICULUM VITAE SUMMARY
+              </span>
+              <span className="text-neutral-500 text-[10px]">VERIFIED 2025</span>
+            </div>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => onTravelTo('about')}
-              className="text-neutral-400 hover:text-white transition-colors flex items-center gap-1"
-            >
-              <span>← 06 About</span>
-            </button>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
-            <button
-              onClick={() => onTravelTo('arrival')}
-              className="text-cyan-300 hover:text-white transition-colors font-medium flex items-center gap-1"
-            >
-              <span>Return to 00 Arrival ↺</span>
-            </button>
+            <p className="text-neutral-300 font-sans text-xs leading-relaxed">
+              {BEYOND_DATA.curriculumVitae.summary}
+            </p>
+
+            <div className="pt-2">
+              <a
+                href="https://sobi.codes"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full inline-flex items-center justify-center gap-2 py-2 px-3 rounded bg-neutral-900 border border-cyan-800/50 text-cyan-300 hover:text-white hover:bg-cyan-950/80 transition-colors"
+              >
+                <span>Access Full CV & Portfolio on sobi.codes</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
-        </footer>
-      </div>
+        </aside>
+      </main>
+
+      {/* EGRESS FOOTER */}
+      <footer className="relative z-20 pt-4 border-t border-cyan-950/50 text-[10px] font-mono text-neutral-500 flex items-center justify-between">
+        <span className="flex items-center gap-1.5">
+          <Terminal className="w-3 h-3 text-cyan-400" />
+          MULTIVERSE EGRESS · HYPERSPEED TRANSMISSION BEAMS
+        </span>
+        <span>FINAL REALITY · TERMINAL EXHAUSTED</span>
+      </footer>
     </div>
   );
 };

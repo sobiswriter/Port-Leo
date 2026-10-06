@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
-import { UniverseId, ResearchPaperItem } from '../../types/universe';
-import { RESEARCH_PAPERS, UNIVERSES_META } from '../../data/portfolioData';
-import { BookOpen, Copy, Check, FileText, Quote, ArrowUpRight, Search, Sparkles } from 'lucide-react';
+import { UniverseId, ResearchRecordItem } from '../../types/universe';
+import { RESEARCH_RECORDS, UNIVERSES_META } from '../../data/portfolioData';
+import {
+  FileText,
+  Bookmark,
+  Award,
+  Sparkles,
+  CheckCircle2,
+  ExternalLink,
+  ChevronRight,
+  ArrowRight,
+  ShieldCheck,
+  Layers,
+  Compass,
+  Radio,
+} from 'lucide-react';
 import Lightfall from '../../components/react-bits/Lightfall';
 
 interface ResearchUniverseProps {
@@ -44,32 +57,20 @@ const LIGHT_SPECTRUMS: LightSpectrum[] = [
 
 export const ResearchUniverse: React.FC<ResearchUniverseProps> = ({ onTravelTo }) => {
   const currentMeta = UNIVERSES_META.find((u) => u.id === 'research')!;
-  const [activeBibtexId, setActiveBibtexId] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedRecordId, setSelectedRecordId] = useState<string>('res-doc-intelligence');
 
   // Lightfall Spectrum State
   const [spectrumId, setSpectrumId] = useState<string>('celestial');
   const activeSpectrum = LIGHT_SPECTRUMS.find((s) => s.id === spectrumId) || LIGHT_SPECTRUMS[0];
 
-  const filteredPapers = RESEARCH_PAPERS.filter(
-    (p) =>
-      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      p.venue.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleCopyBibtex = (paper: ResearchPaperItem) => {
-    navigator.clipboard.writeText(paper.bibtex);
-    setCopiedId(paper.id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
+  const activeRecord: ResearchRecordItem =
+    RESEARCH_RECORDS.find((r) => r.id === selectedRecordId) || RESEARCH_RECORDS[0];
 
   return (
-    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-6 sm:p-10 lg:p-12 overflow-hidden selection:bg-neutral-800">
+    <div className="relative min-h-screen w-full bg-[#050505] text-neutral-100 flex flex-col p-4 sm:p-8 lg:p-10 overflow-x-hidden selection:bg-indigo-900/60 selection:text-white">
       {/* 
         ========================================================================
-        Lightfall WebGL Falling Light Streaks Surface
+        Lightfall WebGL Falling Light Streaks Surface (ORIGINAL BEHAVIOR RESTORED)
         Spans the entire Research universe with interactive cursor illumination
         ========================================================================
       */}
@@ -97,214 +98,225 @@ export const ResearchUniverse: React.FC<ResearchUniverseProps> = ({ onTravelTo }
       </div>
 
       {/* Structural Stage Border Frame */}
-      <div className="absolute inset-4 sm:inset-6 pointer-events-none border border-neutral-800/60 rounded-lg z-10" />
+      <div className="absolute inset-2 sm:inset-4 pointer-events-none border border-indigo-950/40 rounded-lg z-10" />
 
-      {/* Research Header */}
-      <header className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-neutral-800/80 backdrop-blur-xs">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-            <span>UNIVERSE 03</span>
-            <span aria-hidden="true" className="text-neutral-700">/</span>
-            <span className="text-neutral-300 font-semibold uppercase">{currentMeta.name}</span>
-            <span aria-hidden="true" className="text-neutral-700">·</span>
-            <span className="text-neutral-400">{currentMeta.concept}</span>
+      {/* ARCHIVE TOP BAR */}
+      <header className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-indigo-900/30 backdrop-blur-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            <span className="font-mono text-xs font-semibold tracking-wider text-indigo-300 uppercase">
+              ARCHIVE 03 // {currentMeta.name.toUpperCase()} DOSSIER
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight font-display text-neutral-100">
-            Papers, Investigations & Preprints
-          </h1>
+          <span className="text-neutral-700 hidden sm:inline">|</span>
+          <span className="font-mono text-xs text-neutral-400 hidden sm:inline">
+            INVESTIGATIONS & VERIFIED PUBLICATION SIGNALS
+          </span>
         </div>
 
-        {/* Controls: Lightfall Spectrum & Search */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Light Spectrum Selector */}
-          <div className="flex items-center gap-1 bg-neutral-900/80 border border-neutral-800 p-0.5 rounded-md backdrop-blur-md">
-            <span className="text-[11px] font-mono text-neutral-400 px-2 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-neutral-400" />
-              <span className="hidden sm:inline">Beam:</span>
+        {/* Spectrum Controls */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 bg-neutral-950/70 border border-indigo-950/80 p-0.5 rounded text-[11px] font-mono">
+            <span className="text-neutral-400 px-1.5 flex items-center gap-1">
+              <Layers className="w-3 h-3 text-indigo-400" />
+              <span className="hidden sm:inline">Stream:</span>
             </span>
-            {LIGHT_SPECTRUMS.map((spec) => (
+            {LIGHT_SPECTRUMS.map((s) => (
               <button
-                key={spec.id}
-                onClick={() => setSpectrumId(spec.id)}
-                className={`px-2.5 py-1 text-xs font-mono rounded transition-colors ${
-                  spectrumId === spec.id
-                    ? 'bg-neutral-100 text-neutral-950 font-bold shadow-xs'
-                    : 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800'
+                key={s.id}
+                onClick={() => setSpectrumId(s.id)}
+                className={`px-2 py-0.5 rounded transition-colors ${
+                  spectrumId === s.id
+                    ? 'bg-indigo-600 text-white font-bold'
+                    : 'text-neutral-400 hover:text-neutral-200'
                 }`}
               >
-                {spec.label}
+                {s.label}
               </button>
             ))}
           </div>
 
-          {/* Search Field */}
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
-            <input
-              type="text"
-              placeholder="Filter topics, venues, tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs bg-neutral-900/80 border border-neutral-800 rounded text-neutral-200 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-600 backdrop-blur-md w-52 sm:w-60"
-            />
-          </div>
+          <button
+            onClick={() => onTravelTo('arsenal')}
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-mono text-neutral-400 hover:text-indigo-300 transition-colors"
+          >
+            <span>Next: 04 Arsenal</span>
+            <ArrowRight className="w-3 h-3" />
+          </button>
         </div>
       </header>
 
-      {/* Main Structural Stage: Academic Monograph Archive */}
-      <main className="relative z-10 flex-1 py-8 max-w-5xl mx-auto w-full space-y-8">
-        <div className="flex items-center justify-between border-b border-neutral-800/80 pb-3 text-xs font-mono text-neutral-400">
-          <span>Peer-Reviewed Proceedings & Technical Monographs ({filteredPapers.length})</span>
-          <span className="text-neutral-300">Total Citations: 175+</span>
-        </div>
+      {/* ASYMMETRIC INVESTIGATION ARCHIVE LAYOUT */}
+      <main className="relative z-20 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ====================================================================
+            SIDE: INVESTIGATION THREADS & SIGNAL DIRECTORY (4 cols)
+            ==================================================================== */}
+        <aside className="lg:col-span-4 space-y-2.5">
+          <div className="text-[11px] font-mono text-indigo-400 tracking-wider uppercase px-1 mb-2 flex items-center justify-between">
+            <span className="flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-indigo-400" />
+              DOSSIER DIRECTORY ({RESEARCH_RECORDS.length})
+            </span>
+            <span className="text-neutral-500">SELECT RECORD</span>
+          </div>
 
-        <div className="space-y-8">
-          {filteredPapers.map((paper) => {
-            const isBibtexOpen = activeBibtexId === paper.id;
-            return (
-              <article
-                key={paper.id}
-                className="bg-neutral-950/75 backdrop-blur-md border border-neutral-800/80 rounded-xl p-6 sm:p-8 space-y-5 hover:border-neutral-700 transition-colors shadow-lg"
-              >
-                {/* Monograph Top Metadata Line */}
-                <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-neutral-400">
-                  <div className="flex items-center gap-2">
-                    <span className="text-neutral-200 font-semibold">{paper.venue}</span>
-                    <span aria-hidden="true" className="text-neutral-700">·</span>
-                    <span>{paper.year}</span>
-                    <span aria-hidden="true" className="text-neutral-700">·</span>
-                    <span className="text-neutral-400">arXiv:{paper.arxivId}</span>
+          <div className="space-y-2 max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
+            {RESEARCH_RECORDS.map((rec) => {
+              const isSelected = rec.id === activeRecord.id;
+              return (
+                <button
+                  key={rec.id}
+                  onClick={() => setSelectedRecordId(rec.id)}
+                  className={`w-full text-left p-3.5 rounded-lg border transition-all duration-200 backdrop-blur-md ${
+                    isSelected
+                      ? 'bg-indigo-950/80 border-indigo-500/70 text-white shadow-lg ring-1 ring-indigo-500/30'
+                      : 'bg-neutral-950/50 border-indigo-950/50 text-neutral-400 hover:bg-neutral-900/60 hover:text-neutral-200 hover:border-indigo-900/60'
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-mono mb-1">
+                    <span className="text-indigo-300 font-semibold">{rec.type}</span>
+                    {rec.signalBadge && (
+                      <span className="text-emerald-400 bg-emerald-950/60 px-1.5 py-0.2 rounded border border-emerald-800/40">
+                        {rec.signalBadge}
+                      </span>
+                    )}
                   </div>
 
-                  <div className="flex items-center gap-3 text-neutral-400">
-                    <span className="text-neutral-300 font-medium">{paper.citations} Citations</span>
-                    <span aria-hidden="true" className="text-neutral-700">·</span>
-                    <span>{paper.readTime}</span>
+                  <h3 className="font-sans font-semibold text-sm text-neutral-100 group-hover:text-white">
+                    {rec.title}
+                  </h3>
+
+                  <div className="text-[11px] font-mono text-neutral-500 mt-1 truncate">
+                    {rec.domain}
                   </div>
-                </div>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
 
-                {/* Monograph Title */}
-                <h2 className="text-xl sm:text-2xl font-bold font-display text-neutral-50 leading-snug">
-                  {paper.title}
-                </h2>
+        {/* ====================================================================
+            MAIN: LARGE DOCUMENTARY DOSSIER SURFACE (8 cols)
+            ==================================================================== */}
+        <section className="lg:col-span-8 bg-neutral-950/75 backdrop-blur-md border border-indigo-950/70 rounded-xl p-6 sm:p-8 space-y-6">
+          {/* Dossier Record Header */}
+          <div className="border-b border-indigo-950/60 pb-5">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-indigo-400 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-indigo-950 border border-indigo-500/40 text-indigo-200 font-semibold">
+                  {activeRecord.type}
+                </span>
+                <span className="text-neutral-600">/</span>
+                <span className="text-neutral-300">{activeRecord.domain}</span>
+              </div>
+              {activeRecord.dateOrEra && (
+                <span className="text-neutral-400 font-mono">EPOCH: {activeRecord.dateOrEra}</span>
+              )}
+            </div>
 
-                {/* Formal Abstract */}
-                <div className="space-y-1.5">
-                  <span className="text-xs font-mono uppercase tracking-wider text-neutral-400 block">
-                    Abstract
+            <h2 className="text-2xl sm:text-3xl font-bold font-display text-white">
+              {activeRecord.title}
+            </h2>
+
+            <p className="text-sm text-neutral-300 mt-2 leading-relaxed bg-neutral-900/40 p-3.5 rounded border border-indigo-950/50">
+              {activeRecord.overview}
+            </p>
+          </div>
+
+          {/* Investigation Analysis Points */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-mono uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+              <Bookmark className="w-3.5 h-3.5 text-indigo-400" />
+              INVESTIGATION FOCUS & ARCHITECTURAL INQUIRY
+            </h4>
+            <div className="space-y-2">
+              {activeRecord.investigationDetails.map((detail, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start gap-3 p-3 rounded bg-neutral-900/50 border border-indigo-950/40 text-xs sm:text-sm text-neutral-200"
+                >
+                  <span className="text-indigo-400 font-mono text-xs font-semibold shrink-0 mt-0.5">
+                    0{idx + 1}.
                   </span>
-                  <p className="text-sm text-neutral-300 leading-relaxed text-justify">
-                    {paper.abstract}
-                  </p>
+                  <span className="leading-relaxed">{detail}</span>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Key Formal Contributions */}
-                <div className="space-y-2 bg-neutral-900/60 p-4 rounded-lg border border-neutral-800/80">
-                  <span className="text-xs font-mono uppercase tracking-wider text-neutral-400 block">
-                    Key Theoretical & Engineering Contributions:
-                  </span>
-                  <ul className="space-y-1.5">
-                    {paper.contributions.map((c, cIdx) => (
-                      <li key={cIdx} className="text-xs sm:text-sm text-neutral-300 flex items-start gap-2">
-                        <span className="text-neutral-500 font-mono select-none">[{cIdx + 1}]</span>
-                        <span className="leading-relaxed">{c}</span>
-                      </li>
-                    ))}
-                  </ul>
+          {/* Key Findings & Real Outcomes */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-mono uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              EMPIRICAL FINDINGS & SYSTEM VALIDATION
+            </h4>
+            <div className="space-y-2">
+              {activeRecord.keyOutcomes.map((outcome, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start gap-3 p-3 rounded bg-indigo-950/20 border border-indigo-900/40 text-xs sm:text-sm text-indigo-100"
+                >
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">{outcome}</span>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Tags (Unboxed text with separators) & Action Buttons */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-neutral-800/80">
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-400">
-                    <span className="font-mono text-neutral-500 uppercase">Tags:</span>
-                    {paper.tags.map((tag, tIdx) => (
-                      <React.Fragment key={tag}>
-                        <span className="text-neutral-300">{tag}</span>
-                        {tIdx < paper.tags.length - 1 && <span aria-hidden="true" className="text-neutral-700">·</span>}
-                      </React.Fragment>
-                    ))}
-                  </div>
+          {/* Connected Artifacts & Systems */}
+          <div className="pt-4 border-t border-indigo-950/60 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-neutral-500">CONNECTED ARTIFACTS:</span>
+              {activeRecord.artifactsAndTools.map((art) => (
+                <span
+                  key={art}
+                  className="px-2 py-0.5 rounded bg-indigo-950/60 border border-indigo-700/40 text-indigo-200 text-[11px]"
+                >
+                  {art}
+                </span>
+              ))}
+            </div>
 
-                  <div className="flex items-center gap-2.5">
-                    <button
-                      onClick={() => setActiveBibtexId(isBibtexOpen ? null : paper.id)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-300 hover:text-white bg-neutral-900/90 hover:bg-neutral-800 rounded border border-neutral-700 transition-colors"
-                    >
-                      <Quote className="w-3.5 h-3.5" />
-                      <span>{isBibtexOpen ? 'Hide BibTeX' : 'Cite (BibTeX)'}</span>
-                    </button>
-
-                    <a
-                      href={`https://arxiv.org/abs/${paper.arxivId}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-950 bg-neutral-100 hover:bg-white rounded transition-colors"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      <span>Read Preprint</span>
-                      <ArrowUpRight className="w-3 h-3" />
-                    </a>
-                  </div>
-                </div>
-
-                {/* Expandable BibTeX Drawer */}
-                {isBibtexOpen && (
-                  <div className="pt-3 border-t border-neutral-800/80">
-                    <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
-                      <span>BibTeX Entry</span>
-                      <button
-                        onClick={() => handleCopyBibtex(paper)}
-                        className="inline-flex items-center gap-1 text-neutral-300 hover:text-white transition-colors"
-                      >
-                        {copiedId === paper.id ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-emerald-400">Copied to clipboard</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="w-3.5 h-3.5" />
-                            <span>Copy Citation</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <pre className="p-4 rounded-lg bg-neutral-950/90 text-neutral-300 text-xs font-mono overflow-x-auto border border-neutral-800/80 leading-relaxed">
-                      {paper.bibtex}
-                    </pre>
-                  </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
+            <div className="text-neutral-500">
+              VERIFIED DOSSIER · SOBI.CODES ARCHIVE
+            </div>
+          </div>
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 pt-6 border-t border-neutral-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs font-mono text-neutral-400 backdrop-blur-xs">
-        <div>
-          <span>Research Archive · Stage 03/07</span>
-          <span aria-hidden="true" className="text-neutral-700"> · </span>
-          <span>Surface: Interactive Lightfall Tunnel (WebGL)</span>
-        </div>
+      {/* BOTTOM: RECOGNITION & PUBLICATION SIGNALS STREAM */}
+      <footer className="relative z-20 mt-6 pt-4 border-t border-indigo-950/50">
+        <div className="flex flex-col gap-2">
+          <div className="text-[10px] font-mono text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+            <Award className="w-3.5 h-3.5 text-indigo-400" />
+            VERIFIED PUBLICATION & COMPETITIVE SIGNALS STREAM
+          </div>
 
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => onTravelTo('ai-lab')}
-            className="text-neutral-400 hover:text-neutral-200 transition-colors"
-          >
-            ← 02 AI Lab
-          </button>
-          <span aria-hidden="true" className="text-neutral-700">·</span>
-          <button
-            onClick={() => onTravelTo('arsenal')}
-            className="text-neutral-200 hover:text-white transition-colors font-medium"
-          >
-            Enter 04 Arsenal →
-          </button>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            {[
+              { label: 'PATENT PUBLICATION', desc: 'System & Computational IP' },
+              { label: 'AIFUSION IIT ROPAR', desc: 'Applied AI Honors' },
+              { label: 'OPENXAI 2025', desc: 'India Accelerator Cohort' },
+              { label: 'HACKTOSKILL 2025', desc: 'LegalLM Innovation' },
+              { label: 'TECH FEST IIT ROPAR', desc: 'Engineering Distinction' },
+              { label: 'IMC & ODDO MEET', desc: 'Industry Assemblies' },
+            ].map((sig, i) => (
+              <div
+                key={i}
+                className="p-2 rounded bg-neutral-950/60 border border-indigo-950/50 text-left font-mono backdrop-blur-xs"
+              >
+                <div className="text-[10px] font-semibold text-indigo-300 truncate">
+                  {sig.label}
+                </div>
+                <div className="text-[9px] text-neutral-500 truncate">
+                  {sig.desc}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </footer>
     </div>
   );
 };
-
