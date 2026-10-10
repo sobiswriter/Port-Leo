@@ -9,4 +9,4 @@ export const places: { id: UniverseId; name: string; subtitle: string; color: st
   { id: 'about', name: 'The quiet room', subtitle: 'A person behind the possibilities.', color: '#e3bf8d' },
   { id: 'beyond', name: 'The open road', subtitle: 'The next chapter could be ours.', color: '#a8dadd' },
 ];
-export interface RoomProps { onTravelTo: (id: UniverseId) => void }
+export interface RoomProps { onTravelTo: (id: UniverseId | 'universe') => void }
