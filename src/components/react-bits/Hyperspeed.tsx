@@ -11,6 +11,7 @@ export interface HyperspeedProps {
   lanes?: number;
   roadWidth?: number;
   medianWidth?: number;
+  cameraHeight?: number;
   density?: number;
   trailLength?: number;
   lightSize?: number;

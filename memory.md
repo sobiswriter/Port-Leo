@@ -64,3 +64,25 @@ Each initial page load starts with random presets. Every navigation (including b
 - Owner clarified a sourced rounded SVG cursor without the usual arrow stem. Selected Lucide Mouse Pointer 2, using the exact path from the installed lucide-react 0.546.0 package rather than drawing from the screenshot. Added 28px light and blue hover variants with native 5,5 hotspots and rounded joins. Included the package license in public/cursors/LICENSE.txt.
 - Applied to fine-pointer desktop surfaces and interactive controls. Galaxy inherits the compact cursor, and retains grabbing feedback during a drag. Text inputs retain caret cursors. Comet glow configuration unchanged.
 - Both assets parse as valid SVG XML. No dependency changes.
+
+## Faster held Hyperspeed — 2026-10-11
+- Increased all six held boost multipliers from 1.6–1.8x to 2.4–2.8x. Default/neon multiplier is 2.6x. Boost engagement now uses a 0.22-second time constant instead of 0.28; smooth 0.85-second release remains. Increased boosted FOV from 106 to 114 for a stronger sense of travel. Normal cruising speeds remain unchanged.
+
+## Stronger sensation of held speed — 2026-10-11
+- Owner requested another modest increase: held boosts now 3.0–3.4x across presets (default/neon 3.2x), boosted FOV 120, engagement time constant 0.2 seconds. Increased held trail stretch from 1.1 to 1.4 to make passing lights convey speed more strongly. Smooth release and ordinary cruising parameters retained.
+- TypeScript validation run for this configuration change; no interaction logic changes.
+
+## Distinct Hyperspeed environments — 2026-10-11
+- Reworked the six road presets around different spatial characters, rather than minor palette changes: narrow low neon canyon with 64 tall pillars; broad elevated amber hills with 16 cars; pole-free orbital dive with no road/reflection surface and 650 dust points; wide ground-level five-lane racing circuit with 90 cars; straight rose corridor with towering beacons and long trails; elevated sparse lavender drift with eight cars and four small poles.
+- Added an eased cameraHeight prop (2–20 range), independent preset road/median widths, field of view, light sizes, lane counts, backgrounds, surface colouring, reflections and steering. Atmosphere now respects each preset's background instead of overriding it with a shared random palette. Strong held boost retained across all six variants.
+- TypeScript and production build pass. Browser selected all six presets, confirmed selection controls work and each renders without console errors/warnings. Saved five representative screenshots in output/galaxy. No measured FPS audit performed.
+
+## Deep preset replacement and names — 2026-10-11
+- Replaced Orbital Dive with Deep using the owner's supplied screenshot: deep curve/curvature 1, speed 1, boost 3, FOV 90/130, 3 lanes, road width 18, median 2, density 50, trail length/light size 1, 50 poles, dust 100, glow 0.6, reflections 0.5, road opacity 0.1, steering 0.35, interactive enabled. Restored standard camera/pole height. Road #08080a and line #25252d; sampled reference swatches for tail #7c3aed/#3b82f6/#06b6d4/#5a40ff, headlights #2c34bc/#3b82f6 and black poles.
+- Presets now have concise proper names in Atmosphere: Neon Canyon, Solar Ridge, Deep, Silver Circuit, Rose Corridor, Lavender Drift. Existing index/order retained.
+- TypeScript passes; production build run for this preset update.
+
+## Names across room configurations — 2026-10-11
+- Applied short distinct Atmosphere names across the remaining rooms: threshold Silk Current/Contour Flow/Glyph Stream/Matrix Weave/Ocean Swell; workshop Velvet Swell/Signal Pulse/Tidal Glass/Storm Front; archive Celestial Rays/Quantum Prism/Aurora Veil/Solar Cascade; terminal Mint Phosphor/Rose Signal/Amber CRT/Silver Grid/Cyan Transmission/Violet Glass. Tool room's fourth configuration is Violet Ripple.
+- Retained the observatory's existing Latent Manifold/Loss Surface/Neural Field/Deep Tensor and journey's Andromeda Core/Cygnus Rift/Supernova Amber/Pulsar Monochrome names. All eight rooms now expose concise named configurations; rendering parameters and ordering unchanged.
+- TypeScript validation run. Labels-only change; no new tests added.

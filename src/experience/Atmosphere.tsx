@@ -13,7 +13,8 @@ const Highway = lazy(() => import('../components/react-bits/Hyperspeed'));
 const waves = ['silk', 'lines', 'terminal', 'mesh', 'ocean'] as const;
 const slats = ['swell', 'signal', 'tide', 'storm'] as const;
 export const atmosphereNames: Record<UniverseId, string[]> = {
-  arrival: ['Silk', 'Contour lines', 'Terminal glyphs', 'Matrix mesh', 'Swell'], builder: ['Swell', 'Signal', 'Tide', 'Storm'],
+  arrival: ['Silk Current', 'Contour Flow', 'Glyph Stream', 'Matrix Weave', 'Ocean Swell'],
+  builder: ['Velvet Swell', 'Signal Pulse', 'Tidal Glass', 'Storm Front'],
   'ai-lab': TOPO_PALETTES.map(p => p.label), research: LIGHT_SPECTRUMS.map(p => p.label), arsenal: PIXEL_THEMES.map(p => p.label), journey: NEBULA_THEMES.map(p => p.label), about: PHOSPHOR_THEMES.map(p => p.label), beyond: WARP_PRESETS.map(p => p.label),
 };
 class BackgroundBoundary extends React.Component<{children: React.ReactNode}, {failed: boolean}> {
@@ -34,7 +35,7 @@ export function Atmosphere({ room, variant, palette, still, shape }: { room: Uni
     case 'arsenal': scene = <PixelBlast variant={shape} pixelSize={5} color={palette.primary} patternScale={2.5} patternDensity={1.1} enableRipples liquid liquidStrength={0.08} speed={0.45} transparent />; break;
     case 'journey': scene = <Galaxy focal={GALAXY_FOCAL} rotation={GALAXY_ROTATION} hueShift={palette.hue} density={nebula.density} starSpeed={nebula.starSpeed} speed={nebula.speed} glowIntensity={nebula.glowIntensity} saturation={0.28} twinkleIntensity={0.65} rotationSpeed={0.08} mouseInteraction mouseRepulsion transparent />; break;
     case 'about': scene = <Terminal key={terminal.id} gridMul={TERMINAL_GRID_MUL} mouseReact pageLoadAnimation noiseAmp={1} {...terminal} />; break;
-    case 'beyond': scene = <Highway {...warp} background={palette.background} interactive />; break;
+    case 'beyond': scene = <Highway {...warp} background={warp.background ?? palette.background} interactive />; break;
   }
   return <div className={`atmosphere atmosphere-${room}`} aria-hidden="true"><BackgroundBoundary key={room}><Suspense fallback={<div className="still-sky" />}>{still ? <div className="still-sky" /> : scene}</Suspense></BackgroundBoundary><div className="atmosphere-shade" /></div>;
 }

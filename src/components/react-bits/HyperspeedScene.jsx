@@ -440,12 +440,13 @@ const Hyperspeed = ({
   curve = 'winding',
   curvature = 1,
   speed = 1,
-  boost = 1.7,
+  boost = 3.2,
   fov = 90,
-  boostFov = 106,
+  boostFov = 120,
   lanes = 3,
   roadWidth = 10,
   medianWidth = 2,
+  cameraHeight = 8,
   density = 40,
   trailLength = 1,
   lightSize = 1,
@@ -483,6 +484,7 @@ const Hyperspeed = ({
     lanes: Math.max(1, Math.round(lanes)),
     roadWidth: Math.max(1, roadWidth),
     medianWidth: Math.max(0, medianWidth),
+    cameraHeight: Math.min(20, Math.max(2, cameraHeight)),
     density: Math.min(MAX_CARS, Math.max(0, Math.round(density))),
     trailLength: Math.max(0.05, trailLength),
     lightSize: Math.max(0.1, lightSize),
@@ -872,10 +874,10 @@ const Hyperspeed = ({
       syncColors(s);
 
       const wanted = (state.held && s.interactive) || s.boosting ? 1 : 0;
-      state.boost += (wanted - state.boost) * (1 - Math.exp(-dt / (wanted > state.boost ? 0.28 : 0.85)));
+      state.boost += (wanted - state.boost) * (1 - Math.exp(-dt / (wanted > state.boost ? 0.2 : 0.85)));
       const pace = s.speed * (reduce ? 0.3 : 1) * (1 + (s.boost - 1) * state.boost);
       shared.uTime.value += dt * pace;
-      shared.uStretch.value = state.boost * 1.1;
+      shared.uStretch.value = state.boost * 1.4;
       shared.uCurvature.value = s.curvature;
 
       const target = CURVES.indexOf(s.curve) - 1;
@@ -927,7 +929,8 @@ const Hyperspeed = ({
       const follow = s.interactive ? s.steer : 0;
       state.steerX += (state.pointerX * follow - state.steerX) * steerBlend;
       state.steerY += (state.pointerY * follow - state.steerY) * steerBlend;
-      camera.position.set(state.steerX * s.roadWidth * 0.45, 8 - state.steerY * 2.5, -5);
+      const height = camera.position.y + (s.cameraHeight - state.steerY * 2.5 - camera.position.y) * steerBlend;
+      camera.position.set(state.steerX * s.roadWidth * 0.45, height, -5);
 
       const looks = lookShapes(shared.uTime.value, s.curvature);
       const straight = 1 - state.weights.reduce((sum, weight) => sum + weight, 0);
@@ -1045,4 +1048,6 @@ const Hyperspeed = ({
 };
 
 export default Hyperspeed;
+
+
 
