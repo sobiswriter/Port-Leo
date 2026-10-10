@@ -6,3 +6,27 @@
 @media(max-width:700px){.cosmic-inspection{bottom:147px;left:22px;padding:12px 16px;max-width:270px}.experience .cosmic-inspection p{font-size:20px}.cosmic-inspection .cosmic-kicker{font-size:6px}}
 @media(max-width:700px){.experience .cosmic-intro p{max-width:310px;font-size:10px}.cosmic-zoom{top:252px}}
 .cosmic-inspection .cosmic-preview-close{position:absolute;right:8px;top:7px;margin:0;padding:4px;border:0}.cosmic-inspection .cosmic-kicker{padding-right:12px}@media(max-width:700px){.cosmic-zoom{top:285px}}@media(max-width:700px) and (max-height:700px){.cosmic-intro{top:78px}.experience .cosmic-intro h1{font-size:27px}.experience .cosmic-intro p{display:none}.cosmic-zoom{top:200px}.cosmic-inspection{bottom:138px}}
+
+/* Preserve moving texture behind the first two rooms while keeping copy readable. */
+.atmosphere-arrival .atmosphere-shade{background:linear-gradient(90deg,#08090940,transparent 80%),linear-gradient(#08090930,transparent 48%,#08090965)}
+.atmosphere-builder .atmosphere-shade{background:linear-gradient(90deg,#08090955,transparent 85%),linear-gradient(#08090935,transparent 45%,#08090955)}
+.atmosphere-builder .micro-slats{filter:brightness(1.2)}
+
+/* Leave the opening view to the environment; the records begin after the fold. */
+.room-pad .spacious-hero{box-sizing:border-box;min-height:calc(100svh - 112px);margin:0;padding:65px 0 95px;display:flex;flex-direction:column;justify-content:center}
+.room-pad .spacious-hero .text-link{align-self:flex-start;margin-top:30px}
+.room-pad .archive-intro.spacious-hero{align-items:center}
+.room-pad .archive-intro.spacious-hero .text-link{align-self:center}
+.room-pad .about-intro.spacious-hero{flex-direction:row}
+.room-pad :is(#workbench,#lab-instrument,#tool-cabinet,#archive-shelves,#personal-letter,#journey-path){scroll-margin-top:130px}
+.room-cursor{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden}
+.room-cursor .glow-cursor{pointer-events:none}
+@media(max-width:1000px){.room-pad .spacious-hero{min-height:calc(100svh - 90px)}}
+@media(max-width:700px){.room-pad .spacious-hero{min-height:calc(100svh - 86px);padding:45px 0 90px}.room-pad .about-intro.spacious-hero{align-items:center}.room-pad :is(#workbench,#lab-instrument,#tool-cabinet,#archive-shelves,#personal-letter,#journey-path){scroll-margin-top:105px}}
+@media(hover:hover) and (pointer:fine){
+  .experience{cursor:url('/cursors/rounded-pointer.svg') 5 5,default}
+  .experience :is(button,a,summary,select){cursor:url('/cursors/rounded-pointer-hover.svg') 5 5,pointer}
+  .experience :is(input,textarea){cursor:text}
+  .experience .cosmic-galaxy canvas{cursor:inherit}
+  .experience .cosmic-galaxy canvas:active{cursor:grabbing}
+}

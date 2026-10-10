@@ -5,10 +5,12 @@ import { places } from './experience/places';
 import { Atmosphere, atmosphereNames } from './experience/Atmosphere';
 import { colorPalettes } from './experience/colorPalettes';
 import { PORTFOLIO_DESTINATIONS } from './components/galaxy/portfolioDestinations';
+import { cosmicAudio } from './components/galaxy/audio';
 import { rooms, Universe, preloadGalaxy, preloadRoom, warmWorlds } from './experience/worldLoader';
 import { UniverseLoading } from './experience/UniverseLoading';
 import { LivingPage } from './experience/LivingPage';
 import { SceneBoundary } from './experience/SceneBoundary';
+import { RoomCursor } from './experience/RoomCursor';
 import './experience/experience.css';
 import './experience/universe.css';
 import './components/galaxy/galaxy.css';
@@ -38,6 +40,13 @@ export default function App() {
   const pending = useRef<{from: Route; to: Route; sequence: number} | null>(null);
   const sequence = useRef(0);
   const ready = sceneReady && modulesReady;
+
+  useEffect(() => { cosmicAudio.prepareBackgroundMusic(); }, []);
+  useEffect(() => {
+    if (!ready || bootVisible) return;
+    cosmicAudio.startBackgroundMusic();
+    return () => cosmicAudio.stopBackgroundMusic();
+  }, [ready, bootVisible]);
 
   const commit = useCallback((id: Route) => {
     roomRef.current = id;
@@ -139,13 +148,13 @@ export default function App() {
     </main>
     {page && modulesReady && <div className={`world-shell ${flight ? 'is-departing' : ''}`} inert={flight || bootVisible} aria-hidden={flight}>
       <Atmosphere room={page} variant={variants[page] || 0} palette={palette!} still={still || flight} shape={shape}/>
+      <RoomCursor enabled={!still && !flight && !bootVisible}/>
       <header className="site-header"><button className="wordmark" onClick={() => travel('universe')} aria-label="Sobi’s Multiverse home">sobi<span>®</span><small>A PERSONAL UNIVERSE</small></button><span className="room-location"><i/> {String(index).padStart(2, '0')} / {places[index].name}</span><button className="atlas-trigger" onClick={() => travel('universe')}>The universe <Orbit size={18}/></button></header>
       <main id="main-content" ref={main} tabIndex={-1} key={page} className="room-content"><div className="world-orbit-mark" aria-hidden="true"><i/><span/><b/></div><LivingPage key={page} still={still}><Suspense fallback={<div className="room-loading">Opening {places[index].name}…</div>}>{Room && <Room onTravelTo={travel}/>}</Suspense></LivingPage></main>
       <nav className="world-hop" aria-label="Travel to another world"><span>EXPLORE THE UNIVERSE</span>{places.filter(p => p.id !== page).map(place => <button key={place.id} onPointerEnter={() => {void preloadRoom(place.id).catch(() => {});}} onFocus={() => {void preloadRoom(place.id).catch(() => {});}} onClick={() => travel(place.id)}><i style={{background:place.color}}/>{place.name}<ArrowUpRight size={12}/></button>)}</nav>
       <div className="environment-controls"><button aria-label={still ? 'Enable animated backgrounds' : 'Pause animated backgrounds'} onClick={() => setStill(!still)}>{still ? <Play size={15}/> : <Pause size={15}/>}</button><button aria-expanded={settings} aria-controls="atmosphere-settings" onClick={() => setSettings(!settings)}><SlidersHorizontal size={14}/><span>Atmosphere</span></button></div>
       {settings && <section className="atmosphere-settings" id="atmosphere-settings" aria-label="Atmosphere settings"><div className="settings-title"><span className="eyebrow">Change the feeling</span><button aria-label="Close atmosphere settings" onClick={() => setSettings(false)}><X size={16}/></button></div>{atmosphereNames[page].map((name, i) => <button key={name} aria-pressed={(variants[page] || 0) === i} onClick={() => setVariants(v => ({...v, [page]:i}))}>{name}<span>{(variants[page] || 0) === i ? '●' : '○'}</span></button>)}{page === 'arsenal' && <label>Pixel shape<select value={shape} onChange={event => setShape(event.target.value as typeof shape)}>{pixelShapes.map(s => <option key={s}>{s}</option>)}</select></label>}<p>{still ? 'Still mode is on.' : 'Your surroundings, your choice.'}</p></section>}
     </div>}
-    {!page && !flight && <button className="universe-motion" aria-label={still ? 'Enable universe motion' : 'Pause universe motion'} onClick={() => setStill(!still)}>{still ? <Play size={13}/> : <Pause size={13}/>}</button>}
     {flight && <div className="transit-caption" role="status" aria-live="polite"><span>{pending.current?.from === 'universe' ? 'THE HOME GALAXY' : places.find(p => p.id === pending.current?.from)?.name} <ArrowUpRight size={13}/></span><p>{pending.current?.to === 'universe' ? 'Returning to the universe' : `Approaching ${places.find(p => p.id === pending.current?.to)?.name}`}</p><i/></div>}
     {error && !bootVisible && <div className="travel-error" role="alert"><p>{error}</p><button onClick={() => travel('universe')}>Return to the universe</button><button onClick={() => {const to = pending.current?.to; if (to) travel(to);}}>Try again</button></div>}
     {bootVisible && <UniverseLoading ready={ready} progress={progress} error={error} onExit={() => setBootVisible(false)}/>}

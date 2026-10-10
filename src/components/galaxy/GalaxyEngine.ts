@@ -78,8 +78,8 @@ export class GalaxyEngine {
 
   // Galactic Rotation & Dynamic Revolution Control
   private patternAngle = 0;
-  private currentPatternSpeed = 0.038;
-  private targetPatternSpeed = 0.038;
+  private currentPatternSpeed = 0;
+  private targetPatternSpeed = 0;
 
   // Animation & Clock
   private lastFrameTime = performance.now();
@@ -183,6 +183,8 @@ export class GalaxyEngine {
     this.resizeObserver = new ResizeObserver(this.onResize);
     this.resizeObserver.observe(this.canvas.parentElement!);
     this.canvas.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mousemove', this.onWindowMouseMove);
+    window.addEventListener('blur', this.onMouseUp);
     this.canvas.addEventListener('mouseenter', this.onMouseEnter);
     this.canvas.addEventListener('mouseleave', this.onMouseLeave);
     this.canvas.addEventListener('mousedown', this.onMouseDown);
@@ -198,7 +200,7 @@ export class GalaxyEngine {
   }
 
   private createRichDeepSkyStars(): void {
-    const count = 4200;
+    const count = 6800;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
@@ -215,7 +217,7 @@ export class GalaxyEngine {
       positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = radius * Math.cos(phi);
 
-      sizes[i] = 0.35 + Math.random() * 1.3;
+      sizes[i] = Math.random() < 0.08 ? 1.8 + Math.random() : 0.55 + Math.random() * 1.1;
       randomPhases[i] = Math.random();
     }
 
@@ -246,8 +248,8 @@ export class GalaxyEngine {
    * 3. Rigid pattern rotation with continuous inward accretion
    */
   private createComprehensiveMilkyWay(): void {
-    const primaryArmStars = 3200;   // 1600 * 2 = 3200 stars on primary arms
-    const secondaryArmStars = 700;  // 700 * 2 = 1400 stars on secondary spurs
+    const primaryArmStars = 3800;
+    const secondaryArmStars = 1900;
     const centralBulgeStars = 1000; // 1600 dense stars forming vast central bulge
     const unevenDiscStars = 1600;   // 1600 uneven disc stars filling all voids
     const landmarkStars = this.destinations.length; // physical landmark jewel stars
@@ -327,7 +329,7 @@ export class GalaxyEngine {
     primaryBases.forEach((baseAngle, armNum) => {
       for (let i = 0; i < primaryArmStars; i++) {
         const progress = i / primaryArmStars;
-        const sigma = 0.22 + 0.85 * Math.pow(progress, 1.25);
+        const sigma = 0.25 + 1.05 * Math.pow(progress, 1.25);
         const gOffset = gaussianRandom();
         const dPerp = gOffset * sigma;
         const yOffset = gaussianRandom() * (0.07 + 0.16 * progress);
@@ -381,13 +383,14 @@ export class GalaxyEngine {
     secondaryBases.forEach((baseAngle, spurNum) => {
       for (let i = 0; i < secondaryArmStars; i++) {
         const progress = i / secondaryArmStars;
-        const sigma = 0.30 + 0.85 * Math.pow(progress, 1.2);
+        const sigma = 0.32 + 1.05 * Math.pow(progress, 1.2);
         const gOffset = gaussianRandom();
         const dPerp = gOffset * sigma;
         const yOffset = gaussianRandom() * (0.04 + 0.06 * progress);
 
-        const size = 0.7 + Math.random() * 0.9;
-        const alpha = Math.max(0.18, 0.65 - Math.abs(gOffset) * 0.15);
+        const hasSpike = Math.random() < 0.045;
+        const size = hasSpike ? 2.2 + Math.random() : 0.8 + Math.random() * 1.1;
+        const alpha = hasSpike ? 0.95 : Math.max(0.32, 0.82 - Math.abs(gOffset) * 0.12);
 
         const col = new THREE.Color();
         if (Math.random() < 0.6) col.copy(colIceBlue).lerp(colPureWhite, Math.random() * 0.4);
@@ -407,7 +410,7 @@ export class GalaxyEngine {
           progress,
           size,
           col,
-          false,
+          hasSpike,
           alpha
         );
       }
@@ -510,12 +513,13 @@ export class GalaxyEngine {
       });
 
       const col = new THREE.Color(dest.color);
-      const armBaseAngle = (dest.armIndex ?? 0) === 0 ? 0 : Math.PI;
+      const arm = dest.armIndex ?? 0;
+      const armBaseAngle = [0, Math.PI, Math.PI * 0.5, Math.PI * 1.5][arm] ?? 0;
 
       setupStar(
         {
           armIndex: -3,
-          baseRadiusFactor: 9.6,
+          baseRadiusFactor: arm < 2 ? 9.6 : 8.8,
           thetaOffset: armBaseAngle,
           dPerp: 0,
           heightOffset: 0.05,
@@ -657,20 +661,46 @@ export class GalaxyEngine {
 
   private createUniverseDepth(): void {
     // Procedural gas clouds and satellite galaxies occupy actual 3D space.
-    const texture = this.coreGlowMesh.material.map!;
+    const gasCanvas = document.createElement('canvas');
+    gasCanvas.width = gasCanvas.height = 256;
+    const gasContext = gasCanvas.getContext('2d');
+    const gasJitter = () => Math.sqrt(-2 * Math.log(Math.max(1e-6, Math.random()))) * Math.cos(Math.random() * Math.PI * 2);
+    if (gasContext) for (let i = 0; i < 38; i++) {
+      const x = 128 + gasJitter() * 40;
+      const y = 128 + gasJitter() * 28;
+      const radius = 30 + Math.random() * 65;
+      const mist = gasContext.createRadialGradient(x, y, 0, x, y, radius);
+      mist.addColorStop(0, 'rgba(255,255,255,0.065)');
+      mist.addColorStop(0.45, 'rgba(220,230,255,0.025)');
+      mist.addColorStop(1, 'rgba(200,220,255,0)');
+      gasContext.fillStyle = mist;
+      gasContext.fillRect(0, 0, 256, 256);
+    }
+    const texture = new THREE.CanvasTexture(gasCanvas);
     for (const [x, y, z, color, size] of [
       [-26, -12, -32, '#414c86', 55], [35, 8, -45, '#654777', 65],
       [-15, 16, -70, '#29545e', 80], [5, -18, 20, '#443669', 45],
+      [35, 24, 65, '#4c527d', 85], [-60, 15, 50, '#644d76', 95],
+      [10, 42, -15, '#345b6d', 65], [-12, -40, 65, '#51416c', 80],
     ] as const) {
-      const cloud = new THREE.Sprite(new THREE.SpriteMaterial({map: texture, color, opacity: 0.16, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending}));
+      const cloud = new THREE.Sprite(new THREE.SpriteMaterial({map: texture, color, opacity: 0.24, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending}));
       cloud.position.set(x, y, z); cloud.scale.set(size, size * 0.6, 1);
       this.environments.add(cloud);
     }
-    const seeds = [[-45, 10, -40], [48, -12, -65], [12, 28, -95]];
+    // Neighbours surround the home galaxy in 3D, including behind the initial camera.
+    const seeds: number[][] = [];
+    for (let i = 0; i < 24; i++) {
+      const azimuth = i * Math.PI * (3 - Math.sqrt(5));
+      const elevation = Math.asin(1 - 2 * (i + 0.5) / 24);
+      const distance = 68 + (i % 4) * 17;
+      seeds.push([Math.cos(azimuth) * Math.cos(elevation) * distance,
+        Math.sin(elevation) * distance, Math.sin(azimuth) * Math.cos(elevation) * distance,
+        [3.5, 5, 7, 4, 8, 5.5][i % 6]]);
+    }
     seeds.forEach((position, index) => {
       const positions = new Float32Array(1100 * 3);
       for (let i = 0; i < 1100; i++) {
-        const radius = Math.pow(Math.random(), 0.7) * (6 + index * 2);
+        const radius = Math.pow(Math.random(), 0.7) * position[3];
         const angle = radius * 0.8 + (i % 2) * Math.PI + (Math.random() - 0.5) * 0.6;
         positions[i * 3] = Math.cos(angle) * radius;
         positions[i * 3 + 1] = (Math.random() - 0.5) * 0.4;
@@ -678,7 +708,18 @@ export class GalaxyEngine {
       }
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      const galaxy = new THREE.Points(geometry, new THREE.PointsMaterial({color: ['#929ecb', '#c7a4bc', '#8baebf'][index], size: 0.13, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending}));
+      // Small Gaussian halos soften distant structure without a full-screen blur pass.
+      const galaxy = new THREE.Points(geometry, new THREE.ShaderMaterial({
+        uniforms: {uTint: {value: new THREE.Color(['#929ecb', '#c7a4bc', '#8baebf'][index % 3])}, uPixelRatio: {value: Math.min(window.devicePixelRatio || 1, 2)}},
+        vertexShader: `uniform float uPixelRatio; varying float vFade;
+          void main(){vec4 p=modelViewMatrix*vec4(position,1.0);gl_Position=projectionMatrix*p;
+          gl_PointSize=clamp(240.0/max(-p.z,1.0),1.8,4.0)*uPixelRatio;
+          vFade=1.0-smoothstep(90.0,300.0,-p.z)*0.55;}`,
+        fragmentShader: `uniform vec3 uTint; varying float vFade;
+          void main(){float d=length(gl_PointCoord-0.5);float halo=exp(-d*d*18.0)*(1.0-smoothstep(0.38,0.5,d));
+          gl_FragColor=vec4(uTint,halo*0.28*vFade);}`,
+        transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      }));
       galaxy.position.fromArray(position); galaxy.rotation.set(0.35 + index * 0.3, index, 0.2);
       this.environments.add(galaxy);
     });
@@ -686,11 +727,11 @@ export class GalaxyEngine {
   }
 
   private createStarSystems(): void {
-    const planetGeometry = new THREE.SphereGeometry(0.065, 24, 16);
+    const planetGeometry = new THREE.SphereGeometry(0.049, 24, 16);
     this.destinations.forEach(destination => {
       const system = new THREE.Group(); system.name = destination.id;
       for (let orbit = 0; orbit < 3; orbit++) {
-        const radius = 0.35 + orbit * 0.25;
+        const radius = 0.27 + orbit * 0.19;
         const points = Array.from({length: 65}, (_, i) => new THREE.Vector3(Math.cos(i / 64 * Math.PI * 2) * radius, 0, Math.sin(i / 64 * Math.PI * 2) * radius));
         const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({color: destination.color, transparent: true, opacity: 0.13}));
         const planet = new THREE.Mesh(planetGeometry, new THREE.ShaderMaterial({
@@ -711,10 +752,8 @@ export class GalaxyEngine {
   // --- Real Physical Particle Simulation Engine ---
 
   private updateParticlePhysics(delta: number): void {
-    // 1. Dynamic Galaxy Rotation Control:
-    // When visiting a section or traveling, galaxy dynamically moves very slowly (0.0075 rad/s)
-    // When returning Home, it smoothly accelerates back to full majestic speed (0.038 rad/s)
-    this.targetPatternSpeed = (this.activeDestinationId !== null || this.isTraveling) ? 0.0075 : 0.038;
+    // The galaxy turns independently of the camera, whose orientation changes only on drag.
+    this.targetPatternSpeed = this.reducedMotion ? 0 : (this.activeDestinationId !== null || this.isTraveling ? 0.0075 : 0.038);
     this.currentPatternSpeed += (this.targetPatternSpeed - this.currentPatternSpeed) * delta * 2.5;
 
     this.patternAngle += delta * this.currentPatternSpeed;
@@ -864,13 +903,14 @@ export class GalaxyEngine {
     this.isMouseOver = true;
   };
 
-  private onMouseLeave = (): void => {
+  private onMouseLeave = (event: MouseEvent): void => {
     this.isMouseOver = false;
+    if (!(event.buttons & 1)) this.onMouseUp();
     this.mouseWorldPos.set(9999, 9999, 9999);
   };
 
   private onMouseDown = (e: MouseEvent): void => {
-    if (e.button === 0 && !this.activeDestinationId) {
+    if (e.button === 0 && !this.activeDestinationId && !this.isTraveling && !this.isReturning) {
       this.isDragging = true;
       this.previousMousePosition = { x: e.clientX, y: e.clientY };
     }
@@ -878,9 +918,15 @@ export class GalaxyEngine {
 
   private onMouseUp = (): void => {
     this.isDragging = false;
+    this.targetUserRotation.copy(this.userRotation);
+  };
+
+  private onWindowMouseMove = (event: MouseEvent): void => {
+    if (this.isDragging && event.target !== this.canvas) this.onMouseMove(event);
   };
 
   private onMouseMove = (e: MouseEvent): void => {
+    if (!(e.buttons & 1)) this.isDragging = false;
     this.isMouseOver = true;
     const rect = this.canvas.getBoundingClientRect();
     this.mouseNorm.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -910,6 +956,7 @@ export class GalaxyEngine {
   };
 
   private onTouchStart = (e: TouchEvent): void => {
+    if (this.isTraveling || this.isReturning) return;
     this.isMouseOver = true;
     if (e.touches.length === 2) {
       this.isDragging = false;
@@ -926,9 +973,10 @@ export class GalaxyEngine {
 
   private onTouchMove = (e: TouchEvent): void => {
     e.preventDefault();
+    if (this.isTraveling || this.isReturning) return;
     if (e.touches.length === 2 && !this.activeDestinationId) {
       const distance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-      if (this.pinchDistance) this.homeCamDistance = THREE.MathUtils.clamp(this.homeCamDistance * this.pinchDistance / Math.max(distance, 1), this.inspectedDestinationId ? 2 : 12, 180);
+      if (this.pinchDistance) this.homeCamDistance = THREE.MathUtils.clamp(this.homeCamDistance * this.pinchDistance / Math.max(distance, 1), this.inspectedDestinationId ? 2 : 9, 180);
       if (this.homeCamDistance > 18) this.inspectedDestinationId = null;
       this.pinchDistance = distance;
     }
@@ -964,6 +1012,7 @@ export class GalaxyEngine {
 
   private onTouchEnd = (): void => {
     this.isDragging = false;
+    this.targetUserRotation.copy(this.userRotation);
     this.pinchDistance = 0;
     this.mouseWorldPos.set(9999, 9999, 9999);
   };
@@ -971,7 +1020,8 @@ export class GalaxyEngine {
   private onWheel = (event: WheelEvent): void => {
     event.preventDefault();
     if (this.activeDestinationId || this.isTraveling || this.isReturning) return;
-    this.homeCamDistance = THREE.MathUtils.clamp(this.homeCamDistance * Math.exp(event.deltaY * 0.001), this.inspectedDestinationId ? 2 : 12, 180);
+    const pixels = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1);
+    this.homeCamDistance = THREE.MathUtils.clamp(this.homeCamDistance * Math.exp(THREE.MathUtils.clamp(pixels, -180, 180) * 0.0015), this.inspectedDestinationId ? 2 : 9, 180);
     if (this.homeCamDistance > 18) this.inspectedDestinationId = null;
   };
 
@@ -1037,8 +1087,8 @@ export class GalaxyEngine {
    */
   private getDestinationCurrentWorldPos(dest: DestinationConfig): THREE.Vector3 {
     if (typeof dest.armIndex === 'number' && typeof dest.progress === 'number') {
-      const baseAngle = dest.armIndex === 0 ? 0 : Math.PI;
-      const rSpine = 0.55 + 9.6 * Math.pow(dest.progress, 1.12);
+      const baseAngle = [0, Math.PI, Math.PI * 0.5, Math.PI * 1.5][dest.armIndex] ?? 0;
+      const rSpine = 0.55 + (dest.armIndex < 2 ? 9.6 : 8.8) * Math.pow(dest.progress, 1.12);
       const thetaSpine = baseAngle + 4.8 * Math.pow(dest.progress, 0.76) + this.patternAngle;
       const x = rSpine * Math.cos(thetaSpine);
       const z = rSpine * Math.sin(thetaSpine);
@@ -1113,7 +1163,7 @@ export class GalaxyEngine {
 
   private updateCamera(delta: number, elapsed: number): void {
     // 1. User 3D rotation interpolation
-    this.userRotation.lerp(this.targetUserRotation, delta * 4.0);
+    this.userRotation.lerp(this.targetUserRotation, Math.min(1, delta * 12));
 
     // 2. Hover strength interpolation
     const targetHover = this.hoveredDestinationId ? 1.0 : 0.0;
@@ -1189,35 +1239,25 @@ export class GalaxyEngine {
       const baseElev = this.homeCamElevation + this.userRotation.y;
       const baseAzim = this.userRotation.x;
 
-      const idleYaw = this.reducedMotion ? 0 : Math.sin(elapsed * 0.04) * 0.08;
       this.smoothedDistance = THREE.MathUtils.damp(this.smoothedDistance, this.homeCamDistance, 4, delta);
-      const camX = this.smoothedDistance * Math.sin(baseAzim + idleYaw) * Math.cos(baseElev);
+      const camX = this.smoothedDistance * Math.sin(baseAzim) * Math.cos(baseElev);
       const camY = this.smoothedDistance * Math.sin(baseElev);
-      const camZ = this.smoothedDistance * Math.cos(baseAzim + idleYaw) * Math.cos(baseElev);
+      const camZ = this.smoothedDistance * Math.cos(baseAzim) * Math.cos(baseElev);
 
       const targetPos = new THREE.Vector3(camX, camY, camZ);
       if (this.inspectedDestinationId) {
         const destination = this.destinations.find(d => d.id === this.inspectedDestinationId);
         if (destination) {
           const center = this.getDestinationCurrentWorldPos(destination);
-          targetPos.add(center);
-          this.homeCamLookAt.copy(center);
+          this.homeCamLookAt.lerp(center, Math.min(1, delta * 5));
         }
-      } else this.homeCamLookAt.set(0, 0, 0);
+      } else this.homeCamLookAt.lerp(this.tempVec.set(0, 0, 0), Math.min(1, delta * 5));
+      targetPos.add(this.homeCamLookAt);
 
-      if (this.hoveredDestinationId && !this.inspectedDestinationId) {
-        const hDest = this.destinations.find((d) => d.id === this.hoveredDestinationId);
-        if (hDest) {
-          const destWorldPos = this.getDestinationCurrentWorldPos(hDest);
-          const destVec = destWorldPos.clone().multiplyScalar(0.15);
-          this.targetCamLookAt.copy(this.homeCamLookAt).add(destVec);
-        }
-      } else {
-        this.targetCamLookAt.copy(this.homeCamLookAt);
-      }
+      this.targetCamLookAt.copy(this.homeCamLookAt);
 
-      this.camera.position.lerp(targetPos, delta * 2.5);
-      this.currentCamLookAt.lerp(this.targetCamLookAt, delta * 3.0);
+      this.camera.position.copy(targetPos);
+      this.currentCamLookAt.copy(this.targetCamLookAt);
       this.camera.lookAt(this.currentCamLookAt);
     }
   }
@@ -1333,6 +1373,8 @@ export class GalaxyEngine {
     window.removeEventListener('resize', this.onResize);
     this.resizeObserver?.disconnect();
     this.canvas.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mousemove', this.onWindowMouseMove);
+    window.removeEventListener('blur', this.onMouseUp);
     this.canvas.removeEventListener('mouseenter', this.onMouseEnter);
     this.canvas.removeEventListener('mouseleave', this.onMouseLeave);
     this.canvas.removeEventListener('mousedown', this.onMouseDown);
@@ -1357,14 +1399,16 @@ export class GalaxyEngine {
     this.coreGlowMesh?.material.map?.dispose();
     this.coreGlowMesh?.material.dispose();
     const geometries = new Set<THREE.BufferGeometry>();
+    const environmentTextures = new Set<THREE.Texture>();
     this.environments.traverse(object => {
       if (object instanceof THREE.Points) { geometries.add(object.geometry); (object.material as THREE.Material).dispose(); }
-      if (object instanceof THREE.Sprite) object.material.dispose();
+      if (object instanceof THREE.Sprite) { if (object.material.map) environmentTextures.add(object.material.map); object.material.dispose(); }
     });
     this.starSystems.traverse(object => {
       if (object instanceof THREE.Mesh || object instanceof THREE.Line) { geometries.add(object.geometry); (object.material as THREE.Material).dispose(); }
     });
     geometries.forEach(geometry => geometry.dispose());
+    environmentTextures.forEach(texture => texture.dispose());
     this.renderer?.dispose();
   }
 }

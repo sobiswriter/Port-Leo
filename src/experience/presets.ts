@@ -1,4 +1,5 @@
-import type { HyperspeedEffectOptions } from '../components/react-bits/Hyperspeed';
+import type { HyperspeedProps } from '../components/react-bits/Hyperspeed';
+import type { FaultyTerminalProps } from '../components/react-bits/FaultyTerminal';
 interface TopoPalette {
   id: string;
   label: string;
@@ -123,114 +124,25 @@ export const NEBULA_THEMES: NebulaTheme[] = [
 export const GALAXY_FOCAL: [number, number] = [0.5, 0.5];
 export const GALAXY_ROTATION: [number, number] = [1.0, 0.0];
 
-interface PhosphorTheme {
-  id: string;
-  label: string;
-  tint: string;
-  badgeClass: string;
-}
-
+interface PhosphorTheme extends FaultyTerminalProps { id: string; label: string; }
 export const PHOSPHOR_THEMES: PhosphorTheme[] = [
-  {
-    id: 'amber',
-    label: 'Amber CRT (VT220)',
-    tint: '#f59e0b',
-    badgeClass: 'text-amber-400 border-amber-500/40 bg-amber-950/30',
-  },
-  {
-    id: 'phosphor',
-    label: 'Phosphor Green (VT100)',
-    tint: '#10b981',
-    badgeClass: 'text-emerald-400 border-emerald-500/40 bg-emerald-950/30',
-  },
-  {
-    id: 'cyan',
-    label: 'Cyber Cyan (DEC)',
-    tint: '#06b6d4',
-    badgeClass: 'text-cyan-400 border-cyan-500/40 bg-cyan-950/30',
-  },
-  {
-    id: 'monochrome',
-    label: 'Monochrome Glass',
-    tint: '#e2e8f0',
-    badgeClass: 'text-neutral-300 border-neutral-600/40 bg-neutral-900/40',
-  },
+  { id: 'mint', label: 'Mint phosphor · large / steady', tint: '#a7ef9e', scale: 2.5, digitSize: 1.5, timeScale: 1, noiseAmp: 1, brightness: 0.7, scanlineIntensity: 1, curvature: 0.1, mouseStrength: 0.8, mouseReact: true, pageLoadAnimation: true },
+  { id: 'rose', label: 'Rose signal · fast / curved', tint: '#f43f5e', scale: 1.6, digitSize: 1.5, timeScale: 2.5, noiseAmp: 1, brightness: 0.7, scanlineIntensity: 1, curvature: 0.3, mouseStrength: 0.8, mouseReact: true, pageLoadAnimation: true },
+  { id: 'amber', label: 'Amber CRT · broad / slow', tint: '#f5bc72', scale: 1.2, digitSize: 1.8, timeScale: 0.45, brightness: 0.8, scanlineIntensity: 0.8, curvature: 0.22, mouseStrength: 0.45, glitchAmount: 1.1 },
+  { id: 'monochrome', label: 'Silver grid · fine / measured', tint: '#d8e2ef', scale: 3.2, digitSize: 0.85, timeScale: 0.65, brightness: 0.65, scanlineIntensity: 0.45, curvature: 0.04, mouseStrength: 0.3, glitchAmount: 0.4 },
+  { id: 'cyan', label: 'Cyan transmission · wide / brisk', tint: '#6bdae7', scale: 0.9, digitSize: 1.2, timeScale: 1.6, brightness: 0.75, scanlineIntensity: 0.65, curvature: 0.18, mouseStrength: 0.6, glitchAmount: 0.65 },
+  { id: 'violet', label: 'Violet glass · deep / drifting', tint: '#bca0ee', scale: 2, digitSize: 1.4, timeScale: 0.3, brightness: 0.7, scanlineIntensity: 0.6, curvature: 0.35, mouseStrength: 0.5, glitchAmount: 0.8 },
 ];
-
 export const TERMINAL_GRID_MUL: [number, number] = [2, 1];
 
-interface WarpPreset {
-  id: string;
-  label: string;
-  distortion: HyperspeedEffectOptions['distortion'];
-  colors: HyperspeedEffectOptions['colors'];
-  badgeClass: string;
-}
-
+interface WarpPreset extends HyperspeedProps { id: string; label: string; }
 export const WARP_PRESETS: WarpPreset[] = [
-  {
-    id: 'cyber',
-    label: 'Cyber Neon (Ultraviolet & Cyan)',
-    distortion: 'turbulentDistortion',
-    colors: {
-      roadColor: 0x080808,
-      islandColor: 0x0a0a0a,
-      background: 0x000000,
-      shoulderLines: 0xffffff,
-      brokenLines: 0xffffff,
-      leftCars: [0xd856bf, 0x6750a2, 0xc247ac],
-      rightCars: [0x03b3c3, 0x0e5ea5, 0x324555],
-      sticks: 0x03b3c3,
-    },
-    badgeClass: 'text-violet-400 border-violet-500/40 bg-violet-950/30',
-  },
-  {
-    id: 'solar',
-    label: 'Solar Hyperdrive (Amber & Crimson)',
-    distortion: 'mountainDistortion',
-    colors: {
-      roadColor: 0x0a0505,
-      islandColor: 0x0d0707,
-      background: 0x000000,
-      shoulderLines: 0xffedd5,
-      brokenLines: 0xfde047,
-      leftCars: [0xf59e0b, 0xfbbf24, 0xd97706],
-      rightCars: [0xef4444, 0xdc2626, 0xb91c1c],
-      sticks: 0xf59e0b,
-    },
-    badgeClass: 'text-amber-400 border-amber-500/40 bg-amber-950/30',
-  },
-  {
-    id: 'quantum',
-    label: 'Quantum Nexus (Emerald & Azure)',
-    distortion: 'deepDistortion',
-    colors: {
-      roadColor: 0x050a08,
-      islandColor: 0x070d0a,
-      background: 0x000000,
-      shoulderLines: 0xa7f3d0,
-      brokenLines: 0x67e8f9,
-      leftCars: [0x10b981, 0x059669, 0x34d399],
-      rightCars: [0x06b6d4, 0x0891b2, 0x22d3ee],
-      sticks: 0x10b981,
-    },
-    badgeClass: 'text-emerald-400 border-emerald-500/40 bg-emerald-950/30',
-  },
-  {
-    id: 'starlight',
-    label: 'Interstellar Monolith (Pure Starlight)',
-    distortion: 'LongRaceDistortion',
-    colors: {
-      roadColor: 0x08080a,
-      islandColor: 0x0a0a0d,
-      background: 0x000000,
-      shoulderLines: 0xffffff,
-      brokenLines: 0xffffff,
-      leftCars: [0xffffff, 0xe2e8f0, 0x94a3b8],
-      rightCars: [0x38bdf8, 0x0284c7, 0x0369a1],
-      sticks: 0xffffff,
-    },
-    badgeClass: 'text-neutral-300 border-neutral-600/40 bg-neutral-900/40',
-  },
+  { id: 'cyber', label: 'Neon winding · violet trails / cyan poles', curve: 'winding', curvature: 1, speed: 1, boost: 1.7, fov: 90, boostFov: 106, lanes: 3, density: 40, trailLength: 1, lightSize: 1, poles: 20, poleHeight: 1, dust: 100, glow: 0.6, reflections: 0.5, roadOpacity: 0.1, steer: 0.35, tailColors: ['#d856bf', '#6750a2', '#c247ac'], headColors: ['#03b3c3', '#0e5ea5', '#324555'], poleColors: ['#03b3c3'] },
+  { id: 'solar', label: 'Solar hills · amber ribbons / tall poles', curve: 'hills', curvature: 0.75, speed: 0.8, boost: 1.65, density: 32, trailLength: 1.4, lightSize: 1.1, poles: 28, poleHeight: 1.5, dust: 80, glow: 0.65, reflections: 0.6, tailColors: ['#efa34a', '#e06f44'], headColors: ['#ffd5a6', '#fce8ce'], poleColors: ['#f9be72'] },
+  { id: 'quantum', label: 'Deep space · emerald descent / blue headlights', curve: 'deep', curvature: 0.65, speed: 0.65, boost: 1.8, density: 44, trailLength: 0.85, poles: 24, poleHeight: 1.2, dust: 220, glow: 0.5, reflections: 0.7, tailColors: ['#34caa0', '#328d81'], headColors: ['#7adaef', '#418fb6'], poleColors: ['#58d6b5', '#60b8df'] },
+  { id: 'starlight', label: 'Starlight racing · long trails / dense traffic', curve: 'racing', curvature: 0.6, speed: 1.25, boost: 1.7, density: 64, trailLength: 1.8, lightSize: 0.8, poles: 36, poleHeight: 0.85, dust: 180, glow: 0.5, reflections: 0.4, tailColors: ['#dce5fa', '#a1b0cd'], headColors: ['#8ccfea', '#5087c0'], poleColors: ['#d4e9f6'] },
+  { id: 'rose', label: 'Rose express · straight / bright headlamps', curve: 'straight', curvature: 0, speed: 1.05, boost: 1.7, lanes: 4, density: 52, trailLength: 0.55, lightSize: 1.25, poles: 18, poleHeight: 1.8, dust: 120, glow: 0.7, reflections: 0.8, tailColors: ['#f16b91', '#b54473'], headColors: ['#ffe4d4', '#f5c3b9'], poleColors: ['#df99c9'] },
+  { id: 'dusk', label: 'Dusk glide · gentle / sparse lights', curve: 'gentle', curvature: 0.4, speed: 0.55, boost: 1.6, lanes: 2, density: 24, trailLength: 1.1, lightSize: 0.85, poles: 14, poleHeight: 1.25, dust: 60, glow: 0.45, reflections: 0.55, tailColors: ['#9e83db', '#c2a5e5'], headColors: ['#98c5d8', '#accfd4'], poleColors: ['#b29acf'] },
 ];
+
 

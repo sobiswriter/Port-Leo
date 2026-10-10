@@ -377,8 +377,9 @@ export const PixelBlast: React.FC<PixelBlastProps> = ({
     if (mustReinit) {
       if (threeRef.current) {
         const t = threeRef.current;
+        t.removeInteraction?.();
         t.resizeObserver?.disconnect();
-        cancelAnimationFrame(t.raf);
+        t.stopAnimation();
         t.quad?.geometry.dispose();
         t.material.dispose();
         t.composer?.dispose();
@@ -518,12 +519,17 @@ export const PixelBlast: React.FC<PixelBlastProps> = ({
         const { fx, fy, w, h } = mapToPixels(e);
         touch.addTouch({ x: fx / w, y: fy / h });
       };
-      renderer.domElement.addEventListener('pointerdown', onPointerDown, {
+      const interactionSurface = container.closest('.atmosphere') ? window : renderer.domElement;
+      interactionSurface.addEventListener('pointerdown', onPointerDown as EventListener, {
         passive: true
       });
-      renderer.domElement.addEventListener('pointermove', onPointerMove, {
+      interactionSurface.addEventListener('pointermove', onPointerMove as EventListener, {
         passive: true
       });
+      const removeInteraction = () => {
+        interactionSurface.removeEventListener('pointerdown', onPointerDown as EventListener);
+        interactionSurface.removeEventListener('pointermove', onPointerMove as EventListener);
+      };
       let raf = 0;
       const animate = () => {
         if (autoPauseOffscreen && !visibilityRef.current.visible) {
@@ -561,7 +567,9 @@ export const PixelBlast: React.FC<PixelBlastProps> = ({
         timeOffset,
         composer,
         touch,
-        liquidEffect
+        liquidEffect,
+        removeInteraction,
+        stopAnimation: () => cancelAnimationFrame(raf)
       };
     } else {
       const t = threeRef.current;
@@ -588,11 +596,11 @@ export const PixelBlast: React.FC<PixelBlastProps> = ({
     }
     prevConfigRef.current = cfg;
     return () => {
-      if (threeRef.current && mustReinit) return;
       if (!threeRef.current) return;
       const t = threeRef.current;
       t.resizeObserver?.disconnect();
-      cancelAnimationFrame(t.raf);
+      t.removeInteraction?.();
+      t.stopAnimation();
       t.quad?.geometry.dispose();
       t.material.dispose();
       t.composer?.dispose();

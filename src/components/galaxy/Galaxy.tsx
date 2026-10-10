@@ -12,7 +12,6 @@ export const Galaxy: React.FC<GalaxyProps> = ({
   onDestinationSelect,
   onReturnHome,
   className = '',
-  initialMuted = true,
   onDestinationEnter,
   manageHistory = true,
   reducedMotion = false,
@@ -28,7 +27,7 @@ export const Galaxy: React.FC<GalaxyProps> = ({
   const [hoveredDestinationId, setHoveredDestinationId] = useState<string | null>(null);
   const [isTraveling, setIsTraveling] = useState<boolean>(Boolean(activeDestinationId));
   const [showDestinationOverlay, setShowDestinationOverlay] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState<boolean>(initialMuted);
+  const [isMuted, setIsMuted] = useState<boolean>(() => cosmicAudio.getIsMuted());
   const [zoomCommand, setZoomCommand] = useState<{ action: 'in' | 'out' | 'reset' | 'focus'; target?: string; sequence: number }>({action: 'reset', sequence: 0});
   const [distance, setDistance] = useState(29);
 
@@ -140,9 +139,8 @@ export const Galaxy: React.FC<GalaxyProps> = ({
   }, [destinations, manageHistory, activeDestinationId]);
 
   useEffect(() => {
-    if (cosmicAudio.getIsMuted() !== initialMuted) cosmicAudio.toggleMute();
-    return () => { if (!cosmicAudio.getIsMuted()) cosmicAudio.toggleMute(); };
-  }, [initialMuted]);
+    return cosmicAudio.subscribe(setIsMuted);
+  }, []);
 
   const activeDestination = destinations.find((d) => d.id === activeDestinationId);
 

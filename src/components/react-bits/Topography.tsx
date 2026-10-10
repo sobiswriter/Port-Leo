@@ -300,8 +300,9 @@ export const Topography: React.FC<TopographyProps> = ({
     const onMouseLeave = () => {
       mouseActiveTarget = 0;
     };
-    canvas.addEventListener('mousemove', onMouseMove);
-    canvas.addEventListener('mouseleave', onMouseLeave);
+    const interactionSurface = container.closest('.atmosphere') ? window : canvas;
+    interactionSurface.addEventListener('mousemove', onMouseMove as EventListener);
+    interactionSurface.addEventListener('mouseleave', onMouseLeave);
 
     const ctrlArrays = [
       program.uniforms.uCtrlA.value,
@@ -376,8 +377,8 @@ export const Topography: React.FC<TopographyProps> = ({
       ro.disconnect();
       io.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      canvas.removeEventListener('mousemove', onMouseMove);
-      canvas.removeEventListener('mouseleave', onMouseLeave);
+      interactionSurface.removeEventListener('mousemove', onMouseMove as EventListener);
+      interactionSurface.removeEventListener('mouseleave', onMouseLeave);
       ctxMap.delete(container);
       try {
         container.removeChild(canvas);

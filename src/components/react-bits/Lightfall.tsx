@@ -19,6 +19,8 @@ export interface LightfallProps {
   backgroundGlow?: number;
   opacity?: number;
   mouseInteraction?: boolean;
+  /** Sample one continuous light field over the document, using a viewport-sized canvas. */
+  documentFlow?: boolean;
   mouseStrength?: number;
   mouseRadius?: number;
   mouseDampening?: number;
@@ -70,6 +72,10 @@ precision highp float;
 uniform vec3  iResolution;
 uniform vec2  iMouse;
 uniform float iTime;
+uniform float uPageHeight;
+uniform float uScroll;
+uniform float uDocumentFlow;
+uniform float uPulse;
 
 uniform vec3  uColor0;
 uniform vec3  uColor1;
@@ -140,9 +146,16 @@ void mainImage(out vec4 o, vec2 C) {
   float angRings = max(1.0, floor(6.28318530718 * max(uDensity, 0.05) + 0.5));
   vec2 Y = vec2(5e-3, 6.28318530718 / angRings);
 
-  vec2 c0 = sceneC(C, r);
-  vec2 cdx = sceneC(C + vec2(1.0, 0.0), r);
-  vec2 cdy = sceneC(C + vec2(0.0, 1.0), r);
+  vec2 fieldR = r;
+  vec2 fieldC = C;
+  if (uDocumentFlow > 0.5) {
+    // A virtual full-height surface: scrolling reveals the same rays, rather than restarting them.
+    fieldR = vec2(r.x, uPageHeight);
+    fieldC = vec2(C.x, uPageHeight - uScroll - r.y + C.y);
+  }
+  vec2 c0 = sceneC(fieldC, fieldR);
+  vec2 cdx = sceneC(fieldC + vec2(1.0, 0.0), fieldR);
+  vec2 cdy = sceneC(fieldC + vec2(0.0, 1.0), fieldR);
   vec2 dCx = cdx - c0;
   vec2 dCy = cdy - c0;
   dCx.y -= 6.28318530718 * floor(dCx.y / 6.28318530718 + 0.5);
@@ -159,7 +172,7 @@ void mainImage(out vec4 o, vec2 C) {
   if (uMouseEnabled > 0.5) {
     vec2 mN = (iMouse + iMouse - r) / r.x;
     float md = length(uv0 - mN);
-    mGlow = exp(-md * md / max(uMouseRadius * uMouseRadius, 1e-4)) * uMouseStrength;
+    mGlow = exp(-md * md / max(uMouseRadius * uMouseRadius, 1e-4)) * (uMouseStrength + uPulse);
     O.rgb += uMouseColor * mGlow * 0.25;
   }
 
@@ -221,6 +234,7 @@ export const Lightfall: React.FC<LightfallProps> = ({
   backgroundGlow = 0.5,
   opacity = 1,
   mouseInteraction = true,
+  documentFlow = false,
   mouseStrength = 0.5,
   mouseRadius = 1,
   mouseDampening = 0.15,
@@ -242,7 +256,7 @@ export const Lightfall: React.FC<LightfallProps> = ({
     if (!container) return;
 
     const renderer = new Renderer({
-      dpr: dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1),
+      dpr: dpr ?? Math.min(window.devicePixelRatio || 1, 2),
       alpha: true,
       antialias: true
     });
@@ -261,6 +275,10 @@ export const Lightfall: React.FC<LightfallProps> = ({
       iResolution: { value: [gl.drawingBufferWidth, gl.drawingBufferHeight, 1] },
       iMouse: { value: [0, 0] },
       iTime: { value: 0 },
+      uPageHeight: { value: gl.drawingBufferHeight },
+      uScroll: { value: 0 },
+      uDocumentFlow: { value: documentFlow ? 1 : 0 },
+      uPulse: { value: 0 },
       uColor0: { value: arr[0] },
       uColor1: { value: arr[1] },
       uColor2: { value: arr[2] },
@@ -305,6 +323,15 @@ export const Lightfall: React.FC<LightfallProps> = ({
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(container);
+    const syncDocument = () => {
+      const scale = renderer.dpr || 1;
+      uniforms.uPageHeight.value = Math.max(window.innerHeight, document.documentElement.scrollHeight) * scale;
+      uniforms.uScroll.value = window.scrollY * scale;
+    };
+    const pageObserver = documentFlow ? new ResizeObserver(syncDocument) : null;
+    pageObserver?.observe(document.body);
+    if (documentFlow) window.addEventListener('scroll', syncDocument, { passive: true });
+    syncDocument();
 
     const onPointerMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -316,13 +343,21 @@ export const Lightfall: React.FC<LightfallProps> = ({
         uniforms.iMouse.value = [x, y];
       }
     };
+    const interactionSurface = container.closest('.atmosphere') ? window : canvas;
+    const onPointerDown = (e: MouseEvent) => {
+      onPointerMove(e);
+      uniforms.uPulse.value = 1.2;
+    };
     if (mouseInteraction) {
-      canvas.addEventListener('pointermove', onPointerMove);
+      interactionSurface.addEventListener('pointermove', onPointerMove as EventListener);
+      interactionSurface.addEventListener('pointerdown', onPointerDown as EventListener);
     }
 
     const loop = (t: number) => {
       rafRef.current = requestAnimationFrame(loop);
       uniforms.iTime.value = t * 0.001;
+      const frameDelta = lastTimeRef.current ? Math.min((t - lastTimeRef.current) / 1000, 0.1) : 1 / 60;
+      uniforms.uPulse.value *= Math.exp(-frameDelta * 4);
       if (mouseDampening > 0) {
         if (!lastTimeRef.current) lastTimeRef.current = t;
         const dt = (t - lastTimeRef.current) / 1000;
@@ -349,7 +384,12 @@ export const Lightfall: React.FC<LightfallProps> = ({
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (mouseInteraction) canvas.removeEventListener('pointermove', onPointerMove);
+      if (mouseInteraction) {
+        interactionSurface.removeEventListener('pointermove', onPointerMove as EventListener);
+        interactionSurface.removeEventListener('pointerdown', onPointerDown as EventListener);
+      }
+      window.removeEventListener('scroll', syncDocument);
+      pageObserver?.disconnect();
       ro.disconnect();
       if (canvas.parentElement === container) {
         container.removeChild(canvas);
@@ -384,6 +424,7 @@ export const Lightfall: React.FC<LightfallProps> = ({
     backgroundGlow,
     opacity,
     mouseInteraction,
+    documentFlow,
     mouseStrength,
     mouseRadius,
     mouseDampening,

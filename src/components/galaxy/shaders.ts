@@ -138,7 +138,7 @@ export const backgroundStarsVertexShader = /* glsl */ `
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * mvPosition;
     gl_PointSize = aSize * (150.0 / -mvPosition.z) * uPixelRatio;
-    gl_PointSize = clamp(gl_PointSize, 1.0, 3.5);
+    gl_PointSize = clamp(gl_PointSize, 1.8 * uPixelRatio, 4.0 * uPixelRatio);
   }
 `;
 
@@ -151,8 +151,8 @@ export const backgroundStarsFragmentShader = /* glsl */ `
     if (d > 0.5) discard;
     float core = pow(clamp(1.0 - d * 2.2, 0.0, 1.0), 2.5);
     float twinkle = 0.75 + 0.25 * sin(uTime * 1.6 + vRandomPhase * 6.28);
-    vec3 starColor = vec3(0.88, 0.93, 1.0);
-    gl_FragColor = vec4(starColor * core * twinkle, core * 0.6 * twinkle);
+    vec3 starColor = mix(vec3(0.78, 0.87, 1.0), vec3(1.0, 0.91, 0.79), step(0.76, vRandomPhase));
+    gl_FragColor = vec4(starColor, core * 0.78 * twinkle);
   }
 `;
 

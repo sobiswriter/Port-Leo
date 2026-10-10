@@ -25,7 +25,7 @@ export interface DestinationConfig {
    */
   position: [number, number, number];
   /**
-   * Spiral arm index (0 = Arm A, 1 = Arm B) for mathematical lock to galaxy filament
+   * Spiral arm index (0, 1 = primary arms; 2, 3 = secondary arms)
    */
   armIndex?: number;
   /**

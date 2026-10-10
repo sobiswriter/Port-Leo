@@ -217,6 +217,7 @@ export const Galaxy: React.FC<GalaxyProps> = (props) => {
   const smoothMousePos = useRef<{ x: number; y: number }>({ x: 0.5, y: 0.5 });
   const targetMouseActive = useRef<number>(0.0);
   const smoothMouseActive = useRef<number>(0.0);
+  const lastPointerDown = useRef<number>(-Infinity);
 
   // Store latest props in ref to update WebGL uniforms every frame without tearing down context
   const propsRef = useRef<GalaxyProps>(props);
@@ -341,7 +342,8 @@ export const Galaxy: React.FC<GalaxyProps> = (props) => {
       program.uniforms.uGlowIntensity.value = p.glowIntensity ?? 0.3;
       program.uniforms.uSaturation.value = p.saturation ?? 0.0;
       program.uniforms.uMouseRepulsion.value = p.mouseRepulsion ?? true;
-      program.uniforms.uRepulsionStrength.value = p.repulsionStrength ?? 2.0;
+      const pulse = p.disableAnimation ? 0 : Math.exp(-(t - lastPointerDown.current) / 500);
+      program.uniforms.uRepulsionStrength.value = (p.repulsionStrength ?? 2.0) + pulse * 0.9;
       program.uniforms.uTwinkleIntensity.value = p.twinkleIntensity ?? 0.3;
       program.uniforms.uRotationSpeed.value = p.rotationSpeed ?? 0.08;
 
@@ -382,10 +384,16 @@ export const Galaxy: React.FC<GalaxyProps> = (props) => {
     function handleMouseLeave() {
       targetMouseActive.current = 0.0;
     }
+    function handlePointerDown(e: MouseEvent) {
+      handleMouseMove(e);
+      lastPointerDown.current = performance.now();
+    }
 
     if (mouseInteraction) {
-      window.addEventListener('mousemove', handleMouseMove, { passive: true });
-      ctn.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+      window.addEventListener('pointermove', handleMouseMove, { passive: true });
+      window.addEventListener('pointerdown', handlePointerDown, { passive: true });
+      window.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+      window.addEventListener('blur', handleMouseLeave);
     }
 
     return () => {
@@ -393,8 +401,10 @@ export const Galaxy: React.FC<GalaxyProps> = (props) => {
       window.removeEventListener('resize', resize);
       ro.disconnect();
       if (mouseInteraction) {
-        window.removeEventListener('mousemove', handleMouseMove);
-        ctn.removeEventListener('mouseleave', handleMouseLeave);
+        window.removeEventListener('pointermove', handleMouseMove);
+        window.removeEventListener('pointerdown', handlePointerDown);
+        window.removeEventListener('mouseleave', handleMouseLeave);
+        window.removeEventListener('blur', handleMouseLeave);
       }
       if (gl.canvas.parentElement === ctn) {
         ctn.removeChild(gl.canvas);

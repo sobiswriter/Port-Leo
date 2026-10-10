@@ -1,65 +1,87 @@
 export class CosmicAudioSystem {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = true;
-  private droneGain: GainNode | null = null;
   private isInitialized: boolean = false;
+  private music: HTMLAudioElement | null = null;
+  private wantsMusic = true;
+  private musicReady = false;
+  private listeners = new Set<(muted: boolean) => void>();
 
   public init(): void {
     if (this.isInitialized) return;
     try {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.ctx = new AudioCtx();
-      this.setupDrone();
       this.isInitialized = true;
     } catch {
       // AudioContext not supported or blocked
     }
   }
 
-  private setupDrone(): void {
-    if (!this.ctx) return;
+  public prepareBackgroundMusic(): void {
+    if (this.music) return;
+    this.music = new Audio(new URL('audio/organ-variation.mp3', document.baseURI).href);
+    this.music.preload = 'auto';
+    this.music.loop = true;
+    this.music.volume = 0.32;
+    this.music.hidden = true;
+    this.music.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(this.music);
+    this.music.addEventListener('playing', () => this.publishMuted(false));
+    this.music.addEventListener('pause', () => this.publishMuted(true));
+    this.music.addEventListener('error', () => this.publishMuted(true));
+  }
 
-    // Sub-bass root drone
-    const osc1 = this.ctx.createOscillator();
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(55, this.ctx.currentTime); // A1 note
+  private publishMuted(muted: boolean): void {
+    this.isMuted = muted;
+    this.listeners.forEach(listener => listener(muted));
+  }
 
-    const osc2 = this.ctx.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(82.4, this.ctx.currentTime); // E2 fifth
+  public subscribe(listener: (muted: boolean) => void): () => void {
+    this.listeners.add(listener);
+    listener(this.isMuted);
+    return () => { this.listeners.delete(listener); };
+  }
 
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(140, this.ctx.currentTime);
+  private attemptMusic = (): void => {
+    if (!this.musicReady || !this.wantsMusic || !this.music) return;
+    // A rejected autoplay stays quiet until a real user gesture permits playback.
+    void this.music.play().catch(() => {});
+  };
 
-    this.droneGain = this.ctx.createGain();
-    this.droneGain.gain.setValueAtTime(0, this.ctx.currentTime);
+  private unlockAudio = (event?: Event): void => {
+    if (event?.target instanceof Element && event.target.closest('[data-sound-control]')) return;
+    if (!this.musicReady || !this.wantsMusic) return;
+    this.init();
+    if (this.ctx?.state === 'suspended') void this.ctx.resume().catch(() => {});
+    if (this.music?.paused) this.attemptMusic();
+  };
 
-    osc1.connect(filter);
-    osc2.connect(filter);
-    filter.connect(this.droneGain);
-    this.droneGain.connect(this.ctx.destination);
+  public startBackgroundMusic(): void {
+    this.prepareBackgroundMusic();
+    this.musicReady = true;
+    window.addEventListener('pointerdown', this.unlockAudio);
+    window.addEventListener('touchend', this.unlockAudio, { passive: true });
+    window.addEventListener('keydown', this.unlockAudio);
+    this.attemptMusic();
+  }
 
-    osc1.start();
-    osc2.start();
+  public stopBackgroundMusic(): void {
+    this.musicReady = false;
+    this.music?.pause();
+    window.removeEventListener('pointerdown', this.unlockAudio);
+    window.removeEventListener('touchend', this.unlockAudio);
+    window.removeEventListener('keydown', this.unlockAudio);
   }
 
   public toggleMute(): boolean {
-    if (!this.isInitialized) {
-      this.init();
+    this.wantsMusic = this.isMuted;
+    if (this.wantsMusic) {
+      this.unlockAudio();
+    } else {
+      this.music?.pause();
+      this.publishMuted(true);
     }
-
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
-
-    this.isMuted = !this.isMuted;
-
-    if (this.droneGain && this.ctx) {
-      const targetGain = this.isMuted ? 0 : 0.08;
-      this.droneGain.gain.setTargetAtTime(targetGain, this.ctx.currentTime, 0.3);
-    }
-
     return this.isMuted;
   }
 
