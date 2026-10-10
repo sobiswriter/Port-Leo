@@ -1,7 +1,7 @@
 {
   "name": "Sobi's Multiverse",
-  "description": "The independent structural universe portfolio for Sobi, featuring dedicated worlds for Builder, AI Lab, Research, Arsenal, Journey, About, and Beyond.",
+  "description": "An atlas of a restless mind: eight places to explore Sobi’s work, experiments, research, and imagination.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
 
