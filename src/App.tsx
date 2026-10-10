@@ -3,6 +3,7 @@ import { ArrowUpRight, Menu, X, SlidersHorizontal, Pause, Play } from 'lucide-re
 import type { UniverseId } from './types/universe';
 import { places } from './experience/places';
 import { Atmosphere, atmosphereNames } from './experience/Atmosphere';
+import { colorPalettes } from './experience/colorPalettes';
 import './experience/experience.css';
 const rooms = {
   arrival: lazy(() => import('./universes/arrival/ArrivalUniverse').then(m => ({default: m.ArrivalUniverse}))),
@@ -15,21 +16,62 @@ const rooms = {
   beyond: lazy(() => import('./universes/beyond/BeyondUniverse').then(m => ({default: m.BeyondUniverse}))),
 };
 const fromHash = (): UniverseId => places.find(p => p.id === location.hash.slice(1))?.id || 'arrival';
+const pixelShapes = ['diamond', 'square', 'circle', 'triangle'] as const;
+// Choose uniformly from every option except the one the visitor just saw.
+const nextVariant = (count: number, previous: number, random: number) =>
+  count > 1 ? (previous + 1 + Math.floor(random * (count - 1))) % count : 0;
 export default function App() {
   const [room, setRoom] = useState<UniverseId>(fromHash);
-  const [variants, setVariants] = useState<Partial<Record<UniverseId, number>>>({});
+  const [variants, setVariants] = useState<Partial<Record<UniverseId, number>>>(() =>
+    Object.fromEntries(places.map(({id}) => [id, Math.floor(Math.random() * atmosphereNames[id].length)]))
+  );
   const [still, setStill] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const [shape, setShape] = useState<'diamond' | 'square' | 'circle' | 'triangle'>('diamond');
+  const [colors, setColors] = useState<Partial<Record<UniverseId, number>>>(() =>
+    Object.fromEntries(places.map(({id}) => [id, Math.floor(Math.random() * colorPalettes[id].length)]))
+  );
+  const [shape, setShape] = useState<typeof pixelShapes[number]>(() => pixelShapes[Math.floor(Math.random() * pixelShapes.length)]);
   const [settings, setSettings] = useState(false);
   const [visited, setVisited] = useState<UniverseId[]>([fromHash()]);
   const atlas = useRef<HTMLDialogElement>(null);
   const main = useRef<HTMLElement>(null);
   const first = useRef(true);
-  const travel = useCallback((id: UniverseId) => { atlas.current?.close(); setSettings(false); if (location.hash !== `#${id}`) location.hash = id; else setRoom(id); }, []);
-  useEffect(() => {
-    const sync = () => setRoom(fromHash());
-    addEventListener('hashchange', sync); return () => removeEventListener('hashchange', sync);
+  const enterRoom = useCallback((id: UniverseId) => {
+    const random = Math.random();
+    const shapeRandom = Math.random();
+    const colorRandom = Math.random();
+    setColors(previous => ({
+      ...previous,
+      [id]: nextVariant(colorPalettes[id].length, previous[id] ?? 0, colorRandom),
+    }));
+    setVariants(previous => ({
+      ...previous,
+      [id]: nextVariant(atmosphereNames[id].length, previous[id] ?? 0, random),
+    }));
+    if (id === 'arsenal') {
+      setShape(previous => pixelShapes[nextVariant(pixelShapes.length, pixelShapes.indexOf(previous), shapeRandom)]);
+    }
+    setRoom(id);
   }, []);
+  const travel = useCallback((id: UniverseId) => { atlas.current?.close(); setSettings(false); if (location.hash !== `#${id}`) location.hash = id; else enterRoom(id); }, [enterRoom]);
+  useEffect(() => {
+    const sync = () => enterRoom(fromHash());
+    addEventListener('hashchange', sync); return () => removeEventListener('hashchange', sync);
+  }, [enterRoom]);
+  useEffect(() => {
+    const navigateWithArrows = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.repeat || event.isComposing || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      // Leave editing, native controls, and modal navigation to their own keys.
+      const target = event.target instanceof Element ? event.target : null;
+      if (document.querySelector('dialog[open]') || target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="slider"], [role="spinbutton"], [role="listbox"], [role="combobox"], [role="tablist"], [role="radiogroup"]')) return;
+      event.preventDefault();
+      const current = places.findIndex(place => place.id === fromHash());
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      travel(places[(current + direction + places.length) % places.length].id);
+    };
+    window.addEventListener('keydown', navigateWithArrows);
+    return () => window.removeEventListener('keydown', navigateWithArrows);
+  }, [travel]);
   useEffect(() => {
     window.scrollTo({top: 0, behavior: 'instant'});
     setVisited(v => v.includes(room) ? v : [...v, room]);
@@ -44,9 +86,10 @@ export default function App() {
   }, []);
   const index = places.findIndex(p => p.id === room);
   const Room = rooms[room];
-  return <div className={`experience ${still ? 'is-still' : ''}`} style={{'--accent': places[index].color} as React.CSSProperties}>
+  const palette = colorPalettes[room][colors[room] ?? 0];
+  return <div className={`experience ${still ? 'is-still' : ''}`} style={{'--accent': palette.highlight} as React.CSSProperties}>
     <a className="skip-link" href="#main-content" onClick={e => {e.preventDefault(); main.current?.focus();}}>Skip to content</a>
-    <Atmosphere room={room} variant={variants[room] || 0} still={still} shape={shape}/>
+    <Atmosphere room={room} variant={variants[room] || 0} palette={palette} still={still} shape={shape}/>
     <header className="site-header"><button className="wordmark" onClick={() => travel('arrival')} aria-label="Sobi’s Multiverse home">sobi<span>®</span><small>A PERSONAL MULTIVERSE</small></button><span className="room-location"><i/> {String(index).padStart(2, '0')} / {places[index].name}</span><button className="atlas-trigger" onClick={() => atlas.current?.showModal()}>The atlas <Menu size={18}/></button></header>
     <main id="main-content" ref={main} tabIndex={-1} key={room} className="room-content"><Suspense fallback={<div className="room-loading">Entering {places[index].name}…</div>}><Room onTravelTo={travel}/></Suspense></main>
     <div className="environment-controls"><button aria-label={still ? 'Enable animated backgrounds' : 'Pause animated backgrounds'} title={still ? 'Enable motion' : 'Still mode'} onClick={() => setStill(!still)}>{still ? <Play size={15}/> : <Pause size={15}/>}</button><button aria-expanded={settings} aria-controls="atmosphere-settings" onClick={() => setSettings(!settings)}><SlidersHorizontal size={14}/><span>Atmosphere</span></button></div>

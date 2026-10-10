@@ -26,3 +26,6 @@ The old UI Redesign.txt is historical context. The owner's current request and t
 
 ## Remaining product decisions
 The owner should judge this visual direction in motion. Project-specific links and factual portfolio claims still need owner verification before a public release. No hosting, Git commit, or external publication was performed.
+
+## Random atmospheres
+Each initial page load starts with random presets. Every navigation (including browser history and selecting the current room again) picks a different preset from that room’s last selection during the current app session. Manual selections become the previous preset to exclude on the next visit. Arsenal also randomizes its pixel shape. Still mode remains respected; reloading starts a fresh random session.
