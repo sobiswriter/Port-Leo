@@ -928,6 +928,7 @@ const GlowCursor = ({
       gl.deleteShader(vertexShader);
       gl.deleteBuffer(buffer);
       gl.deleteVertexArray(vao);
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, []);
 

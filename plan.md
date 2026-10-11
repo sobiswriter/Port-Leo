@@ -1,21 +1,17 @@
-# Sobi's Multiverse — implementation plan
+# Implementation status
 
-## Objective
-Make an exploratory portfolio that feels like visiting a place. Preserve the eight existing animated backgrounds and their variations. Replace the restored dashboard layouts with distinct, legible environments.
+The galaxy home and all eight destinations are implemented. Current owner content, documents, project links, Lanyard, plain previews, article drafts and environmental variants are present.
 
-## Current pass
-1. Establish the atlas concept and shared travel controls.
-2. Build a cinematic threshold with a clear invitation to enter.
-3. Give each destination a meaningful interaction: project folios, experiment tuning, research shelves, capability drawers, timeline, personal journal, and correspondence.
-4. Preserve supplied portfolio content without inventing achievements or destinations.
-5. Validate TypeScript, production build, desktop and narrow-screen interaction where browser access permits.
+## Release acceptance
 
-## Acceptance
-- Every destination is reachable directly by URL hash and from the atlas.
-- Backgrounds remain visible; reading surfaces appear where content needs contrast.
-- Keyboard and touch users can access all content without hover-only controls.
-- Reduced-motion visitors can explore with animated backgrounds disabled.
-- No fictional AI results, sent-message confirmations, or project-specific links.
+- Direct hash URLs, home directory, page-to-page navigation and browser history work.
+- Projects and AI entries are distinct; all source projects remain accessible.
+- Documents are viewable, selectable through Text view, linked and downloadable.
+- Keyboard/touch access, visible focus, reduced motion, still mode and WebGL fallbacks remain usable.
+- Source records and draft writing are distinguished; no invented results or sent-message confirmation.
+- TypeScript, content/assets, production build and dependency audit run before release.
+- Desktop/mobile browser results and external limitations are recorded in docs/release-check.md.
 
-## Later, after user feedback
-Consider richer transitions or optional sound only after the composition and navigation work. Verify project URLs and portfolio claims with the owner before release. No hosting change is part of this local rebuild.
+## Future owner work
+
+Replace the working research drafts with final articles, keep PDFs and transcripts synchronized, and provide new source/deployment URLs when projects become public. Hosting publication and GitHub push are performed by the owner; this local review does neither.

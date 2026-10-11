@@ -29,7 +29,9 @@ export interface ProjectItem {
   keyFeatures: string[];
   stack: string[];
   githubUrl?: string;
+  sourceUnavailable?: string;
   liveUrl?: string;
+  previewUnavailable?: string;
   featured: boolean;
   status: 'Production' | 'Active Build' | 'Open Source' | 'Exploratory' | 'Featured Project' | 'Long-term Project' | 'Portfolio Project';
   executionEnvironment?: string;

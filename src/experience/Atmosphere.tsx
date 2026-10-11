@@ -28,7 +28,7 @@ export function Atmosphere({ room, variant, palette, still, shape }: { room: Uni
   const terminal = PHOSPHOR_THEMES[variant % PHOSPHOR_THEMES.length];
   let scene: React.ReactNode;
   if (!still) switch(room) {
-    case 'arrival': scene = <Waves preset={waves[variant % waves.length]} color={palette.primary} backgroundColor={palette.background} speed={0.35} fade="none" opacity={0.95} interactive cursorSize={70} cursorStrength={0.7} intro />; break;
+    case 'arrival': scene = <Waves preset={waves[variant % waves.length]} color={palette.primary} backgroundColor={palette.background} speed={0.35} fade="none" opacity={0.83} interactive cursorSize={70} cursorStrength={0.7} intro />; break;
     case 'builder': scene = <Slats preset={slats[variant % slats.length]} color={palette.primary} glintColor={palette.highlight} backgroundColor={palette.background} interactive />; break;
     case 'ai-lab': scene = <Topography lowColor={palette.secondary} midColor={palette.primary} highColor={palette.highlight} speed={0.35} morphAmount={2.8} morphSpeed={0.06} bands={2.4} thickness={0.012} scale={1.05} glow={0.55} colorMode="elevation" contrast={2.8} brightness={1.1} fillBands={false} opacity={0.65} grain mouseInteraction />; break;
     case 'research': scene = <Lightfall documentFlow colors={[palette.secondary, palette.primary, palette.highlight]} backgroundColor={palette.background} speed={0.45} streakCount={3} streakWidth={1} streakLength={1.3} glow={0.9} density={0.5} twinkle={0.8} zoom={2.5} backgroundGlow={0.35} opacity={0.65} mouseInteraction />; break;

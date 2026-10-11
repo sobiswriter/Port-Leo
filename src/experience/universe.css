@@ -10,7 +10,7 @@
 /* Preserve moving texture behind the first two rooms while keeping copy readable. */
 .atmosphere-arrival .atmosphere-shade{background:linear-gradient(90deg,#08090940,transparent 80%),linear-gradient(#08090930,transparent 48%,#08090965)}
 .atmosphere-builder .atmosphere-shade{background:linear-gradient(90deg,#08090955,transparent 85%),linear-gradient(#08090935,transparent 45%,#08090955)}
-.atmosphere-builder .micro-slats{filter:brightness(1.2)}
+.atmosphere-builder .micro-slats{filter:brightness(1.04)}
 
 /* Leave the opening view to the environment; the records begin after the fold. */
 .room-pad .spacious-hero{box-sizing:border-box;min-height:calc(100svh - 112px);margin:0;padding:65px 0 95px;display:flex;flex-direction:column;justify-content:center}
@@ -22,6 +22,52 @@
 .room-cursor{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden}
 .room-cursor .glow-cursor{pointer-events:none}
 .room-identity{margin:16px 0 20px;max-width:480px}
+.profile-lanyard{width:100%;max-width:460px;justify-self:end;min-width:0}
+.profile-lanyard-stage{height:560px;position:relative;background:radial-gradient(ellipse at 50% 52%,#8473ba18,transparent 67%)}
+.lanyard:focus-visible{outline:2px solid #aca0db;outline-offset:-3px;border-radius:14px}
+.lanyard-hint{font:10px 'JetBrains Mono',monospace!important;line-height:1.8!important;text-align:center;color:#bbb5cc!important;margin:0!important}
+.profile-card-static{display:block;height:100%;width:100%;border:0;background:none;padding:25px;cursor:pointer}
+.profile-card-static img{height:100%;max-width:100%;object-fit:contain;border-radius:14px}
+.profile-background{display:grid;grid-template-columns:1fr 1fr 1fr;gap:34px;margin:60px 0 40px;padding-top:45px;border-top:1px solid #ffffff20}
+.background-column article{padding:20px 0;border-bottom:1px solid #ffffff15}
+.background-column h3{font-size:17px;line-height:1.5;font-weight:400;margin:0 0 9px}
+.background-column p,.background-column small{font-size:12px;line-height:1.8;color:#b5b4c0}
+.background-column small{display:block}
+.document-library{padding:65px 0;border-top:1px solid #ffffff20;scroll-margin-top:110px}
+.document-heading{display:flex;justify-content:space-between;gap:24px;align-items:center}
+.document-heading h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.04em;margin:18px 0}
+.document-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 20px}
+.document-tabs button,.document-actions button{padding:10px 16px;border:1px solid #ffffff25;border-radius:30px;font-size:12px;background:#090c1680}
+.document-tabs button[aria-pressed=true],.document-actions button[aria-pressed=true]{background:#dfdfec;color:#15151d;border-color:#dfdfec}
+.document-toolbar{display:flex;justify-content:space-between;gap:24px;align-items:center;padding:18px 0}
+.document-toolbar strong{font-size:14px;font-weight:400}
+.document-toolbar p{font-size:12px!important;margin:8px 0!important}
+.document-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.document-actions a{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+.document-viewer{display:block;width:100%;height:760px;border:1px solid #ffffff25;border-radius:8px;background:#27272b}
+.document-reader{white-space:pre-wrap;font:15px/1.9 'Inter',sans-serif;color:#222637;background:#f3f1e9;border-radius:8px;padding:42px;max-height:760px;overflow:auto}
+.document-help{font-size:11px!important;line-height:1.7!important;color:#9f9da9}
+.pdf-reader{border:1px solid #ffffff25;border-radius:9px;overflow:hidden;background:#24242b}
+.pdf-controls{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#14141c;border-bottom:1px solid #ffffff20;font-size:12px}
+.pdf-controls button{display:grid;place-items:center;min-width:32px;min-height:32px;border:1px solid #ffffff18;border-radius:5px;padding:5px}.pdf-controls button:disabled{opacity:.3}.pdf-controls>div{flex:1}
+.pdf-scroll{height:auto;overflow-x:auto;padding:16px;position:relative}
+.pdf-sheet{position:relative;margin:auto;background:white;box-shadow:0 5px 20px #0004}
+.pdf-sheet canvas{display:block}.pdf-sheet a{position:absolute;display:block;border-radius:2px}.pdf-sheet a:hover,.pdf-sheet a:focus-visible{background:#7468c626;outline:2px solid #7468c6}
+.pdf-status{font-size:12px!important;margin:0 0 10px!important;color:#d3cedd!important}.pdf-status:empty{display:none}
+@media(max-width:700px){.pdf-scroll{padding:12px}.pdf-controls{gap:4px;padding:8px;font-size:10px}.pdf-controls button{min-width:28px}}
+.contact-phone{display:inline-block;font:12px 'JetBrains Mono',monospace;margin:10px 0;color:#bfbdcc}
+.agency-invitation{display:grid;grid-template-columns:1fr 1fr;gap:65px;padding:60px 0 70px;border-top:1px solid #ffffff20;align-items:center}
+.agency-invitation h2{font-size:clamp(32px,4vw,52px);font-weight:400;letter-spacing:-.045em;line-height:1.15;margin:20px 0}
+.agency-invitation h2 em{font-family:Georgia,serif;color:#c2b9d7}
+.agency-wordmark{font-size:26px;letter-spacing:-.025em}.agency-wordmark small{font:9px 'JetBrains Mono',monospace;letter-spacing:.14em}
+.agency-invitation p{font-size:14px!important;line-height:1.9!important;margin:20px 0 26px!important}
+.agency-invitation .primary-link{font-size:12px;max-width:100%;display:inline-flex;gap:12px;align-items:center}
+.live-project-preview{margin:28px 0 20px;border:0;border-radius:0;overflow:hidden;background:#050811}
+.preview-screen{height:370px}.preview-screen iframe{display:block;width:100%;height:100%;border:0;background:white}
+.preview-launch{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:15px;padding:30px;width:100%;height:100%;background:radial-gradient(ellipse,#3b335c40,transparent 70%);color:#ded8ef}
+.preview-launch strong{font:400 22px/1.4 'Inter',sans-serif}.preview-launch span{font-size:11px;color:#b4adc8}
+.study-links{margin-top:22px;font-size:12px}
+@media(max-width:700px){.profile-lanyard{max-width:100%;justify-self:center;flex:none}.profile-lanyard-stage{height:480px}.profile-background{grid-template-columns:1fr;gap:24px}.document-toolbar{align-items:flex-start;flex-direction:column}.document-actions{gap:12px}.document-viewer{height:560px}.document-reader{padding:24px;font-size:13px}.agency-invitation{grid-template-columns:1fr;gap:15px}.preview-screen{height:310px}.room-pad .about-intro.spacious-hero{display:flex;flex-direction:column;align-items:stretch!important;gap:20px}.about-intro.spacious-hero>div:first-child{width:100%}.agency-invitation .primary-link{padding:18px}}
 .room-identity>span{display:block;font:11px 'JetBrains Mono',monospace;letter-spacing:.08em;color:var(--accent)}
 .experience .room-identity>p{font-size:12px;line-height:1.7;margin:8px 0 0;color:#c0c2cb}
 .archive-intro .room-identity{margin-inline:auto}
@@ -43,3 +89,63 @@
   .experience .cosmic-galaxy canvas{cursor:inherit}
   .experience .cosmic-galaxy canvas:active{cursor:grabbing}
 }
+/* Content-led project folios and previews that link to the live site. */
+.workbench .project-folio{transform:none}
+.workbench .project-folio h2{margin:24px 0 20px;font-size:clamp(32px,3.8vw,58px)}
+.workbench .folio-body{min-height:0;padding:20px 0}
+.workbench .folio-body>p{margin:12px 0}
+.folio-context summary{cursor:pointer;font-size:11px;padding:10px 0}
+.folio-context p{margin:8px 0}
+.workbench .project-list{max-height:750px}
+.workbench .project-list>button{min-height:50px}
+.preview-screen{position:relative}
+.preview-screen iframe{pointer-events:none}
+.preview-visit{position:absolute;inset:0;background:transparent}
+.preview-visit:focus-visible{outline-offset:-4px}
+.lab-articles{padding:70px 0 30px}
+.lab-articles h2{margin:20px 0}
+.lab-articles-intro{max-width:650px;line-height:1.9}
+.lab-article-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+.lab-article-grid article{padding:30px;border:1px solid #ffffff22;background:#080d16b8;border-radius:12px}
+.lab-article-grid h3{font-size:22px;font-weight:400;line-height:1.4;margin:18px 0}
+.lab-article-grid p{font-size:13px;line-height:1.9;margin:14px 0}
+.lab-article-grid summary{cursor:pointer;font-size:12px;color:var(--accent);margin-top:20px}
+@media(max-width:700px){.lab-article-grid{grid-template-columns:1fr}.workbench .project-list{max-height:750px}.workbench .project-folio h2{font-size:36px}.lab-article-grid article{padding:24px}}
+/* The physics canvas spans About, so dragging is not clipped to the card slot.
+   Events are picked on the page; only a hit on the card captures a drag. */
+.about-room{position:relative}
+.profile-lanyard.is-free{height:560px}
+.profile-lanyard.is-free .profile-lanyard-stage{position:absolute;inset:0;height:100%;width:100%;pointer-events:none;z-index:5;background:none}
+.profile-lanyard.is-free .lanyard{pointer-events:none}
+.profile-lanyard.is-free .lanyard-hint{position:relative;top:540px}
+@media(max-width:700px){.profile-lanyard.is-free{height:480px}.profile-lanyard.is-free .lanyard-hint{top:460px}}
+/* A reading-first notebook: spacious paper, narrow measure, editorial type. */
+.archive-record .article-preview-excerpt{max-width:780px;margin:16px 0 12px;font-size:13px;line-height:1.85;color:#bac4ce;letter-spacing:0}
+.article-preview-meta{display:block;font:9px/1.8 'JetBrains Mono',monospace;letter-spacing:.06em;color:#a7b1bf}
+.journal-paper{grid-template-columns:145px minmax(0,1fr);gap:48px;padding:50px clamp(24px,4vw,64px);background:#eeeae1}
+.journal-paper .record-margin{padding-top:8px}
+.journal-paper .journal-author{font:16px/1.6 Georgia,serif;color:#293332;margin:12px 0 18px}
+.journal-paper .record-margin p{margin:12px 0;font-size:11px}
+.journal-draft{display:inline-block;padding:4px 8px;border:1px solid #48585540;border-radius:3px;font:9px 'JetBrains Mono',monospace}
+.journal-rule{display:block;width:35px;height:1px;background:#40524d50;margin:28px 0}
+.journal-paper .record-margin small{color:#61736d;line-height:1.8}
+.research-prose{max-width:68ch;margin:0 auto}
+.research-prose .article-lede{font:22px/1.65 Georgia,serif;letter-spacing:-.015em;margin:0 0 32px;color:inherit}
+.research-prose section{margin:30px 0 0}
+.research-prose h3{display:flex;align-items:baseline;gap:15px;font:400 25px/1.35 Georgia,serif;letter-spacing:-.025em;margin:0 0 18px;color:inherit}
+.research-prose h3>span{font:9px 'JetBrains Mono',monospace;opacity:.5;letter-spacing:.05em}
+.research-prose p{font:15px/1.95 'Plus Jakarta Sans',sans-serif;margin:16px 0;color:inherit;overflow-wrap:anywhere}
+.journal-paper .research-prose p{color:#3c4944}
+.research-prose blockquote{font:italic 24px/1.55 Georgia,serif;margin:32px 0;padding:8px 0 8px 24px;border-left:2px solid currentColor;color:inherit}
+.journal-paper .research-prose blockquote{color:#566c63}
+.journal-context{max-width:68ch;margin:38px auto 0;padding-top:24px;border-top:1px solid #33443c30}
+.journal-context p{font-size:11px;line-height:1.85;margin:10px 0;color:#627069}
+.journal-context .stack-line{margin:18px 0 0}
+.lab-article-grid .research-prose{margin-top:25px;color:#cbd2da}
+.lab-article-grid .research-prose .article-lede{font:18px/1.7 Georgia,serif}
+.lab-article-grid .research-prose h3{font:400 22px/1.4 Georgia,serif}
+.lab-article-grid .research-prose p{font-size:13px;line-height:1.9}
+.lab-article-grid .research-prose blockquote{font-size:21px;color:#b6c9dd;padding-left:18px}
+@media(max-width:700px){.journal-paper{display:block;padding:30px 24px}.journal-paper .record-margin{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #33443c30}.journal-paper .record-margin>.eyebrow,.journal-paper .record-margin>small{width:100%}.journal-paper .record-margin p,.journal-paper .journal-author{margin:0}.journal-rule{display:none}.research-prose .article-lede{font-size:20px}.research-prose p{font-size:14px;line-height:1.9}.research-prose h3{font-size:23px}.research-prose blockquote{font-size:22px}.archive-record .article-preview-excerpt{font-size:12px}.archive-record summary{align-items:flex-start}.record-open{padding-top:14px}}
+.room-load-error{min-height:45vh;padding:60px 8vw;background:#090d19e0}.room-load-error h2{font-size:32px}.room-load-error p{margin:24px 0}.room-load-error button{padding:12px 18px;border:1px solid #ffffff40;border-radius:6px}
+.project-links .source-note{font-size:10px;align-self:center;line-height:1.6;max-width:190px;color:#626b60}

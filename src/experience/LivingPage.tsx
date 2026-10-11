@@ -5,10 +5,14 @@ export function LivingPage({children, still}: {children: React.ReactNode; still:
   const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const element = root.current;
-    if (!element || still) return;
+    if (!element) return;
+    if (still) {
+      element.querySelectorAll('[data-reveal]').forEach(target => target.classList.add('has-arrived'));
+      return;
+    }
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) {entry.target.classList.add('has-arrived'); observer.unobserve(entry.target);}
-    }), {threshold: 0.08});
+    }), {threshold: 0, rootMargin: '0px 0px -24px 0px'});
     const observe = () => element.querySelectorAll('section, article, .next-place, .journey-moment').forEach((target, index) => {
       if (target.hasAttribute('data-reveal')) return;
       target.setAttribute('data-reveal', '');

@@ -24,7 +24,7 @@ export const CosmicHud: React.FC<CosmicHudProps> = (props) => {
   const selected = props.destinations.find(d => d.id === (props.activeDestinationId || props.hoveredDestinationId || inspectedId));
   return <div className="cosmic-hud">
     <header className="cosmic-header"><span className="cosmic-wordmark">sobi<span>®</span></span><span className="cosmic-coordinate">PERSONAL MULTIVERSE / STAR ATLAS</span></header>
-    <div className="cosmic-intro"><span className="cosmic-kicker">THE IMAGINATION OF SOBI / {String(props.destinations.length).padStart(2, '0')} WORLDS</span><h1>Bound by curiosity.<br/><em>Limitless by nature.</em></h1><p>Souradip Biswas · AI/ML developer & researcher.<br/>Explore projects, skills, research, and experience.</p></div>
+    <div className="cosmic-intro"><span className="cosmic-kicker">THE IMAGINATION OF SOBI / {String(props.destinations.length).padStart(2, '0')} WORLDS</span><h1>Bound by curiosity.<br/><em>Limitless by nature.</em></h1><p>Souradip Biswas · AI/ML developer · full stack engineer.<br/>Explore projects, skills, research, and experience.</p></div>
     <button className="cosmic-directory-toggle" aria-expanded={directoryOpen} aria-controls="cosmic-directory" onClick={() => setDirectoryOpen(!directoryOpen)}>{directoryOpen ? <X size={15}/> : <List size={15}/>}World directory</button>
     <nav id="cosmic-directory" className={`cosmic-directory ${directoryOpen ? 'is-open' : ''}`} aria-label="Galaxy worlds">
       <div className="cosmic-kicker">CHOOSE YOUR OWN WAY</div>

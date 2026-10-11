@@ -21,7 +21,7 @@ export class CosmicAudioSystem {
   public prepareBackgroundMusic(): void {
     if (this.music) return;
     this.music = new Audio(new URL('audio/organ-variation.mp3', document.baseURI).href);
-    this.music.preload = 'auto';
+    this.music.preload = 'metadata';
     this.music.loop = true;
     this.music.volume = 0.48;
     this.music.hidden = true;

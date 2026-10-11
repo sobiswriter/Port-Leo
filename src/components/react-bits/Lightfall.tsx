@@ -380,9 +380,15 @@ export const Lightfall: React.FC<LightfallProps> = ({
         }
       }
     };
-    rafRef.current = requestAnimationFrame(loop);
+    const onVisibilityChange = () => {
+      if (document.hidden) {if (rafRef.current) cancelAnimationFrame(rafRef.current); rafRef.current = 0;}
+      else if (!rafRef.current) {lastTimeRef.current = 0; rafRef.current = requestAnimationFrame(loop);}
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    if (!document.hidden) rafRef.current = requestAnimationFrame(loop);
 
     return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (mouseInteraction) {
         interactionSurface.removeEventListener('pointermove', onPointerMove as EventListener);
@@ -403,6 +409,7 @@ export const Lightfall: React.FC<LightfallProps> = ({
       callIfFn(geometryRef.current, 'remove');
       callIfFn(meshRef.current, 'remove');
       callIfFn(rendererRef.current, 'destroy');
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
       programRef.current = null;
       geometryRef.current = null;
       meshRef.current = null;

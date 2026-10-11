@@ -1266,6 +1266,8 @@ export class GalaxyEngine {
    * Projects each destination's current rotated world position to screen coordinates,
    * guaranteeing that landmarks stick physically to their location on the galaxy!
    */
+  private lastProjectionUpdate = 0;
+
   private updateProjectedPositions(): void {
     const width = this.canvas.parentElement?.clientWidth || window.innerWidth;
     const height = this.canvas.parentElement?.clientHeight || window.innerHeight;
@@ -1358,7 +1360,10 @@ export class GalaxyEngine {
     }
 
     // 4. Synchronized Projected Landmark Coordinates (Sticking to galaxy)
-    this.updateProjectedPositions();
+    if (now - this.lastProjectionUpdate >= 1000 / 30) {
+      this.lastProjectionUpdate = now;
+      this.updateProjectedPositions();
+    }
 
     // 5. Render Scene
     this.renderer.render(this.scene, this.camera);
@@ -1410,6 +1415,7 @@ export class GalaxyEngine {
     geometries.forEach(geometry => geometry.dispose());
     environmentTextures.forEach(texture => texture.dispose());
     this.renderer?.dispose();
+    this.renderer?.forceContextLoss();
   }
 }
 

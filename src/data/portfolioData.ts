@@ -1,13 +1,12 @@
-// Content reconciled against sobi.codes and sobiswriter/Me-Protfolio. See docs/content-sources.md.
-import type {UniverseMeta, ProjectItem, AiLabExperiment, ResearchRecordItem, TopologyNode, CosmicMilestone, AboutDossier, BeyondData} from '../types/universe';
-
+// Updated from the owner’s CV/resumés and public GitHub records. See docs/content-sources.md.
+import type {UniverseMeta,ProjectItem,AiLabExperiment,ResearchRecordItem,TopologyNode,CosmicMilestone,AboutDossier,BeyondData} from '../types/universe';
 export const UNIVERSES_META: UniverseMeta[] = [
   {
     "id": "arrival",
     "indexStr": "00",
     "name": "Overview",
     "title": "Overview",
-    "tagline": "Souradip Biswas · AI/ML developer and independent builder.",
+    "tagline": "Souradip Biswas · AI/ML developer, full stack engineer, and agency owner.",
     "concept": "The threshold",
     "hash": "arrival"
   },
@@ -85,63 +84,80 @@ export const PROJECTS_DATA: ProjectItem[] = [
     "role": "AI Application",
     "problem": "An AI platform for uploading, parsing, and analyzing legal documents.",
     "architecture": [
-      "Uses LLM workflows to surface key clauses, risks, and concise summaries for faster legal review."
+      "PDF, DOCX, and text uploads with structured summaries, clause and risk analysis, and document Q&A.",
+      "Answers connected to source citations and document highlighting; Gemini PDF analysis and Mammoth DOCX parsing."
     ],
     "keyFeatures": [],
     "stack": [
       "TypeScript",
-      "AI/NLP Stack",
-      "Next.js"
+      "Next.js",
+      "Genkit",
+      "Gemini",
+      "Mammoth"
     ],
     "githubUrl": "https://github.com/sobiswriter/LegalLM",
     "liveUrl": "https://legal-lmx24-git-main-sobiswriters-projects.vercel.app/",
+    "previewUnavailable": "This deployment does not allow embedded previews.",
     "featured": true,
     "status": "Featured Project",
     "executionEnvironment": "AI Application"
   },
   {
     "id": "project-aic",
-    "title": "Project AIC",
-    "tagline": "Core Long-term Personal Project",
+    "title": "Niva / Project AIC",
+    "tagline": "Proactive conversational AI assistant",
     "category": "Applied AI",
-    "role": "AI Bot / System",
-    "problem": "A Python-based intelligent bot system exploring behavior and decision logic.",
+    "role": "AI Assistant",
+    "problem": "A Telegram assistant with conversational context, long-term memory, and proactive follow-ups.",
     "architecture": [
-      "Investigates long-term memory, adaptive responses, and personality-oriented interaction design."
+      "FastAPI webhook handling with Gemini and Vertex AI integration.",
+      "Short-term conversational context and summarized long-term memory stored in Firestore."
     ],
-    "keyFeatures": [],
+    "keyFeatures": [
+      "Scheduled journaling and sentiment checks.",
+      "Proactive follow-ups and summarized conversational memory."
+    ],
     "stack": [
       "Python",
-      "PyTorch",
-      "Transformers"
+      "FastAPI",
+      "Gemini",
+      "Vertex AI",
+      "Firestore",
+      "Docker"
     ],
     "githubUrl": "https://github.com/sobiswriter/Project-AIC",
     "featured": false,
     "status": "Long-term Project",
-    "executionEnvironment": "AI Bot / System"
+    "executionEnvironment": "Telegram assistant"
   },
   {
     "id": "right-left",
-    "title": "RIGHT.LEFT Digital & Video Production Agency",
-    "tagline": "Elite digital engineering and motion creative platform.",
-    "category": "Applied AI",
-    "role": "Digital Agency Platform",
-    "problem": "A production-grade agency platform with an editorial visual system and React 19 architecture.",
+    "title": "LaunchSILO Labs",
+    "tagline": "My agency. Built to bring ambitious ideas to life.",
+    "category": "Commercial & Web",
+    "role": "Agency Owner & Developer",
+    "problem": "An agency platform for e-commerce, SaaS, portfolios, video production, and mobile development services.",
     "architecture": [
-      "Includes an Express API layer and Gemini-powered server intelligence for fast RFP scoping and lead qualification."
+      "Multi-step scope builder captures service requirements, budgets, timelines, and deliverables, with AI-assisted estimates and inquiry qualification.",
+      "Administrative CMS and inquiry pipeline with status tracking, client notes, invoices, PDF export, and WhatsApp handoffs."
     ],
-    "keyFeatures": [],
+    "keyFeatures": [
+      "Scope builder and AI-assisted estimates.",
+      "CMS, client inquiry tracking, and invoice exports."
+    ],
     "stack": [
       "React 19",
-      "Express",
-      "Gemini AI",
-      "Headless E-commerce",
-      "SaaS"
+      "Firebase",
+      "Firestore",
+      "REST APIs",
+      "Gemini"
     ],
-    "liveUrl": "https://rightleft.ai.studio/",
+    "liveUrl": "https://launchsilo.in/",
     "featured": false,
     "status": "Portfolio Project",
-    "executionEnvironment": "Digital Agency Platform"
+    "executionEnvironment": "Agency platform",
+    "githubUrl": "https://github.com/sobiswriter/RLBiz",
+    "sourceUnavailable": "Repository not publicly available."
   },
   {
     "id": "wassap",
@@ -161,7 +177,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "WebSocket"
     ],
     "githubUrl": "https://github.com/sobiswriter/Wassap",
-    "liveUrl": "https://wassap-rho.vercel.app/",
+    "liveUrl": "https://wassapyo.vercel.app/",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Real-time Communication"
@@ -208,7 +224,8 @@ export const PROJECTS_DATA: ProjectItem[] = [
     "liveUrl": "https://guru-kripa-jwellers.vercel.app/",
     "featured": false,
     "status": "Portfolio Project",
-    "executionEnvironment": "Luxury E-commerce Website"
+    "executionEnvironment": "Luxury E-commerce Website",
+    "githubUrl": "https://github.com/sobiswriter/Guru-Kripa-Jwellers"
   },
   {
     "id": "sonar-thali",
@@ -318,6 +335,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     ],
     "githubUrl": "https://github.com/sobiswriter/CosmicCanvas",
     "liveUrl": "https://sobiswriter.github.io/CosmicCanvas/",
+    "previewUnavailable": "This demo redirects to an HTTP site and opens separately.",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Experimental UI"
@@ -362,7 +380,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Electron",
       "React"
     ],
-    "githubUrl": "https://github.com/sobiswriter/PersonaVerse",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Desktop AI App"
@@ -383,7 +400,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Tkinter",
       "OCR"
     ],
-    "githubUrl": "https://github.com/sobiswriter/AI-Overlay",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Desktop Utility"
@@ -405,10 +421,10 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Twilio",
       "SMTP"
     ],
-    "githubUrl": "https://github.com/sobiswriter/Inviter",
     "featured": false,
     "status": "Portfolio Project",
-    "executionEnvironment": "Web Application"
+    "executionEnvironment": "Web Application",
+    "githubUrl": "https://github.com/sobiswriter/Main_Inviter"
   },
   {
     "id": "business-venture-app",
@@ -426,7 +442,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Electron",
       "SQLite"
     ],
-    "githubUrl": "https://github.com/sobiswriter/Business-Venture-App",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Desktop Application"
@@ -448,7 +463,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "State Machines"
     ],
     "githubUrl": "https://github.com/sobiswriter/Cosmos-Anomaly",
-    "liveUrl": "https://cosmos-anomaly.vercel.app/",
+    "liveUrl": "https://cosmos-anomaly.vercel.app",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Experimental System"
@@ -470,7 +485,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "Redux"
     ],
     "githubUrl": "https://github.com/sobiswriter/TimeLine-Twist-V2",
-    "liveUrl": "https://time-line-twist-v2.vercel.app/",
+    "liveUrl": "https://time-line-twist-v2.vercel.app",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Iterative System"
@@ -493,10 +508,117 @@ export const PROJECTS_DATA: ProjectItem[] = [
       "PowerShell",
       ".NET"
     ],
-    "githubUrl": "https://github.com/sobiswriter/PowerShell-Utility-Suite",
     "featured": false,
     "status": "Portfolio Project",
     "executionEnvironment": "Automation Tool Collection"
+  },
+  {
+    "id": "bhudrishty",
+    "title": "Bhudrishty",
+    "category": "Applied AI",
+    "role": "Mobile Developer · ML & Web Contributor",
+    "problem": "A landslide early-warning system developed with Team Vortiq for SIH 2026.",
+    "architecture": [
+      "Independently developed the entire mobile application and contributed to the ML component and website.",
+      "Multi-source risk assessment combines sensor readings, rainfall, terrain, and satellite data for localized warnings."
+    ],
+    "stack": [
+      "Mobile Development",
+      "Machine Learning",
+      "Web Development"
+    ],
+    "tagline": "Mobile Developer · ML & Web Contributor",
+    "keyFeatures": [
+      "College nomination to present at SIH 2026 after competing among 900 teams."
+    ],
+    "featured": false,
+    "status": "Portfolio Project",
+    "executionEnvironment": "Mobile Developer · ML & Web Contributor"
+  },
+  {
+    "id": "waterborne-prediction",
+    "title": "Waterborne Disease Outbreak Prediction",
+    "category": "Applied AI",
+    "role": "Hybrid ML System",
+    "problem": "Forecasts outbreaks and generates regional risk scores using water-quality, environmental, and demographic data.",
+    "architecture": [
+      "Hybrid LSTM–XGBoost model.",
+      "Recognized among the Top 15 teams in the Smart India Hackathon pre-finale."
+    ],
+    "stack": [
+      "Python",
+      "TensorFlow",
+      "Keras",
+      "LSTM",
+      "XGBoost",
+      "FastAPI"
+    ],
+    "tagline": "Hybrid ML System",
+    "keyFeatures": [],
+    "featured": false,
+    "status": "Portfolio Project",
+    "executionEnvironment": "Hybrid ML System"
+  },
+  {
+    "id": "client-retail",
+    "title": "Retail Inventory Application",
+    "category": "Commercial & Web",
+    "role": "Freelance Client Application",
+    "problem": "An offline-first inventory and operations application for a general retail shop.",
+    "architecture": [
+      "Stock valuation, sales analytics, receivables and payables, GST reports, data exports, and invoice generation."
+    ],
+    "stack": [
+      "Inventory Management",
+      "Offline-first Software"
+    ],
+    "tagline": "Freelance Client Application",
+    "keyFeatures": [],
+    "featured": false,
+    "status": "Portfolio Project",
+    "executionEnvironment": "Freelance Client Application"
+  },
+  {
+    "id": "client-medical",
+    "title": "Medical Shop Application",
+    "category": "Commercial & Web",
+    "role": "Freelance Client Application",
+    "problem": "An application developed for a medical shop.",
+    "architecture": [
+      "Client application delivery for a medical retail business."
+    ],
+    "stack": [
+      "Application Development"
+    ],
+    "tagline": "Freelance Client Application",
+    "keyFeatures": [],
+    "featured": false,
+    "status": "Portfolio Project",
+    "executionEnvironment": "Freelance Client Application"
+  },
+  {
+    "id": "bisos-chamber",
+    "title": "BisosChamber",
+    "category": "Applied AI",
+    "role": "Persona AI Playground",
+    "problem": "A newer evolution of PersonaVerse for creating and interacting with AI personas.",
+    "architecture": [
+      "React and Gemini-based persona playground."
+    ],
+    "stack": [
+      "TypeScript",
+      "React",
+      "Vite",
+      "Gemini",
+      "Tailwind CSS"
+    ],
+    "tagline": "Persona AI Playground",
+    "keyFeatures": [],
+    "featured": false,
+    "status": "Portfolio Project",
+    "executionEnvironment": "Persona AI Playground",
+    "githubUrl": "https://github.com/sobiswriter/BisosChamber",
+    "liveUrl": "https://bisos-chamber.vercel.app/"
   }
 ];
 
@@ -508,13 +630,15 @@ export const AI_LAB_EXPERIMENTS: AiLabExperiment[] = [
     "focusArea": "AI Application",
     "what": "An AI platform for uploading, parsing, and analyzing legal documents.",
     "why": "An AI platform for uploading, parsing, and analyzing legal documents.",
-    "how": "Uses LLM workflows to surface key clauses, risks, and concise summaries for faster legal review.",
-    "whatWasExplored": "Uses LLM workflows to surface key clauses, risks, and concise summaries for faster legal review.",
+    "how": "PDF, DOCX, and text uploads with structured summaries, clause and risk analysis, and document Q&A. Answers connected to source citations and document highlighting; Gemini PDF analysis and Mammoth DOCX parsing.",
+    "whatWasExplored": "PDF, DOCX, and text uploads with structured summaries, clause and risk analysis, and document Q&A. Answers connected to source citations and document highlighting; Gemini PDF analysis and Mammoth DOCX parsing.",
     "whatWasLearned": "An AI platform for uploading, parsing, and analyzing legal documents.",
     "technologies": [
       "TypeScript",
-      "AI/NLP Stack",
-      "Next.js"
+      "Next.js",
+      "Genkit",
+      "Gemini",
+      "Mammoth"
     ],
     "relatedProjects": [
       "legallm"
@@ -523,18 +647,21 @@ export const AI_LAB_EXPERIMENTS: AiLabExperiment[] = [
   },
   {
     "id": "project-aic",
-    "title": "Project AIC",
-    "tagline": "Core Long-term Personal Project",
-    "focusArea": "AI Bot / System",
-    "what": "A Python-based intelligent bot system exploring behavior and decision logic.",
-    "why": "A Python-based intelligent bot system exploring behavior and decision logic.",
-    "how": "Investigates long-term memory, adaptive responses, and personality-oriented interaction design.",
-    "whatWasExplored": "Investigates long-term memory, adaptive responses, and personality-oriented interaction design.",
-    "whatWasLearned": "A Python-based intelligent bot system exploring behavior and decision logic.",
+    "title": "Niva / Project AIC",
+    "tagline": "Proactive conversational AI assistant",
+    "focusArea": "AI Assistant",
+    "what": "A Telegram assistant with conversational context, long-term memory, and proactive follow-ups.",
+    "why": "A Telegram assistant with conversational context, long-term memory, and proactive follow-ups.",
+    "how": "FastAPI webhook handling with Gemini and Vertex AI integration. Short-term conversational context and summarized long-term memory stored in Firestore.",
+    "whatWasExplored": "FastAPI webhook handling with Gemini and Vertex AI integration. Short-term conversational context and summarized long-term memory stored in Firestore.",
+    "whatWasLearned": "A Telegram assistant with conversational context, long-term memory, and proactive follow-ups.",
     "technologies": [
       "Python",
-      "PyTorch",
-      "Transformers"
+      "FastAPI",
+      "Gemini",
+      "Vertex AI",
+      "Firestore",
+      "Docker"
     ],
     "relatedProjects": [
       "project-aic"
@@ -621,6 +748,71 @@ export const AI_LAB_EXPERIMENTS: AiLabExperiment[] = [
       "ai-overlay"
     ],
     "status": "Portfolio Project"
+  },
+  {
+    "id": "bhudrishty",
+    "title": "Bhudrishty",
+    "tagline": "Mobile Developer · ML & Web Contributor",
+    "focusArea": "Mobile Developer · ML & Web Contributor",
+    "what": "A landslide early-warning system developed with Team Vortiq for SIH 2026.",
+    "why": "A landslide early-warning system developed with Team Vortiq for SIH 2026.",
+    "how": "Independently developed the entire mobile application and contributed to the ML component and website. Multi-source risk assessment combines sensor readings, rainfall, terrain, and satellite data for localized warnings.",
+    "whatWasExplored": "Independently developed the entire mobile application and contributed to the ML component and website. Multi-source risk assessment combines sensor readings, rainfall, terrain, and satellite data for localized warnings.",
+    "whatWasLearned": "A landslide early-warning system developed with Team Vortiq for SIH 2026.",
+    "technologies": [
+      "Mobile Development",
+      "Machine Learning",
+      "Web Development"
+    ],
+    "relatedProjects": [
+      "bhudrishty"
+    ],
+    "status": "Portfolio Project"
+  },
+  {
+    "id": "waterborne-prediction",
+    "title": "Waterborne Disease Outbreak Prediction",
+    "tagline": "Hybrid ML System",
+    "focusArea": "Hybrid ML System",
+    "what": "Forecasts outbreaks and generates regional risk scores using water-quality, environmental, and demographic data.",
+    "why": "Forecasts outbreaks and generates regional risk scores using water-quality, environmental, and demographic data.",
+    "how": "Hybrid LSTM–XGBoost model. Recognized among the Top 15 teams in the Smart India Hackathon pre-finale.",
+    "whatWasExplored": "Hybrid LSTM–XGBoost model. Recognized among the Top 15 teams in the Smart India Hackathon pre-finale.",
+    "whatWasLearned": "Forecasts outbreaks and generates regional risk scores using water-quality, environmental, and demographic data.",
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "Keras",
+      "LSTM",
+      "XGBoost",
+      "FastAPI"
+    ],
+    "relatedProjects": [
+      "waterborne-prediction"
+    ],
+    "status": "Portfolio Project"
+  },
+  {
+    "id": "bisos-chamber",
+    "title": "BisosChamber",
+    "tagline": "Persona AI Playground",
+    "focusArea": "Persona AI Playground",
+    "what": "A newer evolution of PersonaVerse for creating and interacting with AI personas.",
+    "why": "A newer evolution of PersonaVerse for creating and interacting with AI personas.",
+    "how": "React and Gemini-based persona playground.",
+    "whatWasExplored": "React and Gemini-based persona playground.",
+    "whatWasLearned": "A newer evolution of PersonaVerse for creating and interacting with AI personas.",
+    "technologies": [
+      "TypeScript",
+      "React",
+      "Vite",
+      "Gemini",
+      "Tailwind CSS"
+    ],
+    "relatedProjects": [
+      "bisos-chamber"
+    ],
+    "status": "Portfolio Project"
   }
 ];
 
@@ -702,16 +894,17 @@ export const RESEARCH_RECORDS: ResearchRecordItem[] = [
   },
   {
     "id": "patent",
-    "title": "Patent Publication (IPR)",
+    "title": "Hybrid Endomythosis Detection through AI & ML",
     "type": "PUBLICATION SIGNAL",
     "domain": "Applied research",
-    "overview": "Published a patent demonstrating original technical innovation and applied research.",
+    "overview": "Patent publication · October 2025.",
     "investigationDetails": [
-      "Patent publication is listed in the previous portfolio."
+      "Published under the IPR framework. The CV provides the publication announcement."
     ],
     "keyOutcomes": [],
     "artifactsAndTools": [],
-    "signalBadge": "Patent publication"
+    "signalBadge": "Patent publication",
+    "dateOrEra": "Oct 2025"
   },
   {
     "id": "conferences",
@@ -1034,10 +1227,320 @@ export const TOPOLOGY_NODES: TopologyNode[] = [
       "the-shadow-diary",
       "inviter"
     ]
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "cluster": "APPLICATION DEVELOPMENT",
+    "depth": "Applied",
+    "description": "React is part of my technical toolkit.",
+    "connectedNodes": [
+      "electron",
+      "tkinter",
+      "node-next"
+    ],
+    "relatedProjects": [
+      "right-left",
+      "shri-guru-kirpa",
+      "sonar-thali",
+      "wat-ewrite",
+      "gdc-diagnostic",
+      "personaverse",
+      "timeline-twist-v2",
+      "bisos-chamber"
+    ]
+  },
+  {
+    "id": "next-js",
+    "name": "Next.js",
+    "cluster": "APPLICATION DEVELOPMENT",
+    "depth": "Applied",
+    "description": "Next.js is part of my technical toolkit.",
+    "connectedNodes": [
+      "electron",
+      "tkinter",
+      "node-next"
+    ],
+    "relatedProjects": [
+      "legallm",
+      "wassap",
+      "equity-echo",
+      "sonar-thali",
+      "wat-ewrite",
+      "devineclub",
+      "the-shadow-diary",
+      "inviter"
+    ]
+  },
+  {
+    "id": "tailwind-css",
+    "name": "Tailwind CSS",
+    "cluster": "APPLICATION DEVELOPMENT",
+    "depth": "Applied",
+    "description": "Tailwind CSS is part of my technical toolkit.",
+    "connectedNodes": [
+      "electron",
+      "tkinter",
+      "node-next"
+    ],
+    "relatedProjects": [
+      "bisos-chamber"
+    ]
+  },
+  {
+    "id": "fastapi",
+    "name": "FastAPI",
+    "cluster": "APPLICATION DEVELOPMENT",
+    "depth": "Applied",
+    "description": "FastAPI is part of my technical toolkit.",
+    "connectedNodes": [
+      "electron",
+      "tkinter",
+      "node-next"
+    ],
+    "relatedProjects": [
+      "project-aic",
+      "waterborne-prediction"
+    ]
+  },
+  {
+    "id": "rest-apis",
+    "name": "REST APIs",
+    "cluster": "APPLICATION DEVELOPMENT",
+    "depth": "Applied",
+    "description": "REST APIs is part of my technical toolkit.",
+    "connectedNodes": [
+      "electron",
+      "tkinter",
+      "node-next"
+    ],
+    "relatedProjects": [
+      "right-left"
+    ]
+  },
+  {
+    "id": "gemini",
+    "name": "Gemini",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "Gemini is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": [
+      "legallm",
+      "project-aic",
+      "right-left",
+      "bisos-chamber"
+    ]
+  },
+  {
+    "id": "vertex-ai",
+    "name": "Vertex AI",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "Vertex AI is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": [
+      "project-aic"
+    ]
+  },
+  {
+    "id": "genkit",
+    "name": "Genkit",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "Genkit is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": [
+      "legallm"
+    ]
+  },
+  {
+    "id": "tensorflow-keras",
+    "name": "TensorFlow / Keras",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "TensorFlow / Keras is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": [
+      "waterborne-prediction"
+    ]
+  },
+  {
+    "id": "xgboost",
+    "name": "XGBoost",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "XGBoost is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": [
+      "waterborne-prediction"
+    ]
+  },
+  {
+    "id": "scikit-learn",
+    "name": "scikit-learn",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "scikit-learn is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": []
+  },
+  {
+    "id": "pandas",
+    "name": "pandas",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "pandas is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": []
+  },
+  {
+    "id": "numpy",
+    "name": "NumPy",
+    "cluster": "AI / ML",
+    "depth": "Applied",
+    "description": "NumPy is part of my technical toolkit.",
+    "connectedNodes": [
+      "nlp",
+      "documents",
+      "transformers"
+    ],
+    "relatedProjects": []
+  },
+  {
+    "id": "google-cloud",
+    "name": "Google Cloud",
+    "cluster": "SYSTEMS & TOOLING",
+    "depth": "Applied",
+    "description": "Google Cloud is part of my technical toolkit.",
+    "connectedNodes": [
+      "modular",
+      "automation",
+      "cli"
+    ],
+    "relatedProjects": []
+  },
+  {
+    "id": "cloud-run",
+    "name": "Cloud Run",
+    "cluster": "SYSTEMS & TOOLING",
+    "depth": "Applied",
+    "description": "Cloud Run is part of my technical toolkit.",
+    "connectedNodes": [
+      "modular",
+      "automation",
+      "cli"
+    ],
+    "relatedProjects": []
+  },
+  {
+    "id": "firebase-firestore",
+    "name": "Firebase / Firestore",
+    "cluster": "SYSTEMS & TOOLING",
+    "depth": "Applied",
+    "description": "Firebase / Firestore is part of my technical toolkit.",
+    "connectedNodes": [
+      "modular",
+      "automation",
+      "cli"
+    ],
+    "relatedProjects": [
+      "project-aic",
+      "right-left"
+    ]
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "cluster": "SYSTEMS & TOOLING",
+    "depth": "Applied",
+    "description": "Supabase is part of my technical toolkit.",
+    "connectedNodes": [
+      "modular",
+      "automation",
+      "cli"
+    ],
+    "relatedProjects": []
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "cluster": "SYSTEMS & TOOLING",
+    "depth": "Applied",
+    "description": "Vercel is part of my technical toolkit.",
+    "connectedNodes": [
+      "modular",
+      "automation",
+      "cli"
+    ],
+    "relatedProjects": [
+      "wat-ewrite"
+    ]
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "cluster": "SYSTEMS & TOOLING",
+    "depth": "Applied",
+    "description": "Docker is part of my technical toolkit.",
+    "connectedNodes": [
+      "modular",
+      "automation",
+      "cli"
+    ],
+    "relatedProjects": [
+      "project-aic"
+    ]
   }
 ];
 
 export const COSMIC_MILESTONES: CosmicMilestone[] = [
+  {
+    "id": "sih-bhudrishty",
+    "title": "SIH 2026 · Bhudrishty",
+    "year": "2026",
+    "category": "Hackathon",
+    "epoch": "Hackathon",
+    "context": "Team Vortiq",
+    "summary": "College nomination to present at SIH 2026 after competing among 900 teams.",
+    "significance": "",
+    "verifiedDetails": [
+      "College nomination to present at SIH 2026 after competing among 900 teams."
+    ],
+    "celestialCoordinates": {
+      "sector": "Team Vortiq",
+      "magnitude": "Hackathon",
+      "anchorIndex": 0
+    }
+  },
   {
     "id": "openxai-2025",
     "title": "India Accelerator – OpenXAI",
@@ -1053,7 +1556,7 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Blockseblock Labs",
       "magnitude": "Cohort",
-      "anchorIndex": 0
+      "anchorIndex": 1
     }
   },
   {
@@ -1071,42 +1574,45 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Google’s HacktoSkill program",
       "magnitude": "Cohort",
-      "anchorIndex": 1
-    }
-  },
-  {
-    "id": "patent-publication",
-    "title": "Patent Publication (IPR)",
-    "epoch": "Patent",
-    "category": "Patent",
-    "context": "Applied research",
-    "summary": "Published a patent demonstrating original technical innovation and applied research.",
-    "significance": "",
-    "verifiedDetails": [
-      "Published a patent demonstrating original technical innovation and applied research."
-    ],
-    "celestialCoordinates": {
-      "sector": "Applied research",
-      "magnitude": "Patent",
       "anchorIndex": 2
     }
   },
   {
+    "id": "patent-publication",
+    "title": "Hybrid Endomythosis Detection through AI & ML",
+    "epoch": "Patent",
+    "category": "Patent",
+    "context": "Applied AI & ML research",
+    "summary": "Patent publication for Hybrid Endomythosis Detection through AI & ML.",
+    "significance": "",
+    "verifiedDetails": [
+      "Patent publication · October 2025"
+    ],
+    "celestialCoordinates": {
+      "sector": "Applied research",
+      "magnitude": "Patent",
+      "anchorIndex": 3
+    },
+    "year": "Oct 2025"
+  },
+  {
     "id": "techfest-iit-ropar",
-    "title": "Tech Fest – IIT Ropar",
+    "title": "Advitiya 2026 · IIT Ropar",
     "epoch": "Award & Recognition",
     "category": "Award & Recognition",
     "context": "IIT Ropar",
-    "summary": "Recognition for technical performance and innovation.",
+    "summary": "First and second place in two technical events.",
     "significance": "",
     "verifiedDetails": [
-      "Recognition for technical performance and innovation."
+      "First place in one technical event.",
+      "Second place in another technical event."
     ],
     "celestialCoordinates": {
       "sector": "IIT Ropar",
       "magnitude": "Award & Recognition",
-      "anchorIndex": 3
-    }
+      "anchorIndex": 4
+    },
+    "year": "2026"
   },
   {
     "id": "hackathons-ideathons",
@@ -1122,7 +1628,7 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Rapid prototyping",
       "magnitude": "Hackathon",
-      "anchorIndex": 4
+      "anchorIndex": 5
     }
   },
   {
@@ -1139,7 +1645,7 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Gandhinagar",
       "magnitude": "Conference",
-      "anchorIndex": 5
+      "anchorIndex": 6
     }
   },
   {
@@ -1156,7 +1662,7 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Delhi",
       "magnitude": "Conference",
-      "anchorIndex": 6
+      "anchorIndex": 7
     }
   },
   {
@@ -1173,7 +1679,7 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Programming",
       "magnitude": "Award & Recognition",
-      "anchorIndex": 7
+      "anchorIndex": 8
     }
   },
   {
@@ -1190,7 +1696,60 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
     "celestialCoordinates": {
       "sector": "Language coursework",
       "magnitude": "Academic",
-      "anchorIndex": 8
+      "anchorIndex": 9
+    }
+  },
+  {
+    "id": "waterborne-sih",
+    "title": "SIH Pre-finale · Top 15",
+    "year": "Oct 2025",
+    "category": "Hackathon",
+    "epoch": "Hackathon",
+    "context": "Waterborne Disease Outbreak Prediction",
+    "summary": "Recognized among the Top 15 teams in the Smart India Hackathon pre-finale.",
+    "significance": "",
+    "verifiedDetails": [
+      "Recognized among the Top 15 teams in the Smart India Hackathon pre-finale."
+    ],
+    "celestialCoordinates": {
+      "sector": "Waterborne Disease Outbreak Prediction",
+      "magnitude": "Hackathon",
+      "anchorIndex": 10
+    }
+  },
+  {
+    "id": "web-e-thon",
+    "title": "Web-E-Thon 2025",
+    "year": "Mar 2025",
+    "category": "Hackathon",
+    "epoch": "Hackathon",
+    "context": "Web development",
+    "summary": "First runner-up.",
+    "significance": "",
+    "verifiedDetails": [
+      "First runner-up."
+    ],
+    "celestialCoordinates": {
+      "sector": "Web development",
+      "magnitude": "Hackathon",
+      "anchorIndex": 11
+    }
+  },
+  {
+    "id": "college-ideathon",
+    "title": "College Tech Fest Ideathon",
+    "category": "Hackathon",
+    "epoch": "Hackathon",
+    "context": "College Tech Fest",
+    "summary": "Ideathon winner.",
+    "significance": "",
+    "verifiedDetails": [
+      "Ideathon winner."
+    ],
+    "celestialCoordinates": {
+      "sector": "College Tech Fest",
+      "magnitude": "Hackathon",
+      "anchorIndex": 12
     }
   }
 ];
@@ -1198,21 +1757,22 @@ export const COSMIC_MILESTONES: CosmicMilestone[] = [
 export const ABOUT_DOSSIER: AboutDossier = {
   "name": "Souradip (Sobi) Biswas",
   "handle": "@sobiswriter",
-  "role": "AI / ML Developer & Researcher",
+  "role": "AI & ML Developer · Full Stack Engineer",
   "location": "India",
   "timezone": "IST (UTC+05:30)",
   "coordinates": "",
-  "status": "College student · independent developer · research-oriented builder",
+  "status": "B.Tech CSE student · LaunchSILO Labs agency owner",
   "positioning": [
-    "AI / ML Systems",
     "Applied AI",
-    "Creative Tooling"
+    "Full Stack Engineering",
+    "Mobile Software",
+    "Client Delivery"
   ],
   "manifestoStatement": "AI as a system, not a demo.",
   "narrativeParagraphs": [
-    "I build applied AI systems with a focus on usability, clarity, and reliable execution. My core interests include document intelligence, generative AI, NLP, and behavior-aware interfaces.",
-    "I combine AI, interface design, and tooling into complete products, with an iterative workflow centered on shipping useful outcomes. I am a college student and independent developer with a research-driven product mindset.",
-    "I share projects on GitHub and technical posts on LinkedIn about AI systems, interfaces, and development practices. Building, sharing, and refining real systems is a consistent thread through my work."
+    "I’m an AI and ML developer, full stack engineer, and the owner of LaunchSILO Labs. I build applications, AI workflows, and mobile software, with hands-on client delivery and technical competition experience.",
+    "My work ranges from document intelligence and conversational AI to landslide early warnings and offline-first business applications. I like turning a promising idea into something people can actually use.",
+    "I’m pursuing a B.Tech in Computer Science and Engineering at Lovely Professional University in Punjab, where I started in August 2023. I also train, build with teams, and keep exploring the space between intelligence and the interface."
   ],
   "engineeringAxioms": [
     {
@@ -1235,10 +1795,10 @@ export const ABOUT_DOSSIER: AboutDossier = {
     }
   ],
   "currentExplorations": [
-    "Document intelligence and NLP",
-    "Generative AI and rewriting pipelines",
-    "Persona, identity, and behavior modeling",
-    "Creative and systems tooling"
+    "Applied AI and document intelligence",
+    "Conversational systems with long-term memory",
+    "Mobile software and disaster early-warning systems",
+    "Full stack products and client delivery"
   ],
   "offlinePursuits": [
     "Foundational Spanish coursework · Espanola Grade B*"
@@ -1248,7 +1808,7 @@ export const ABOUT_DOSSIER: AboutDossier = {
 export const BEYOND_DATA: BeyondData = {
   "transmissionHeader": "Contact & Résumé",
   "terminalStatus": "Open to collaboration",
-  "email": "souradip.biswas23@lpu.in",
+  "email": "souradip073@gmail.com",
   "channels": [
     {
       "name": "GitHub",
@@ -1270,6 +1830,13 @@ export const BEYOND_DATA: BeyondData = {
       "url": "https://sobi.codes/",
       "protocol": "Portfolio",
       "note": "The original portfolio."
+    },
+    {
+      "name": "Phone",
+      "handle": "+91 8787822581",
+      "url": "tel:+918787822581",
+      "protocol": "Call",
+      "note": "Professional enquiries."
     }
   ],
   "curriculumVitae": {
@@ -1290,6 +1857,6 @@ export const BEYOND_DATA: BeyondData = {
       "HackerRank",
       "Espanola – Grade B*"
     ],
-    "resumeDownloadAvailable": false
+    "resumeDownloadAvailable": true
   }
 };

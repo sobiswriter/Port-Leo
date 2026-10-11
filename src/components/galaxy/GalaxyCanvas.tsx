@@ -71,8 +71,18 @@ export const GalaxyCanvas: React.FC<GalaxyCanvasProps> = ({
 
     engineRef.current = engine;
     onReady?.();
+    const canvas = canvasRef.current;
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      engine.setEnabled(false);
+      engineRef.current = null;
+      setUnavailable(true);
+      setProjections(new Map());
+    };
+    canvas.addEventListener('webglcontextlost', onContextLost);
 
     return () => {
+      canvas.removeEventListener('webglcontextlost', onContextLost);
       engine.destroy();
       engineRef.current = null;
     };

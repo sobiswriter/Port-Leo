@@ -1046,6 +1046,7 @@ const Hyperspeed = ({
       document.removeEventListener('visibilitychange', onVisibilityChange);
       disposables.forEach(item => item.dispose());
       renderer.dispose();
+      renderer.forceContextLoss();
       renderer.domElement.remove();
     };
   }, []);
