@@ -23,7 +23,7 @@ export class CosmicAudioSystem {
     this.music = new Audio(new URL('audio/organ-variation.mp3', document.baseURI).href);
     this.music.preload = 'auto';
     this.music.loop = true;
-    this.music.volume = 0.32;
+    this.music.volume = 0.48;
     this.music.hidden = true;
     this.music.setAttribute('aria-hidden', 'true');
     document.body.appendChild(this.music);
@@ -154,3 +154,4 @@ export class CosmicAudioSystem {
 }
 
 export const cosmicAudio = new CosmicAudioSystem();
+

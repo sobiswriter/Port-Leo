@@ -1,0 +1,266 @@
+[
+  {
+    "title": "Wat-EWrite",
+    "type": "Blogging Platform",
+    "desc": "Blogging site example and personal blogging platform.",
+    "summary": "A clean platform for publishing, reading, and showcasing long-form writing.",
+    "details": "Built as both a personal blog and a reference implementation focused on readable layouts and smooth content publishing.",
+    "stack": [
+      "TypeScript",
+      "Next.js",
+      "React",
+      "Vercel"
+    ],
+    "github": "https://github.com/sobiswriter/Wat-EWrite",
+    "demo": "https://wat-e-write.vercel.app"
+  },
+  {
+    "title": "Sonar Thali Food Commerce App",
+    "type": "Food Commerce Application",
+    "desc": "Food commerce app for showcasing products and serving customers.",
+    "summary": "A customer-facing storefront for discovering menu offerings and placing orders.",
+    "details": "Designed around clear product discovery and smooth purchase flows for food-focused commerce experiences.",
+    "stack": [
+      "TypeScript",
+      "Next.js",
+      "React",
+      "E-commerce"
+    ],
+    "github": "https://github.com/sobiswriter/Sonar-Thali-Food-Commerce-App",
+    "demo": "https://sonar-thali.vercel.app"
+  },
+  {
+    "title": "RIGHT.LEFT Digital & Video Production Agency",
+    "type": "Digital Agency Platform",
+    "desc": "Elite digital engineering and motion creative platform.",
+    "summary": "A production-grade agency platform with an editorial visual system and React 19 architecture.",
+    "details": "Includes an Express API layer and Gemini-powered server intelligence for fast RFP scoping and lead qualification.",
+    "stack": [
+      "React 19",
+      "Express",
+      "Gemini AI",
+      "Headless E-commerce",
+      "SaaS"
+    ],
+    "demo": "https://rightleft.ai.studio/"
+  },
+  {
+    "title": "Shri Guru Kirpa Gold Platters And Jewellers",
+    "type": "Luxury E-commerce Website",
+    "desc": "Modern jewellery catalog and customer experience for Shri Guru Kirpa Gold Platters And Jewellers in Phagwara, Punjab.",
+    "summary": "A premium jewellery storefront with catalog browsing, virtual try-on, and appointment booking.",
+    "details": "Balances high-end visual design with practical discovery flows, store information, and concierge-style guidance.",
+    "stack": [
+      "React",
+      "Vite",
+      "E-commerce",
+      "AI Concierge"
+    ],
+    "demo": "https://guru-kripa-jwellers.vercel.app/"
+  },
+  {
+    "title": "GDC Diagnostic Center",
+    "type": "Healthcare Web Application",
+    "desc": "Official diagnostic and pathology web portal for GDC Diagnostic Center, Benad Road, Jaipur, Rajasthan.",
+    "summary": "A 24×7 diagnostic center web portal for services, center information, and patient-facing workflows.",
+    "details": "Built to present pathology offerings clearly while supporting day-to-day operational and management needs.",
+    "stack": [
+      "React",
+      "Vite",
+      "Healthcare",
+      "Management System"
+    ],
+    "demo": "https://gdc-site.vercel.app/"
+  },
+  {
+    "title": "Wassap",
+    "type": "Real-time Communication",
+    "desc": "WhatsApp Clone with AI Integration",
+    "summary": "A real-time messaging app inspired by WhatsApp with built-in AI assistance.",
+    "details": "Includes live chat, responsive UI patterns, and integrated assistant workflows for faster communication.",
+    "stack": [
+      "TypeScript",
+      "Next.js",
+      "AI Integration",
+      "WebSocket"
+    ],
+    "github": "https://github.com/sobiswriter/Wassap",
+    "demo": "https://wassap-rho.vercel.app/"
+  },
+  {
+    "title": "EquityEcho",
+    "type": "FinTech / AI Application",
+    "desc": "Stock Market Prediction Platform",
+    "summary": "An AI-assisted platform for stock analysis, trend tracking, and market prediction.",
+    "details": "Combines ML-based forecasting with interactive financial views to support better trading and portfolio decisions.",
+    "stack": [
+      "TypeScript",
+      "Next.js",
+      "ML Models",
+      "Financial APIs"
+    ],
+    "github": "https://github.com/sobiswriter/EquityEcho-Stocks-Predictor"
+  },
+  {
+    "title": "DevineClub",
+    "type": "Competition Project",
+    "desc": "AIFusion IIT Ropar Hackathon",
+    "summary": "An AI application built for AIFusion at IIT Ropar under hackathon constraints.",
+    "details": "Focused on practical architecture, fast iteration, and real-world problem solving in a competition setting.",
+    "stack": [
+      "TypeScript",
+      "Next.js",
+      "AI/ML Stack",
+      "Competition-Ready"
+    ],
+    "github": "https://github.com/sobiswriter/DevineClub"
+  },
+  {
+    "title": "CosmicCanvas",
+    "type": "Experimental UI",
+    "desc": "Generative Art & Color Playground",
+    "summary": "An interactive canvas for experimenting with generative color and motion.",
+    "details": "Explores WebGL rendering, procedural strokes, and responsive visual interaction patterns.",
+    "stack": [
+      "JavaScript",
+      "WebGL",
+      "Canvas API"
+    ],
+    "github": "https://github.com/sobiswriter/CosmicCanvas",
+    "demo": "https://sobiswriter.github.io/CosmicCanvas/"
+  },
+  {
+    "title": "LegalLM",
+    "type": "AI Application",
+    "desc": "Featured Flagship Project",
+    "summary": "An AI platform for uploading, parsing, and analyzing legal documents.",
+    "details": "Uses LLM workflows to surface key clauses, risks, and concise summaries for faster legal review.",
+    "stack": [
+      "TypeScript",
+      "AI/NLP Stack",
+      "Next.js"
+    ],
+    "github": "https://github.com/sobiswriter/LegalLM",
+    "demo": "https://legal-lmx24-git-main-sobiswriters-projects.vercel.app/"
+  },
+  {
+    "title": "Project AIC",
+    "type": "AI Bot / System",
+    "desc": "Core Long-term Personal Project",
+    "summary": "A Python-based intelligent bot system exploring behavior and decision logic.",
+    "details": "Investigates long-term memory, adaptive responses, and personality-oriented interaction design.",
+    "stack": [
+      "Python",
+      "PyTorch",
+      "Transformers"
+    ],
+    "github": "https://github.com/sobiswriter/Project-AIC"
+  },
+  {
+    "title": "The Shadow Diary",
+    "type": "AI Journaling",
+    "desc": "Psychological AI Tool",
+    "summary": "An AI-assisted journal that rewrites and reframes entries using psychological themes.",
+    "details": "Turns raw notes into structured reflections with guided interpretation and a focused writing interface.",
+    "stack": [
+      "TypeScript",
+      "Next.js",
+      "OpenAI API"
+    ],
+    "github": "https://github.com/sobiswriter/The-Shadow-Diary",
+    "demo": "https://the-shadow-diary.vercel.app/"
+  },
+  {
+    "title": "PersonaVerse",
+    "type": "Desktop AI App",
+    "desc": "Interactive Playground",
+    "summary": "A desktop playground for creating and chatting with AI-driven personas.",
+    "details": "Supports character profiles, behavior constraints, and real-time conversational simulation.",
+    "stack": [
+      "Node.js",
+      "Electron",
+      "React"
+    ],
+    "github": "https://github.com/sobiswriter/PersonaVerse"
+  },
+  {
+    "title": "AI Overlay",
+    "type": "Desktop Utility",
+    "desc": "Productivity Tool",
+    "summary": "A lightweight desktop overlay for quick, context-aware AI assistance.",
+    "details": "Runs as a smart on-screen layer to help with fast lookups and productivity tasks.",
+    "stack": [
+      "Python",
+      "Tkinter",
+      "OCR"
+    ],
+    "github": "https://github.com/sobiswriter/AI-Overlay"
+  },
+  {
+    "title": "Inviter",
+    "type": "Web Application",
+    "desc": "Event Management",
+    "summary": "An invitation management app with automated SMS and email workflows.",
+    "details": "Streamlines RSVPs through reminders, follow-ups, and real-time guest tracking dashboards.",
+    "stack": [
+      "Node.js",
+      "Next.js",
+      "Twilio",
+      "SMTP"
+    ],
+    "github": "https://github.com/sobiswriter/Inviter"
+  },
+  {
+    "title": "Business Venture App",
+    "type": "Desktop Application",
+    "desc": "Enterprise Solution",
+    "summary": "A business desktop app for financial tracking, reporting, and internal operations.",
+    "details": "Includes account management, invoice PDF generation, and cash-flow visibility tools.",
+    "stack": [
+      "Node.js",
+      "Electron",
+      "SQLite"
+    ],
+    "github": "https://github.com/sobiswriter/Business-Venture-App"
+  },
+  {
+    "title": "Cosmos Anomaly",
+    "type": "Experimental System",
+    "desc": "Narrative Engine",
+    "summary": "A narrative-driven system exploring timeline manipulation and anomaly logic.",
+    "details": "Users influence branching timelines, with graph-based state management driving ripple effects.",
+    "stack": [
+      "TypeScript",
+      "WebGL",
+      "State Machines"
+    ],
+    "github": "https://github.com/sobiswriter/Cosmos-Anomaly",
+    "demo": "https://cosmos-anomaly.vercel.app/"
+  },
+  {
+    "title": "Timeline Twist (V2)",
+    "type": "Iterative System",
+    "desc": "System Refactor",
+    "summary": "The second iteration of a timeline system with a cleaner architecture.",
+    "details": "Refactors the core engine for better performance and support for deep branching paths.",
+    "stack": [
+      "TypeScript",
+      "React",
+      "Redux"
+    ],
+    "github": "https://github.com/sobiswriter/TimeLine-Twist-V2",
+    "demo": "https://time-line-twist-v2.vercel.app/"
+  },
+  {
+    "title": "PS Utility Suite",
+    "type": "Automation Tool Collection",
+    "desc": "DevOps / Scripting",
+    "summary": "A PowerShell toolkit for scripting, scheduling, scraping, and routine automation.",
+    "details": "Designed for Windows power users to automate repetitive operations and system-level tasks.",
+    "stack": [
+      "PowerShell",
+      ".NET"
+    ],
+    "github": "https://github.com/sobiswriter/PowerShell-Utility-Suite"
+  }
+]

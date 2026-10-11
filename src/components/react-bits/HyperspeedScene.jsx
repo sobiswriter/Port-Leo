@@ -867,7 +867,7 @@ const Hyperspeed = ({
 
     const frame = now => {
       raf = 0;
-      if (!alive) return;
+      if (!alive || !state.visible || document.hidden) return;
       const s = settingsRef.current;
       const dt = Math.min(0.05, Math.max(0.001, (now - last) / 1000));
       last = now;
@@ -973,7 +973,7 @@ const Hyperspeed = ({
     };
 
     const wake = () => {
-      if (raf || !alive || !state.visible) return;
+      if (raf || !alive || !state.visible || document.hidden) return;
       last = performance.now();
       raf = requestAnimationFrame(frame);
     };
@@ -996,6 +996,10 @@ const Hyperspeed = ({
       setHeld(true);
     };
     const onUp = () => setHeld(false);
+    const onVisibilityChange = () => {
+      if (document.hidden) {onUp(); cancelAnimationFrame(raf); raf = 0;}
+      else wake();
+    };
     const onMove = event => {
       const rect = container.getBoundingClientRect();
       state.pointerX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -1024,6 +1028,7 @@ const Hyperspeed = ({
     window.addEventListener('pointerup', onUp, true);
     window.addEventListener('pointercancel', onUp, true);
     window.addEventListener('blur', onUp);
+    document.addEventListener('visibilitychange', onVisibilityChange);
     resize();
 
     return () => {
@@ -1038,6 +1043,7 @@ const Hyperspeed = ({
       window.removeEventListener('pointerup', onUp, true);
       window.removeEventListener('pointercancel', onUp, true);
       window.removeEventListener('blur', onUp);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       disposables.forEach(item => item.dispose());
       renderer.dispose();
       renderer.domElement.remove();

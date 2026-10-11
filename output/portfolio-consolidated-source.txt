@@ -1,0 +1,211 @@
+CONSOLIDATED PORTFOLIO DATA REPORT
+BASIC IDENTITY
+Full Name: Souradip (Sobi) Biswas
+Handle / Alias: sobiswriter
+Primary Domain: AI / ML Systems, Applied AI, Creative Tooling
+Current Status: College student, independent developer , researcher-oriented
+Online Presence:
+GitHub: https://github.com/sobiswriter
+LinkedIn: https://www.linkedin.com/in/sobiswriter/
+PROFESSIONAL OVERVIEW (AGGREGATED)
+AI-focused developer and researcher building applied systems rather than toy demos
+Strong interest in document intelligence, generative AI, NLP , and persona-based systems
+Combines AI + interfaces + tooling into complete end-to-end products
+Comfortable with experimentation, iteration, and rebuilding systems from scratch
+TECHNICAL SKILLS (OBSERVED)
+Programming Languages
+Python
+TypeScript
+JavaScript
+PowerShell
+Java (working familiarity)
+AI / Machine Learning
+Natural Language Processing (NLP)
+Generative AI systems
+Document analysis and intelligence
+Transformer-based models (applied usage)
+AI-assisted rewriting and analysis pipelines
+Application Development
+Desktop application development (Electron, Tkinter)
+Web application development (Node.js, Next.js)
+UI/UX logic for AI-driven tools
+API-driven application architectures
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+1
+
+Systems & Tooling
+Modular AI system design
+Automation pipelines
+CLI and PowerShell utilities
+Integration with third-party services and APIs
+MAJOR PROJECTS (FROM GITHUB)
+LegalLM
+Type: AI Application
+Focus: Legal document intelligence
+Description: AI-driven platform for uploading, parsing, and analyzing legal documents using NLP-
+based approaches.
+Tech Stack: TypeScript, AI/NLP stack
+Status: Featured flagship project
+Project AIC
+Type: AI Bot / System
+Description: Python-based intelligent bot system exploring behavior , interaction, and decision logic.
+Tech Stack: Python
+Status: Core long-term personal project
+The Shadow Diary
+Type: AI-powered journaling application
+Description: Journaling platform that uses AI to rewrite and reinterpret entries, inspired by
+psychological and Jungian themes.
+Tech Stack: TypeScript
+PersonaVerse
+Type: Desktop AI Application
+Description: Persona creation and interaction playground enabling users to build and converse with
+AI-driven personalities.
+Tech Stack: Node.js, Electron
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+2
+
+AI Overlay
+Type: Desktop Utility
+Description: Lightweight AI overlay tool designed for productivity and real-time assistance.
+Tech Stack: Python, Tkinter
+Inviter
+Type: Web Application
+Description: Invitation management system integrating messaging and email services for
+automated communication workflows.
+Tech Stack: Node.js, Next.js, Twilio, SMTP APIs
+Business Venture App
+Type: Desktop Application
+Description: Business-focused application supporting financial tracking, reporting, and internal
+workflows.
+Tech Stack: Node.js, Electron
+Cosmos Anomaly
+Type: Experimental System
+Description: Narrative-driven and system-oriented project exploring timeline manipulation and
+anomaly-based logic.
+Tech Stack: TypeScript
+Timeline Twist (V2)
+Type: Iterative System
+Description: Second iteration of a timeline-based project, emphasizing refactoring and architectural
+improvement.
+Tech Stack: TypeScript
+PowerShell Utility Suite
+Type: Automation Tool Collection
+Description: Collection of PowerShell modules including web scraping, scheduling, stopwatch
+utilities, image editing, and automation tools.
+Tech Stack: PowerShell
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+3
+
+COLLABORATIONS & PROGRAMS
+India Accelerator – OpenXAI 2025
+Collaborative project under Blockseblock Labs
+Participation in accelerator-style development environment
+Focus on scalable and collaborative AI system development
+ACHIEVEMENTS & RECOGNITION
+Patent Publication (IPR): Published a patent under the Intellectual Property Rights (IPR) framework,
+demonstrating original technical innovation and applied research.
+Tech Fest – IIT Ropar: Achieved recognition for technical performance and innovation at IIT Ropar
+Tech Fest events.
+Hackathons & Ideathons: Winner and participant in multiple hackathons and ideathons, involving
+rapid prototyping, problem-solving, and solution presentation.
+Conference Participation:
+Attended ODDO Meet, Gandhinagar
+Attended IMC Conference, Delhi
+HackerRank Achievements:
+5★ in Problem Solving
+5★ in Python
+PUBLIC PRESENCE & SIGNALS
+Active GitHub profile with multiple featured projects
+Accumulated GitHub stars across repositories
+Technical posts and engagement on LinkedIn related to AI systems, interfaces, and development
+practices
+Consistent focus on building, sharing, and iterating on real systems
+CORE THEMES ACROSS WORK
+AI as a system, not a demo
+Persona, identity, and behavior modeling
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+4
+
+Applied NLP and document intelligence
+Tooling designed for real workflows
+Iterative rebuilding and architectural refinement
+• 
+• 
+• 
+5

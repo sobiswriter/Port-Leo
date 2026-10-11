@@ -10,6 +10,10 @@ export function AnimatedPanel({as = 'div', className, children, ariaLive}: {as?:
   return <Panel className={className} aria-live={ariaLive} initial={still ? false : {opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{duration:0.55,ease:[0.16,1,0.3,1]}}>{children}</Panel>;
 }
 export function Eyebrow({ children }: {children: React.ReactNode}) { return <p className="eyebrow">{children}</p>; }
+export function RoomIdentity({id}: {id: UniverseId}) {
+  const place = places.find(p => p.id === id)!;
+  return <div className="room-identity"><span>{place.name}</span><p>{place.subtitle}</p></div>;
+}
 export function Continue({ to, onTravelTo }: RoomProps & {to: UniverseId}) {
   const place = places.find(p => p.id === to)!;
   const still = useContext(StillContext);

@@ -31,7 +31,7 @@ export interface ProjectItem {
   githubUrl?: string;
   liveUrl?: string;
   featured: boolean;
-  status: 'Production' | 'Active Build' | 'Open Source' | 'Exploratory';
+  status: 'Production' | 'Active Build' | 'Open Source' | 'Exploratory' | 'Featured Project' | 'Long-term Project' | 'Portfolio Project';
   executionEnvironment?: string;
 }
 
@@ -79,7 +79,7 @@ export interface TopologyNode {
   name: string;
   cluster: 'LANGUAGES' | 'AI / ML' | 'APPLICATION DEVELOPMENT' | 'SYSTEMS & TOOLING';
   description: string;
-  depth: 'Core Mastery' | 'Applied Production' | 'System Architecture';
+  depth: 'Core Mastery' | 'Applied Production' | 'System Architecture' | 'Applied' | 'Familiarity';
   connectedNodes: string[];
   relatedProjects: string[];
 }

@@ -1,0 +1,1 @@
+Place the owner's supplied résumé PDF here, then set RESUME_DOCUMENT.url in src/data/resume.ts to /documents/<filename>.pdf. View and download actions appear automatically when configured. No substitute résumé is published while waiting for the updated document.

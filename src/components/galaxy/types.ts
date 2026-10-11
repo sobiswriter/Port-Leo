@@ -18,6 +18,7 @@ export interface DestinationConfig {
   id: string;
   name: string;
   subtitle: string;
+  worldName?: string;
   sectorCode: string;
   route: string;
   /**

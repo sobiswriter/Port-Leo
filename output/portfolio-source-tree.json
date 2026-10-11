@@ -1,0 +1,203 @@
+{
+  "sha": "4cc7f6d3d246002d272300f87981b8fa9a64d31d",
+  "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/trees/4cc7f6d3d246002d272300f87981b8fa9a64d31d",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "892067bc705f2bae57a9fe606a8fd43af3c37d3b",
+      "size": 281,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/892067bc705f2bae57a9fe606a8fd43af3c37d3b"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a8d7c1405ea5e570e624c8f8c06c148b22838388",
+      "size": 2312,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/a8d7c1405ea5e570e624c8f8c06c148b22838388"
+    },
+    {
+      "path": "Souradip Biswas – Consolidated Portfolio Data.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fbb07464d94076b1c4dcc30272d3f4274957a0d",
+      "size": 23811,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/4fbb07464d94076b1c4dcc30272d3f4274957a0d"
+    },
+    {
+      "path": "jsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77167096423d4f458eb88f3349f38d7dab3777e1",
+      "size": 124,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/77167096423d4f458eb88f3349f38d7dab3777e1"
+    },
+    {
+      "path": "my Image.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40dc637bd450a0b31e0533030892f615315b8e73",
+      "size": 355804,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/40dc637bd450a0b31e0533030892f615315b8e73"
+    },
+    {
+      "path": "next.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bbde6fbcf63ebdfb75984423c654b0c932d6ff78",
+      "size": 120,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/bbde6fbcf63ebdfb75984423c654b0c932d6ff78"
+    },
+    {
+      "path": "package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c0b23e7394ed2c7b14d7511293cfdc4f31462df",
+      "size": 31337,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/7c0b23e7394ed2c7b14d7511293cfdc4f31462df"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ae6f6ba1a2cc1b19059c64c1f858b350a6cd887",
+      "size": 386,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/5ae6f6ba1a2cc1b19059c64c1f858b350a6cd887"
+    },
+    {
+      "path": "public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c1de59ad6d880f7c1433a6db46ea126764eee1e0",
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/trees/c1de59ad6d880f7c1433a6db46ea126764eee1e0"
+    },
+    {
+      "path": "public/my-image.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40dc637bd450a0b31e0533030892f615315b8e73",
+      "size": 355804,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/40dc637bd450a0b31e0533030892f615315b8e73"
+    },
+    {
+      "path": "public/resume.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0cadb35be63e8f530a35d00a159b917262547b72",
+      "size": 147019,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/0cadb35be63e8f530a35d00a159b917262547b72"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9f93cbeb6a06cd8f902251bfd254b5ae477b49e5",
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/trees/9f93cbeb6a06cd8f902251bfd254b5ae477b49e5"
+    },
+    {
+      "path": "src/app",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f6b6a78ee48d07190387a4a4cf4dce9b89677fa9",
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/trees/f6b6a78ee48d07190387a4a4cf4dce9b89677fa9"
+    },
+    {
+      "path": "src/app/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "37d94e23fb860e48f3bc009fd89654f935d5a1e8",
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/trees/37d94e23fb860e48f3bc009fd89654f935d5a1e8"
+    },
+    {
+      "path": "src/app/components/LiquidEther.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "edf3b6bfd04d5e824df0c38a4da5ff36274ecef1",
+      "size": 132,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/edf3b6bfd04d5e824df0c38a4da5ff36274ecef1"
+    },
+    {
+      "path": "src/app/components/LiquidEther.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "05337371b673a2100e7aa5a8eebf0c4895da8aae",
+      "size": 44448,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/05337371b673a2100e7aa5a8eebf0c4895da8aae"
+    },
+    {
+      "path": "src/app/components/NavDock.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "438e4d75ac07aad798460e0e9cefe64356e1951d",
+      "size": 6142,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/438e4d75ac07aad798460e0e9cefe64356e1951d"
+    },
+    {
+      "path": "src/app/components/Shuffle.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cea7671af7b4666223ed89fc5b52c30ccfe1b489",
+      "size": 509,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/cea7671af7b4666223ed89fc5b52c30ccfe1b489"
+    },
+    {
+      "path": "src/app/components/Shuffle.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "031f7b64216c62f8a6a9b2b15def84906ab68d69",
+      "size": 15079,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/031f7b64216c62f8a6a9b2b15def84906ab68d69"
+    },
+    {
+      "path": "src/app/components/TextType.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f04c0ffdf7c599a99c06e0a7d80ea7dda25484e8",
+      "size": 212,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/f04c0ffdf7c599a99c06e0a7d80ea7dda25484e8"
+    },
+    {
+      "path": "src/app/components/TextType.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e94d4a64719001c172caa1243d3ce843dcfbbdc",
+      "size": 5762,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/1e94d4a64719001c172caa1243d3ce843dcfbbdc"
+    },
+    {
+      "path": "src/app/components/ThemeToggle.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00e226dd46a0fcdd597e074b5c897bf6ab733b71",
+      "size": 2463,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/00e226dd46a0fcdd597e074b5c897bf6ab733b71"
+    },
+    {
+      "path": "src/app/globals.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96a7e28d9482ed8b88e4ce0acad775b232b9fb6f",
+      "size": 21508,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/96a7e28d9482ed8b88e4ce0acad775b232b9fb6f"
+    },
+    {
+      "path": "src/app/layout.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a33470f1d73668930d4c3b54da8c54fd8f79004",
+      "size": 1003,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/1a33470f1d73668930d4c3b54da8c54fd8f79004"
+    },
+    {
+      "path": "src/app/page.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3572db47959aa93a98d217eda9f379021e612973",
+      "size": 37046,
+      "url": "https://api.github.com/repos/sobiswriter/Me-Protfolio/git/blobs/3572db47959aa93a98d217eda9f379021e612973"
+    }
+  ],
+  "truncated": false
+}

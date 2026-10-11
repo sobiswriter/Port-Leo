@@ -5,6 +5,7 @@ import type { DestinationConfig } from './types';
 export const PORTFOLIO_DESTINATIONS: DestinationConfig[] = places.map((place, index) => ({
   id: place.id,
   name: place.name,
+  worldName: place.worldName,
   subtitle: place.subtitle,
   sectorCode: String(index).padStart(2, '0'),
   route: place.id,

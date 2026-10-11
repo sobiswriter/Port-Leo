@@ -121,7 +121,7 @@ export default function App() {
   }, [bootVisible, flight, room, travel]);
   useEffect(() => {
     window.scrollTo({top:0, behavior:'instant'});
-    document.title = `${room === 'universe' ? 'The universe' : places.find(p => p.id === room)!.name} — Sobi’s Multiverse`;
+    document.title = `${room === 'universe' ? 'The universe' : places.find(p => p.id === room)!.name} — Souradip (Sobi) Biswas`;
     if (!bootVisible && !flight) (room === 'universe' ? universeMain : main).current?.focus({preventScroll:true});
   }, [room, bootVisible, flight]);
   useEffect(() => {

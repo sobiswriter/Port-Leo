@@ -14,10 +14,21 @@ const loaders = {
 };
 type RoomModule = Awaited<ReturnType<typeof loaders[UniverseId]>>;
 const cache = new Map<UniverseId, Promise<RoomModule>>();
+const atmospheres = {
+  arrival: () => import('../components/react-bits/PatternWaves'),
+  builder: () => import('../components/react-bits/MicroSlats'),
+  'ai-lab': () => import('../components/react-bits/Topography'),
+  research: () => import('../components/react-bits/Lightfall'),
+  arsenal: () => import('../components/react-bits/PixelBlast'),
+  journey: () => import('../components/react-bits/Galaxy'),
+  about: () => import('../components/react-bits/FaultyTerminal'),
+  beyond: () => import('../components/react-bits/Hyperspeed'),
+};
 export function preloadRoom(id: UniverseId) {
   let promise = cache.get(id);
   if (!promise) {
-    promise = loaders[id]().catch(error => {cache.delete(id); throw error;});
+    promise = Promise.all([loaders[id](), atmospheres[id]().catch(() => null)])
+      .then(([room]) => room).catch(error => {cache.delete(id); throw error;});
     cache.set(id, promise);
   }
   return promise;
@@ -28,24 +39,25 @@ const importGalaxy = () => import('../components/galaxy/Galaxy').then(m => ({def
 export const preloadGalaxy = () => galaxyPromise ??= importGalaxy();
 export const Universe = lazy(preloadGalaxy);
 
-const atmospheres = [
-  () => import('../components/react-bits/PatternWaves'), () => import('../components/react-bits/MicroSlats'),
-  () => import('../components/react-bits/Topography'), () => import('../components/react-bits/Lightfall'),
-  () => import('../components/react-bits/PixelBlast'), () => import('../components/react-bits/Galaxy'),
-  () => import('../components/react-bits/FaultyTerminal'), () => import('../components/react-bits/Hyperspeed'),
-];
 export function warmWorlds() {
   const connection = (navigator as Navigator & {connection?: {saveData?: boolean; effectiveType?: string}}).connection;
   if (connection?.saveData || connection?.effectiveType?.includes('2g')) return () => {};
-  const queue = [...Object.keys(loaders).map(id => () => preloadRoom(id as UniverseId)), ...atmospheres];
+  const queue = Object.keys(loaders).map(id => () => preloadRoom(id as UniverseId));
   let cancelled = false;
   let timer: ReturnType<typeof setTimeout>;
+  let idle: number | undefined;
+  const schedule = () => {
+    if (cancelled) return;
+    if ('requestIdleCallback' in window) idle = window.requestIdleCallback(next, {timeout: 2500});
+    else timer = setTimeout(next, 350);
+  };
   const next = () => {
     if (cancelled) return;
+    if (document.hidden) {timer = setTimeout(schedule, 1200); return;}
     const load = queue.shift();
     if (!load) return;
-    void load().catch(() => {}).finally(() => { if (!cancelled) timer = setTimeout(next, 350); });
+    void load().catch(() => {}).finally(schedule);
   };
-  timer = setTimeout(next, 1200);
-  return () => {cancelled = true; clearTimeout(timer);};
+  timer = setTimeout(schedule, 1200);
+  return () => {cancelled = true; clearTimeout(timer); if (idle !== undefined) window.cancelIdleCallback(idle);};
 }
