@@ -32,11 +32,11 @@ export const CosmicHud: React.FC<CosmicHudProps> = (props) => {
       <p>There is no right order.</p>
     </nav>
     {selected && !props.isTraveling && <div className="cosmic-inspection"><button className="cosmic-preview-close" aria-label="Close star preview" onClick={() => {setInspectedId(null); props.onDestinationHover(null);}}><X size={12}/></button><span className="cosmic-kicker">{selected.sectorCode} / STELLAR SYSTEM</span><p>{selected.worldName ?? selected.name}</p><span className="cosmic-preview-info">{selected.name} · {selected.subtitle}</span><button onClick={() => props.onZoom('focus', selected.id)}>Look closer <Eye size={12}/></button><button onClick={() => props.onDestinationSelect(selected.id)}>Enter world <ArrowUpRight size={12}/></button></div>}
-    <footer className="cosmic-footer"><span className="cosmic-instructions">DRAG TO ORBIT <b>·</b> SCROLL TO ZOOM <b>·</b> SELECT A STAR</span><div>
+    <footer className="cosmic-footer"><span className="cosmic-instructions"><span className="cosmic-desktop-hint">DRAG TO ORBIT <b>·</b> SCROLL TO ZOOM <b>·</b> SELECT A STAR</span><span className="cosmic-touch-hint">DRAG TO ORBIT <b>·</b> PINCH TO ZOOM <b>·</b> TAP A STAR</span></span><div>
       {props.activeDestinationId && <button disabled={props.isTraveling} onClick={props.onReturnHome} aria-label="Return to galaxy"><RotateCcw size={14}/><span>Return</span></button>}
       <button data-sound-control onClick={props.onToggleMute} aria-label={props.isMuted ? 'Enable galaxy sound' : 'Mute galaxy sound'} aria-pressed={!props.isMuted}>{props.isMuted ? <VolumeX size={14}/> : <Volume2 size={14}/>}<span>Sound {props.isMuted ? 'off' : 'on'}</span></button>
     </div></footer>
-    <div className="cosmic-status" role="status" aria-live="polite">{props.isTraveling ? `In transit · ${selected?.name ?? 'the home galaxy'}` : selected ? selected.subtitle : props.distance > 85 ? 'A single galaxy in an ocean of possibilities.' : 'You are here. Everything else is a possibility.'}</div>
+    <div className={`cosmic-status ${selected && !props.isTraveling ? 'is-inspecting' : ''}`} role="status" aria-live="polite">{props.isTraveling ? `In transit · ${selected?.name ?? 'the home galaxy'}` : selected ? selected.subtitle : props.distance > 85 ? 'A single galaxy in an ocean of possibilities.' : 'You are here. Everything else is a possibility.'}</div>
   </div>;
 };
 

@@ -59,6 +59,10 @@ export class GalaxyEngine {
   private smoothedDistance = 29;
   private reportedDistance = 0;
   private pinchDistance = 0;
+  private touchActive = false;
+  private touchMoved = false;
+  private lastTouchEnd = 0;
+  private touchOrigin = { x: 0, y: 0 };
   private environments = new THREE.Group();
   private starSystems = new THREE.Group();
   private journeyArc = new THREE.Vector3();
@@ -189,9 +193,11 @@ export class GalaxyEngine {
     this.canvas.addEventListener('mouseleave', this.onMouseLeave);
     this.canvas.addEventListener('mousedown', this.onMouseDown);
     window.addEventListener('mouseup', this.onMouseUp);
-    this.canvas.addEventListener('touchstart', this.onTouchStart, { passive: false });
-    this.canvas.addEventListener('touchmove', this.onTouchMove, { passive: false });
+    this.canvas.parentElement!.addEventListener('touchstart', this.onTouchStart, { passive: false });
+    this.canvas.parentElement!.addEventListener('touchmove', this.onTouchMove, { passive: false });
+    this.canvas.parentElement!.addEventListener('click', this.onTouchClick, true);
     window.addEventListener('touchend', this.onTouchEnd);
+    window.addEventListener('touchcancel', this.onTouchCancel);
     this.canvas.addEventListener('wheel', this.onWheel, { passive: false });
     document.addEventListener('visibilitychange', this.onVisibilityChange);
 
@@ -956,9 +962,16 @@ export class GalaxyEngine {
   };
 
   private onTouchStart = (e: TouchEvent): void => {
-    if (this.isTraveling || this.isReturning) return;
-    this.isMouseOver = true;
+    if (this.activeDestinationId || this.isTraveling || this.isReturning) return;
+    if (!this.touchActive) {
+      this.touchMoved = false;
+      this.touchOrigin = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    this.touchActive = true;
+    // Touch has no hover; keep the star-field attraction dormant.
+    this.isMouseOver = false;
     if (e.touches.length === 2) {
+      this.touchMoved = true;
       this.isDragging = false;
       this.pinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
     }
@@ -972,6 +985,7 @@ export class GalaxyEngine {
   };
 
   private onTouchMove = (e: TouchEvent): void => {
+    if (!this.touchActive) return;
     e.preventDefault();
     if (this.isTraveling || this.isReturning) return;
     if (e.touches.length === 2 && !this.activeDestinationId) {
@@ -982,6 +996,7 @@ export class GalaxyEngine {
     }
     if (e.touches.length === 1) {
       const touch = e.touches[0];
+      if (Math.hypot(touch.clientX - this.touchOrigin.x, touch.clientY - this.touchOrigin.y) > 8) this.touchMoved = true;
       const rect = this.canvas.getBoundingClientRect();
       this.mouseNorm.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
       this.mouseNorm.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
@@ -990,8 +1005,10 @@ export class GalaxyEngine {
         const deltaX = touch.clientX - this.previousMousePosition.x;
         const deltaY = touch.clientY - this.previousMousePosition.y;
 
-        this.rotationVelocity.x = deltaX * 0.006;
-        this.rotationVelocity.y = deltaY * 0.005;
+        // Normalize sensitivity across narrow and wide phones.
+        const sensitivity = Math.PI / Math.max(320, Math.min(rect.width, rect.height));
+        this.rotationVelocity.x = deltaX * sensitivity;
+        this.rotationVelocity.y = deltaY * sensitivity * 0.75;
 
         this.targetUserRotation.x += this.rotationVelocity.x;
         this.targetUserRotation.y = Math.max(
@@ -1010,11 +1027,33 @@ export class GalaxyEngine {
     }
   };
 
-  private onTouchEnd = (): void => {
+  private onTouchEnd = (event: TouchEvent): void => {
+    if (!this.touchActive) return;
+    if (event.touches.length === 1) {
+      this.isDragging = true;
+      this.pinchDistance = 0;
+      this.previousMousePosition = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      return;
+    }
+    if (event.touches.length > 1) return;
+    this.onTouchCancel();
+  };
+
+  private onTouchCancel = (): void => {
+    this.touchActive = false;
+    this.lastTouchEnd = performance.now();
     this.isDragging = false;
-    this.targetUserRotation.copy(this.userRotation);
     this.pinchDistance = 0;
+    this.isMouseOver = false;
     this.mouseWorldPos.set(9999, 9999, 9999);
+  };
+
+  private onTouchClick = (event: MouseEvent): void => {
+    if (!this.touchMoved || event.detail === 0) return;
+    this.touchMoved = false;
+    if (performance.now() - this.lastTouchEnd > 750) return;
+    event.preventDefault();
+    event.stopPropagation();
   };
 
   private onWheel = (event: WheelEvent): void => {
@@ -1384,9 +1423,11 @@ export class GalaxyEngine {
     this.canvas.removeEventListener('mouseleave', this.onMouseLeave);
     this.canvas.removeEventListener('mousedown', this.onMouseDown);
     window.removeEventListener('mouseup', this.onMouseUp);
-    this.canvas.removeEventListener('touchstart', this.onTouchStart);
-    this.canvas.removeEventListener('touchmove', this.onTouchMove);
+    this.canvas.parentElement?.removeEventListener('touchstart', this.onTouchStart);
+    this.canvas.parentElement?.removeEventListener('touchmove', this.onTouchMove);
+    this.canvas.parentElement?.removeEventListener('click', this.onTouchClick, true);
     window.removeEventListener('touchend', this.onTouchEnd);
+    window.removeEventListener('touchcancel', this.onTouchCancel);
     this.canvas.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
 

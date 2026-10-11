@@ -51,3 +51,6 @@ npx --package @playwright/cli playwright-cli -s=release run-code --filename scri
 ```
 
 Inspect the returned observations: correct route headings, no overflow, no visibly hidden revealed sections, no local asset failures and successful interaction flags. Closed disclosures are excluded from the visibility check. Browser-only output lives in ignored folders.
+
+### Mobile galaxy follow-up
+Mobile and coarse-pointer layouts use small labels with 44px touch targets. Inspection cards and hover descriptions are hidden, and the footer describes drag/pinch/tap gestures. Drags can begin on a star without navigating; lifting one finger after a pinch resumes orbiting. Checked at 390x844 in Chrome, including no horizontal overflow, desktop hover preservation and star tap navigation. Startup playback was verified; an intentionally rejected first play call resumed on the next interaction. Audible autoplay remains subject to browser policy.

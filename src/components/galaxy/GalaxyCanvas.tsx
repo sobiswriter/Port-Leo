@@ -124,7 +124,7 @@ export const GalaxyCanvas: React.FC<GalaxyCanvasProps> = ({
   }, [activeDestinationId, unavailable, onTravelComplete, onReturnHomeComplete, reducedMotion, journey]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#030307]">
+    <div className="relative w-full h-full overflow-hidden bg-[#030307] touch-none">
       {unavailable && <p className="cosmic-fallback" role="status">The star map is unavailable on this device. Choose a world from the directory.</p>}
       {/* 3D WebGL Canvas */}
       <canvas
